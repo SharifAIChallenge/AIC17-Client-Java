@@ -13,52 +13,37 @@ import common.util.Log;
  */
 public class Controller {
 
-    /**
-     * Logging tag.
-     */
+    // Logging tag
     private static final String TAG = "Controller";
 
-    /**
-     * Connection details' file encoding.
-     */
+    // File encoding for connection details
     private static String detailsEnc = "UTF-8";
 
-    /**
-     * Connection details.
-     */
+    // Connection details
     private int port;
     private String host;
     private String token;
     private long retryDelay;
 
-    /**
-     * Player of the game.
-     */
+    // AI (participant's) class
     private AI ai;
 
-    /**
-     * Model of the game.
-     */
+    // Game model
     private Model model;
 
-    /**
-     * Client side network.
-     */
+    // Client side network
     private Network network;
 
-    /**
-     * Terminator. Controller waits for this object to be notified. Then it will
-     * be terminated.
-     */
+    // Terminator. Controller waits for this object to be notified. Then it will be terminated.
     private final Object terminator;
 
     /**
      * Constructor
      *
-     * @param hostIP        host address
-     * @param hostPort      host port
-     * @param token         client token
-     * @param retryDelay    connection retry delay
+     * @param hostIP     host address
+     * @param hostPort   host port
+     * @param token      client token
+     * @param retryDelay connection retry delay
      */
     public Controller(String hostIP, int hostPort, String token, long retryDelay) {
         this.terminator = new Object();
