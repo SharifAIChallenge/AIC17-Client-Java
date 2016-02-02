@@ -2,10 +2,11 @@ package common.network;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import common.util.Json;
 import common.util.Log;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
@@ -38,21 +39,16 @@ public class JsonSocket {
 
     public static final Charset ENCODING = Charset.forName("UTF-8");
 
-    /**
-     * The <code>Gson</code> object is used to convert between java and json.
-     */
+    // The <code>Gson</code> object is used to convert between java and json.
     private Gson mGson;
-    /**
-     * The underlying <code>Socket</code>.
-     */
+
+    // The underlying <code>Socket</code>.
     private Socket mSocket;
-    /**
-     * Input stream of the socket.
-     */
+
+    // Input stream of the socket.
     private InputStream mIn;
-    /**
-     * Output stream of the socket.
-     */
+
+    // Output stream of the socket.
     private OutputStream mOut;
 
     /**

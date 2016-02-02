@@ -1,4 +1,4 @@
-package common.util;
+package common.network;
 
 import com.google.gson.Gson;
 

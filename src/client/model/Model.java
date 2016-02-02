@@ -33,10 +33,10 @@ public class Model implements World {
     }
 
     public void handleInitMessage(Message msg) {
-        myID = (int) msg.args[0];
+        myID = msg.args.get(0).getAsInt();
 
         // graph deserialization
-        JsonArray adjListInt = (JsonArray) msg.args[1];
+        JsonArray adjListInt = msg.args.get(1).getAsJsonArray();
 
         Node[] nodes = new Node[adjListInt.size()];
         for (int i = 0; i < nodes.length; i++) {
@@ -52,7 +52,7 @@ public class Model implements World {
             nodes[i].setNeighbours(neighbours);
         }
 
-        JsonArray graphDiff = (JsonArray) msg.args[2];
+        JsonArray graphDiff = msg.args.get(2).getAsJsonArray();
         for (int i = 0; i < graphDiff.size(); i++) {
             JsonArray nodeDiff = graphDiff.get(i).getAsJsonArray();
             int node = nodeDiff.get(0).getAsInt();
@@ -62,16 +62,16 @@ public class Model implements World {
             nodes[node].setArmyCount(armyCount);
         }
 
-        updateNodesList();
-
         map = new Graph(nodes);
+
+        updateNodesList();
     }
 
     public void handleTurnMessage(Message msg) {
         turnStartTime = System.currentTimeMillis();
-        turn = (int) msg.args[0];
+        turn = msg.args.get(0).getAsInt();
 
-        JsonArray graphDiff = (JsonArray) msg.args[1];
+        JsonArray graphDiff = msg.args.get(1).getAsJsonArray();
         for (int i = 0; i < graphDiff.size(); i++) {
             JsonArray nodeDiff = graphDiff.get(i).getAsJsonArray();
             int nodeIndex = nodeDiff.get(0).getAsInt();

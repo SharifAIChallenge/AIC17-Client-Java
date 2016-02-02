@@ -1,15 +1,8 @@
 package client;
 
 import client.model.Model;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import common.network.data.Message;
-import common.util.Json;
 import common.util.Log;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Main controller. Controls execution of the program, e.g. checks time limit of
@@ -104,6 +97,7 @@ public class Controller {
      * @param msg incoming message
      */
     private void handleMessage(Message msg) {
+        System.err.println("todo: msg " + msg.name + " received");
         switch (msg.name) {
             case "turn":
                 handleTurnMessage(msg);
@@ -118,6 +112,7 @@ public class Controller {
                 Log.i(TAG, "Undefined message received. " + msg.name);
                 break;
         }
+        System.err.println("todo: msg end");
     }
 
     /**
