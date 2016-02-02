@@ -15,7 +15,7 @@ public class Message {
         this.args = args;
     }
 
-    public Message(String name, Object[] args) {
+    public Message(String name, Object... args) {
         this(name, Json.GSON.toJsonTree(args).getAsJsonArray());
     }
 }

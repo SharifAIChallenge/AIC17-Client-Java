@@ -106,7 +106,7 @@ public class Network {
         Message init;
         try {
             client = new JsonSocket(host, port);
-            client.send(new Message("token", new Object[]{token}));
+            client.send(new Message("token", token));
             init = client.get(Message.class);
             if (!init.name.equals("init")) {
                 client.close();

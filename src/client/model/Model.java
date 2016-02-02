@@ -137,9 +137,7 @@ public class Model implements World {
 
     @Override
     public void moveArmy(int src, int dst, int count) {
-        sender.accept(new Message(Event.EVENT, new Object[]{
-                new Event("m", new Object[]{src, dst, count})
-        }));
+        sender.accept(new Message(Event.EVENT, new Event("m", new Object[]{src, dst, count})));
     }
 
 }
