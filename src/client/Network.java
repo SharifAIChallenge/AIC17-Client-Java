@@ -18,57 +18,36 @@ import java.util.function.Consumer;
  */
 public class Network {
 
-    /**
-     * Logging tag.
-     */
+    // Logging tag
     private static final String TAG = "Network";
 
-    /**
-     * Maximum number of exceptions could occur during connection. After that
-     * client will be closed.
-     */
-    public static final int MAX_NUM_EXCEPTIONS = 50;
+    // Maximum number of exceptions could occur during connection. After that client will be closed.
+    public static final int MAX_NUM_EXCEPTIONS = 20;
 
-    /**
-     * Handles incoming messages.
-     */
+    // Handles incoming messages
     private Consumer<Message> messageHandler;
 
-    /**
-     * Send queue.
-     */
+    // Send queue
     private LinkedBlockingDeque<Message> messagesToSend;
 
-    /**
-     * Connection details.
-     */
+    // Connection details
     private int port;
     private String host;
     private String token;
 
-    /**
-     * Socket of the client.
-     */
+    // Client socket
     private JsonSocket socket;
 
-    /**
-     * Connection flag.
-     */
+    // Connection flag
     private boolean isConnected;
 
-    /**
-     * Executor used to receive messages.
-     */
+    // Executor used to receive messages
     private ExecutorService executor;
 
-    /**
-     * Termination flag.
-     */
+    // Termination flag
     private boolean terminateFlag;
 
-    /**
-     * Number of exceptions occurred during communication.
-     */
+    // Number of exceptions occurred during communication
     private int numOfExceptions;
 
 
@@ -113,11 +92,11 @@ public class Network {
                 throw new Exception("First message of the server was not init message.");
             }
         } catch (IOException e) {
-            Log.i(TAG, "Error while connection to server.", e);
+            Log.e(TAG, "Can not connect to server.", e);
             handleIOE(e);
             return;
         } catch (Exception e) {
-            Log.i(TAG, "Error while connection to server.", e);
+            Log.e(TAG, "Can not connect to server.");
             return;
         }
         isConnected = true;
@@ -145,10 +124,10 @@ public class Network {
         try {
             messageHandler.accept(socket.get(Message.class));
         } catch (IOException e) {
-            Log.i(TAG, "Error receiving the server's message.", e);
+            Log.e(TAG, "Can not receive server's message.");
             handleIOE(e);
         } catch (Exception e) {
-            Log.i(TAG, "Error receiving the server's message.", e);
+            Log.e(TAG, "Can not recieve server's message.");
         }
     }
 
@@ -163,7 +142,7 @@ public class Network {
                     socket.send(msg);
                 } catch (InterruptedException ignored) {
                 } catch (IOException e) {
-                    Log.i(TAG, "Error while sending client's message.", e);
+                    Log.e(TAG, "Can not send client's message.");
                     handleIOE(e);
                 }
             }
@@ -187,7 +166,7 @@ public class Network {
         try {
             socket.close();
         } catch (IOException e) {
-            Log.i(TAG, "Error closing the client.", e);
+            Log.e(TAG, "Can not terminate the client.");
         }
     }
 

@@ -79,8 +79,19 @@ public interface World {
      * calling this method and by passing with source, destination, and number
      * of armies you want to move from source to destination.
      *
-     * @param src   source node's index. you can get index of a node by calling node.getIndex().
-     * @param dst   destination node's index. you can get index of a node by calling node.getIndex().
+     * @param src   source node
+     * @param dst   destination node
+     * @param count number of armies you want to move from source to destination
+     */
+    void moveArmy(Node src, Node dst, int count);
+
+    /**
+     * The move is the only action in this game. You can request a move by
+     * calling this method and by passing with source, destination, and number
+     * of armies you want to move from source to destination.
+     *
+     * @param src   source node's index, you can get index of a node by calling node.getIndex().
+     * @param dst   destination node's index, you can get index of a node by calling node.getIndex().
      * @param count number of armies you want to move from source to destination.
      */
     void moveArmy(int src, int dst, int count);

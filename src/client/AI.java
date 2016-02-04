@@ -1,5 +1,7 @@
 package client;
 
+import client.model.Node;
+
 /**
  * AI class.
  * You should fill body of the method {@link #doTurn}.
@@ -12,7 +14,19 @@ package client;
 public class AI {
 
     public void doTurn(World world) {
-        // fill this method, we've presented a stupid AI for example! :D
+        // fill this method, we've presented a stupid AI for example!
+
+        Node[] myNodes = world.getMyNodes();
+        for (Node source : myNodes) {
+            // get neighbours
+            Node[] neighbours = source.getNeighbours();
+            if (neighbours.length > 0) {
+                // select a random neighbour
+                Node destination = neighbours[(int) (neighbours.length * Math.random())];
+                // move half of the node's army to the neighbor node
+                world.moveArmy(source, destination, source.getArmyCount()/2);
+            }
+        }
 
     }
 

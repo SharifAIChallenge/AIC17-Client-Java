@@ -10,6 +10,9 @@ public class Node {
     private int armyCount;
     private Node[] neighbours;
 
+    Node(int index) {
+        this.index = index;
+    }
 
     /**
      * get neighbours of this node.

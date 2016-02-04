@@ -1,6 +1,6 @@
 package client;
 
-import client.model.Model;
+import client.model.Game;
 import common.network.data.Message;
 import common.util.Log;
 
@@ -29,7 +29,7 @@ public class Controller {
     private AI ai;
 
     // Game model
-    private Model model;
+    private Game game;
 
     // Client side network
     private Network network;
@@ -59,7 +59,7 @@ public class Controller {
     public void start() {
         try {
             network = new Network(this::handleMessage);
-            model = new Model(network::send);
+            game = new Game(network::send);
             ai = new AI();
             network.setConnectionData(host, port, token);
             while (!network.isConnected()) {
@@ -71,7 +71,7 @@ public class Controller {
             }
             network.terminate();
         } catch (Exception e) {
-            Log.i(TAG, "Error while starting client.", e);
+            Log.e(TAG, "Can not start the client.", e);
         }
     }
 
@@ -82,7 +82,7 @@ public class Controller {
      * @param msg incoming message
      */
     private void handleMessage(Message msg) {
-        System.err.println("todo: msg " + msg.name + " received");
+        Log.v(TAG, msg.name + " received.");
         switch (msg.name) {
             case "turn":
                 handleTurnMessage(msg);
@@ -94,10 +94,10 @@ public class Controller {
                 handleShutdownMessage(msg);
                 break;
             default:
-                Log.i(TAG, "Undefined message received. " + msg.name);
+                Log.w(TAG, "Undefined message received: " + msg.name);
                 break;
         }
-        System.err.println("todo: msg end");
+        Log.v(TAG, msg.name + " handle finished.");
     }
 
     /**
@@ -106,7 +106,7 @@ public class Controller {
      * @param msg init message
      */
     private void handleInitMessage(Message msg) {
-        model.handleInitMessage(msg);
+        game.handleInitMessage(msg);
     }
 
     /**
@@ -116,7 +116,7 @@ public class Controller {
      * @param msg turn message
      */
     private void handleTurnMessage(Message msg) {
-        model.handleTurnMessage(msg);
+        game.handleTurnMessage(msg);
         doTurn();
     }
 
@@ -137,7 +137,7 @@ public class Controller {
         new Thread() {
             @Override
             public void run() {
-                ai.doTurn(model);
+                ai.doTurn(game);
             }
         }.start();
     }

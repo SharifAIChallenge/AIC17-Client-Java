@@ -10,13 +10,14 @@ import java.util.function.Consumer;
 
 /**
  * Model contains data which describes current state of the game.
- * You do not need to read this class, it's internal implementation. View
- * World interface for more information.
- * Please do not change this class.
+ * You do not need to read this class, it's internal implementation.
+ * See World interface for more information.
+ * Do not change this class.
  */
-public class Model implements World {
+public class Game implements World {
     private long turnTimeout = 400; // todo
     private long turnStartTime;
+    private ArrayList<Event> events;
     private Consumer<Message> sender;
 
     private int myID;
@@ -28,7 +29,7 @@ public class Model implements World {
     private class NodeArrayList extends ArrayList<Node> {
     } // solving generic array creation!
 
-    public Model(Consumer<Message> sender) {
+    public Game(Consumer<Message> sender) {
         this.sender = sender;
     }
 
@@ -40,7 +41,7 @@ public class Model implements World {
 
         Node[] nodes = new Node[adjListInt.size()];
         for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new Node();
+            nodes[i] = new Node(i);
         }
 
         for (int i = 0; i < adjListInt.size(); i++) {
@@ -65,6 +66,8 @@ public class Model implements World {
         map = new Graph(nodes);
 
         updateNodesList();
+
+        events = new ArrayList<>();
     }
 
     public void handleTurnMessage(Message msg) {
@@ -133,6 +136,11 @@ public class Model implements World {
     @Override
     public long getTotalTurnTime() {
         return turnTimeout;
+    }
+
+    @Override
+    public void moveArmy(Node src, Node dst, int count) {
+        moveArmy(src.getIndex(), dst.getIndex(), count);
     }
 
     @Override
