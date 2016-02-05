@@ -77,7 +77,7 @@ public final class Log {
         if (priority < LOG_LEVEL)
             return;
         if (DEV_MODE) {
-            System.err.printf("\tpriority=%d,%n\ttag=%s,%n\tmessage=%s%n", priority, tag, msg);
+            System.err.printf("%s (%s): %s%n", LEVELS[priority], tag, msg);
         } else {
             System.err.println(LEVELS[priority] + ": " + msg);
         }
@@ -87,7 +87,7 @@ public final class Log {
         if (priority < LOG_LEVEL)
             return;
         if (DEV_MODE) {
-            System.err.printf("\tpriority=%d,%n\ttag=%s,%n\tmessage=%s%n", priority, tag, msg + '\n' + getStackTraceString(tr));
+            System.err.printf("%s (%s): %s%n", LEVELS[priority], tag, msg + '\n' + getStackTraceString(tr));
         } else {
             System.err.println(LEVELS[priority] + ": " + msg);
         }
