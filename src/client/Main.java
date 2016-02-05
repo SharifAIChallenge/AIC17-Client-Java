@@ -12,9 +12,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             run(getArgs());
-        } catch (Exception ignore) {
-            printHelp();
-            ignore.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -36,10 +35,6 @@ public class Main {
                 args[i] = argDefaults[i];
         }
         return args;
-    }
-
-    private static void printHelp() {
-        System.err.println("Invalid arguments. You should provide host IP, host port, client token, and retry delay (in ms).");
     }
 
 }
