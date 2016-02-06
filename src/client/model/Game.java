@@ -91,7 +91,6 @@ public class Game implements World {
         }
         for (int i = 0; i < nodes.length; i++) {
             nodes[i] = nodesList[i].toArray(new Node[nodesList[i].size()]);
-            System.err.println(nodesList[i]);
         }
     }
 
