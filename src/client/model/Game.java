@@ -15,9 +15,8 @@ import java.util.function.Consumer;
  * Do not change this class.
  */
 public class Game implements World {
-    private long turnTimeout = 400; // todo
+    private long turnTimeout;
     private long turnStartTime;
-    private ArrayList<Event> events;
     private Consumer<Message> sender;
 
     private int myID;
@@ -34,10 +33,12 @@ public class Game implements World {
     }
 
     public void handleInitMessage(Message msg) {
-        myID = msg.args.get(0).getAsInt();
+        turnTimeout = msg.args.get(0).getAsLong();
+
+        myID = msg.args.get(1).getAsInt();
 
         // graph deserialization
-        JsonArray adjListInt = msg.args.get(1).getAsJsonArray();
+        JsonArray adjListInt = msg.args.get(2).getAsJsonArray();
 
         Node[] nodes = new Node[adjListInt.size()];
         for (int i = 0; i < nodes.length; i++) {
@@ -53,7 +54,7 @@ public class Game implements World {
             nodes[i].setNeighbours(neighbours);
         }
 
-        JsonArray graphDiff = msg.args.get(2).getAsJsonArray();
+        JsonArray graphDiff = msg.args.get(3).getAsJsonArray();
         for (int i = 0; i < graphDiff.size(); i++) {
             JsonArray nodeDiff = graphDiff.get(i).getAsJsonArray();
             int node = nodeDiff.get(0).getAsInt();
@@ -66,8 +67,6 @@ public class Game implements World {
         map = new Graph(nodes);
 
         updateNodesList();
-
-        events = new ArrayList<>();
     }
 
     public void handleTurnMessage(Message msg) {
@@ -92,6 +91,7 @@ public class Game implements World {
         }
         for (int i = 0; i < nodes.length; i++) {
             nodes[i] = nodesList[i].toArray(new Node[nodesList[i].size()]);
+            System.err.println(nodesList[i]);
         }
     }
 

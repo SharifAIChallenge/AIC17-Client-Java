@@ -12,6 +12,7 @@ public class Node {
 
     Node(int index) {
         this.index = index;
+        this.owner = -1;
     }
 
     /**
