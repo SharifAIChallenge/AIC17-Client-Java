@@ -1,5 +1,7 @@
 package client;
 
+import common.util.Log;
+
 /**
  * Initial point of execution.
  * Do not change this class.
@@ -33,6 +35,7 @@ public class Main {
             args[i] = System.getenv(argNames[i]);
             if (args[i] == null)
                 args[i] = argDefaults[i];
+            Log.i("PARAM", argNames[i] + "=" + args[i]);
         }
         return args;
     }
