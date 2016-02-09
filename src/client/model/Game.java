@@ -2,6 +2,7 @@ package client.model;
 
 import client.World;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import common.model.Event;
 import common.network.data.Message;
 
@@ -16,6 +17,13 @@ import java.util.function.Consumer;
  */
 public class Game implements World {
     private long turnTimeout;
+    private int escape;
+    private int nodeBonus;
+    private int edgeBonus;
+    private int firstlvl;
+    private int secondlvl;
+    private double lossRate1;
+    private double lossRate2;
     private long turnStartTime;
     private Consumer<Message> sender;
 
@@ -33,7 +41,15 @@ public class Game implements World {
     }
 
     public void handleInitMessage(Message msg) {
-        turnTimeout = msg.args.get(0).getAsLong();
+        JsonObject constants = msg.args.get(0).getAsJsonObject();
+        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
+        escape = constants.getAsJsonPrimitive("escape").getAsInt();
+        nodeBonus = constants.getAsJsonPrimitive("nodeBonus").getAsInt();
+        edgeBonus = constants.getAsJsonPrimitive("edgeBonus").getAsInt();
+        firstlvl = constants.getAsJsonPrimitive("firstlvl").getAsInt();
+        secondlvl = constants.getAsJsonPrimitive("secondlvl").getAsInt();
+        lossRate1 = constants.getAsJsonPrimitive("lossRate1").getAsInt();
+        lossRate2 = constants.getAsJsonPrimitive("lossRate2").getAsInt();
 
         myID = msg.args.get(1).getAsInt();
 
@@ -145,6 +161,41 @@ public class Game implements World {
     @Override
     public void moveArmy(int src, int dst, int count) {
         sender.accept(new Message(Event.EVENT, new Event("m", new Object[]{src, dst, count})));
+    }
+
+    @Override
+    public int getEscapeConstant() {
+        return escape;
+    }
+
+    @Override
+    public int getNodeBonusConstant() {
+        return nodeBonus;
+    }
+
+    @Override
+    public int getEdgeBonusConstant() {
+        return edgeBonus;
+    }
+
+    @Override
+    public int getLowArmyBound() {
+        return firstlvl;
+    }
+
+    @Override
+    public int getMediumArmyBound() {
+        return secondlvl;
+    }
+
+    @Override
+    public double getMediumLossCoefficient() {
+        return lossRate1;
+    }
+
+    @Override
+    public double getLowCasualtyCoefficient() {
+        return lossRate2;
     }
 
 }

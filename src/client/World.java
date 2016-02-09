@@ -95,4 +95,18 @@ public interface World {
      * @param count number of armies you want to move from source to destination.
      */
     void moveArmy(int src, int dst, int count);
+
+    int getEscapeConstant();
+
+    int getNodeBonusConstant();
+
+    int getEdgeBonusConstant();
+
+    int getLowArmyBound();
+
+    int getMediumArmyBound();
+
+    double getMediumLossCoefficient();
+
+    double getLowCasualtyCoefficient();
 }
