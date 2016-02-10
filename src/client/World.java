@@ -96,17 +96,60 @@ public interface World {
      */
     void moveArmy(int src, int dst, int count);
 
+    /**
+     * Maximum number of armies that can escape from a battle.
+     *
+     * @return escape constant
+     */
     int getEscapeConstant();
 
+    /**
+     * Amount of armies awarded for getting ownership of a node.
+     *
+     * @return node bonus constant
+     */
     int getNodeBonusConstant();
 
+    /**
+     * Amount of armies added to a node for each adjacent node with the same ownership.
+     *
+     * @return edge bonus constant
+     */
     int getEdgeBonusConstant();
 
+    /**
+     * Maximum amount of army that indicated as low.
+     *
+     * @return
+     */
     int getLowArmyBound();
 
+    /**
+     * Maximum amount of army that indicated as medium.
+     *
+     * @return medium army bound
+     */
     int getMediumArmyBound();
 
-    double getMediumLossCoefficient();
+    /**
+     * The winner of the battle losses some of his armies. The coefficient of loss
+     * is a function of the army count of both sides of the battle (in terms of
+     * low, medium, and high). When the level difference of the winner and loser is
+     * at most 1 (e.g. winner is high and loser is medium, or winner is low and
+     * medium is low), the loss coefficient can be determined by calling this function.
+     *
+     * @return loss coefficient
+     */
+    double getMediumCasualtyCoefficient();
 
+    /**
+     * The winner of the battle losses some of his armies. The coefficient of loss
+     * is a function of the army count of both sides of the battle (in terms of
+     * low, medium, and high). When the level difference of the winner and loser
+     * is 2 (i.e. winner is high and loser is low), the loss coefficient can be
+     * determined by calling this function.
+     *
+     * @return loss coefficient
+     */
     double getLowCasualtyCoefficient();
 }

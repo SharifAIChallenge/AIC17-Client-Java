@@ -189,7 +189,7 @@ public class Game implements World {
     }
 
     @Override
-    public double getMediumLossCoefficient() {
+    public double getMediumCasualtyCoefficient() {
         return lossRate1;
     }
 
