@@ -47,6 +47,13 @@ public interface World {
     Node[] getFreeNodes();
 
     /**
+     * total (maximum) turns of the game.
+     *
+     * @return total turns
+     */
+    int getTotalTurns();
+
+    /**
      * number of turns that passed as long as game started.
      *
      * @return turn number

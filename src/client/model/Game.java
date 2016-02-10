@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * Do not change this class.
  */
 public class Game implements World {
+    private int totalTurns;
     private long turnTimeout;
     private int escape;
     private int nodeBonus;
@@ -42,6 +43,7 @@ public class Game implements World {
 
     public void handleInitMessage(Message msg) {
         JsonObject constants = msg.args.get(0).getAsJsonObject();
+        totalTurns = constants.getAsJsonPrimitive("turns").getAsInt();
         turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
         escape = constants.getAsJsonPrimitive("escape").getAsInt();
         nodeBonus = constants.getAsJsonPrimitive("nodeBonus").getAsInt();
@@ -141,6 +143,11 @@ public class Game implements World {
     @Override
     public Node[] getFreeNodes() {
         return nodes[0];
+    }
+
+    @Override
+    public int getTotalTurns() {
+        return totalTurns;
     }
 
     @Override
