@@ -101,12 +101,12 @@ public class Tile
 
 	public void resetConstants(int id) {
 		this.id = id;
-		direction = -1;
-		color = -1;
-		queen = -1;
-		sick = -1;
-		team = -1;
-		targetId = -1;
+		this.direction = -1;
+		this.color = -1;
+		this.queen = -1;
+		this.sick = -1;
+		this.team = -1;
+		this.targetId = -1;
 	}
 
 	public void addTeleport(JsonArray teleInfo){
@@ -115,4 +115,13 @@ public class Tile
 		targetId = teleInfo.get(3).getAsInt();
 	}
 
+	public void addFishInfo(int id, int direction, int color, int queen, int team) {
+		this.id = id;
+		this.direction = direction;
+		this.color = color;
+		this.queen = queen;
+		this.team = team;
+		this.sick = -1;
+		this.targetId = -1;
+	}
 }

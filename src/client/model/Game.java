@@ -1,10 +1,13 @@
 import client.model.Map;
 import client.model.Tile;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import common.model.Event;
 import common.network.data.Message;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class Game {
@@ -164,6 +167,108 @@ public class Game {
         foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsDouble();
         trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsDouble();
 
+    }
+
+    public void handleTurnMessage(Message msg)
+    {
+        JsonArray allChanges = msg.args.get(0).getAsJsonArray();
+        for(int i = 0; i < allChanges.size(); i++)
+        {
+            Gson gson = new Gson();
+            JsonObject changes = allChanges.get(i).getAsJsonObject();
+            String jsonString = changes.toString();
+            Change change = gson.fromJson(jsonString, Change.class);
+            String type = change.getType();
+            if(type.equals("a"))
+            {
+                ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
+                for(int j = 0; j < allAdds.size(); j++)
+                {
+                    ArrayList<Integer> addChange = allAdds.get(j);
+                    switch(addChange.get(1))
+                    {
+                        case 0:
+                            addFish(addChange);
+                            break;
+                        case 1:
+                            addFood(addChange);
+                            break;
+                        case 2:
+                            addTrash(addChange);
+                            break;
+                        case 3:
+                            addNet(addChange);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void addFish(ArrayList<Integer> changes)
+    {
+        ArrayList<Tile> fishList;
+        int id = changes.get(0);
+        int tileX = changes.get(2);
+        int tileY = changes.get(3);
+        int direction = changes.get(4);
+        int color = changes.get(5);
+        int queen = changes.get(6);
+        int team = changes.get(7);
+        Tile[][] tiles = map.getTiles();
+        Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.addFishInfo(id, direction, color, queen, team);
+        if(team == teamID)
+        {
+            fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
+            fishList.add(theChosenTile);
+            fishes[0] = (Tile[]) fishList.toArray();
+        }
+        else
+        {
+            fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
+            fishList.add(theChosenTile);
+            fishes[1] = (Tile[]) fishList.toArray();
+        }
+    }
+
+    public void addFood(ArrayList<Integer> changes)
+    {
+        Tile[][] tiles = map.getTiles();
+        int id = changes.get(0);
+        int tileX = changes.get(2);
+        int tileY = changes.get(3);
+        Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.resetConstants(id);
+        ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
+        foodList.add(theChosenTile);
+        items[3] = (Tile[]) foodList.toArray();
+    }
+
+    public void addTrash(ArrayList<Integer> changes)
+    {
+        Tile[][] tiles = map.getTiles();
+        int id = changes.get(0);
+        int tileX = changes.get(2);
+        int tileY = changes.get(3);
+        Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.resetConstants(id);
+        ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
+        trashList.add(theChosenTile);
+        items[2] = (Tile[]) trashList.toArray();
+    }
+
+    public void addNet(ArrayList<Integer> changes)
+    {
+        Tile[][] tiles = map.getTiles();
+        int id = changes.get(0);
+        int tileX = changes.get(2);
+        int tileY = changes.get(3);
+        Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.resetConstants(id);
+        ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
+        netList.add(theChosenTile);
+        items[1] = (Tile[]) netList.toArray();
     }
 
     public int getTotalTurns() {
