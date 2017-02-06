@@ -1,208 +1,194 @@
-package client.model;
-
-import client.World;
+import client.model.Map;
+import client.model.Tile;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import common.model.Event;
 import common.network.data.Message;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
-/**
- * Model contains data which describes current state of the game.
- * You do not need to read this class, it's internal implementation.
- * See World interface for more information.
- * Do not change this class.
- */
-public class Game implements World {
+public class Game {
+    // Yo!
     private int totalTurns;
-    private long turnTimeout;
-    private int escape;
-    private int nodeBonus;
-    private int edgeBonus;
-    private int firstlvl;
-    private int secondlvl;
-    private double lossRate1;
-    private double lossRate2;
-    private long turnStartTime;
+    private int currentTurn;
+    private long totalTime;
+    private long startTime;
+    private int teamID;
+    private int width;
+    private int height;
+
+    // Constants
+    private double turnTimeout;
+    private double foodProb;
+    private double trashProb;
+    private double netProb;
+    private double colorCost;
+    private double sickCost;
+    private double updateCost;
+    private double detMoveCost;
+    private double killQueenScore;
+    private double killBothQueenScore;
+    private double killFishScore;
+    private double queenCollisionScore;
+    private double fishFoodScore;
+    private double queenFoodScore;
+    private double sickLifeTime;
+    private double powerRatio;
+    private double endRatio;
+    private double disobeyNum;
+    private double foodValidTime;
+    private double trashValidTime;
+
+
+    private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
+    private Tile[][] fishes = new Tile[2][]; // My normal-0, sick-1 and queen-2 fish tiles
+    //	private Tile[][][] myRedFish = new Tile[3][][]; // My normal-0, sick-1 and queen-2 fish tiles
+//	private Tile[][][] opponentBlueFish = new Tile[3][][]; // Opponent's normal-0, sick-1 and queen-2 fish tiles;
+//	private Tile[][][] opponentRedFish = new Tile[3][][]; // Opponent's normal-0, sick-1 and queen-2 fish tiles;
+    private Tile[][] freeTiles;
+
     private Consumer<Message> sender;
 
-    private int myID;
-    private int turn;
-    private Graph map;
-
-    private Node[][] nodes = new Node[3][]; // free nodes, player1's nodes, player2's nodes
-
-    private class NodeArrayList extends ArrayList<Node> {
-    } // solving generic array creation!
+    private Map map;
 
     public Game(Consumer<Message> sender) {
         this.sender = sender;
     }
 
+    public void moveArmy(String src, String dst, String count) {
+
+    }
+
+    public void sendEvent(String type, Object[] args) {
+        sender.accept(new Message(Event.EVENT, new Event(type, args)));
+    }
+
     public void handleInitMessage(Message msg) {
-        JsonObject constants = msg.args.get(0).getAsJsonObject();
-        totalTurns = constants.getAsJsonPrimitive("turns").getAsInt();
-        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
-        escape = constants.getAsJsonPrimitive("escape").getAsInt();
-        nodeBonus = constants.getAsJsonPrimitive("nodeBonus").getAsInt();
-        edgeBonus = constants.getAsJsonPrimitive("edgeBonus").getAsInt();
-        firstlvl = constants.getAsJsonPrimitive("firstlvl").getAsInt();
-        secondlvl = constants.getAsJsonPrimitive("secondlvl").getAsInt();
-        lossRate1 = constants.getAsJsonPrimitive("lossRate1").getAsInt();
-        lossRate2 = constants.getAsJsonPrimitive("lossRate2").getAsInt();
+        teamID = msg.args.get(0).getAsInt();
 
-        myID = msg.args.get(1).getAsInt();
+        JsonArray size = msg.args.get(1).getAsJsonArray();
+        width = size.get(0).getAsInt();
+        height = size.get(1).getAsInt();
 
-        // graph deserialization
-        JsonArray adjListInt = msg.args.get(2).getAsJsonArray();
-
-        Node[] nodes = new Node[adjListInt.size()];
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new Node(i);
-        }
-
-        for (int i = 0; i < adjListInt.size(); i++) {
-            JsonArray neighboursInt = adjListInt.get(i).getAsJsonArray();
-            Node[] neighbours = new Node[adjListInt.get(i).getAsJsonArray().size()];
-            for (int j = 0; j < neighbours.length; j++) {
-                neighbours[j] = nodes[neighboursInt.get(j).getAsInt()];
+        Tile[][] tiles = new Tile[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                tiles[i][j] = new Tile(i, j);
             }
-            nodes[i].setNeighbours(neighbours);
         }
 
-        JsonArray graphDiff = msg.args.get(3).getAsJsonArray();
-        for (int i = 0; i < graphDiff.size(); i++) {
-            JsonArray nodeDiff = graphDiff.get(i).getAsJsonArray();
-            int node = nodeDiff.get(0).getAsInt();
-            int owner = nodeDiff.get(1).getAsInt();
-            int armyCount = nodeDiff.get(2).getAsInt();
-            nodes[node].setOwner(owner);
-            nodes[node].setArmyCount(armyCount);
+
+        JsonArray fishes = msg.args.get(2).getAsJsonArray();
+        this.fishes = new Tile[2][fishes.size()];
+        int myfish = 0;
+        int opfish = 0;
+        for (int i = 0; i < fishes.size(); i++) {
+            int tileX, tileY;
+            JsonArray fishInfo = fishes.get(i).getAsJsonArray();
+            tileX = fishInfo.get(1).getAsInt();
+            tileY = fishInfo.get(2).getAsInt();
+            tiles[tileX][tileY].addFishInfo(fishInfo);
+            if (teamID == fishInfo.get(7).getAsInt()) {
+                this.fishes[0][myfish++] = tiles[tileX][tileY];
+            } else {
+                this.fishes[1][opfish++] = tiles[tileX][tileY];
+            }
         }
 
-        map = new Graph(nodes);
-
-        updateNodesList();
-    }
-
-    public void handleTurnMessage(Message msg) {
-        turnStartTime = System.currentTimeMillis();
-        turn = msg.args.get(0).getAsInt();
-
-        JsonArray graphDiff = msg.args.get(1).getAsJsonArray();
-        for (int i = 0; i < graphDiff.size(); i++) {
-            JsonArray nodeDiff = graphDiff.get(i).getAsJsonArray();
-            int nodeIndex = nodeDiff.get(0).getAsInt();
-            map.getNode(nodeIndex).setOwner(nodeDiff.get(1).getAsInt());
-            map.getNode(nodeIndex).setArmyCount(nodeDiff.get(2).getAsInt());
+        JsonArray foods = msg.args.get(3).getAsJsonArray();
+        Tile[] foodTiles = new Tile[foods.size()];
+        for (int i = 0; i < foods.size(); i++) {
+            JsonArray foodInfo = foods.get(i).getAsJsonArray();
+            int id = foodInfo.get(0).getAsInt();
+            int tileX = foodInfo.get(1).getAsInt();
+            int tileY = foodInfo.get(2).getAsInt();
+            tiles[tileX][tileY].resetConstants(id);
+            foodTiles[i] = tiles[tileX][tileY];
         }
+        items[3] = foodTiles;
 
-        updateNodesList();
-    }
-
-    private void updateNodesList() {
-        NodeArrayList[] nodesList = new NodeArrayList[]{new NodeArrayList(), new NodeArrayList(), new NodeArrayList()};
-        for (Node n : map.getNodes()) {
-            nodesList[n.getOwner() + 1].add(n);
+        JsonArray trashes = msg.args.get(4).getAsJsonArray();
+        Tile[] trashTiles = new Tile[trashes.size()];
+        for (int i = 0; i < trashes.size(); i++) {
+            JsonArray trashInfo = foods.get(i).getAsJsonArray();
+            int id = trashInfo.get(0).getAsInt();
+            int tileX = trashInfo.get(1).getAsInt();
+            int tileY = trashInfo.get(2).getAsInt();
+            tiles[tileX][tileY].resetConstants(id);
+            trashTiles[i] = tiles[tileX][tileY];
         }
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = nodesList[i].toArray(new Node[nodesList[i].size()]);
+        items[2] = trashTiles;
+
+        JsonArray nets = msg.args.get(5).getAsJsonArray();
+        Tile[] netTiles = new Tile[nets.size()];
+        for (int i = 0; i < nets.size(); i++) {
+            JsonArray netInfo = nets.get(i).getAsJsonArray();
+            int id = netInfo.get(0).getAsInt();
+            int tileX = netInfo.get(1).getAsInt();
+            int tileY = netInfo.get(2).getAsInt();
+            tiles[tileX][tileY].resetConstants(id);
+            netTiles[i] = tiles[tileX][tileY];
         }
+        items[1] = netTiles;
+
+        JsonArray teleports = msg.args.get(6).getAsJsonArray();
+        Tile[] teleportTiles = new Tile[teleports.size()];
+        for (int i = 0; i < teleports.size(); i++) {
+            JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
+            int tileX = teleportInfo.get(1).getAsInt();
+            int tileY = teleportInfo.get(2).getAsInt();
+            tiles[tileX][tileY].addTeleport(teleportInfo);
+            teleportTiles[i] = tiles[tileX][tileY];
+        }
+        items[0] = teleportTiles;
+
+        JsonObject constants = msg.args.get(7).getAsJsonObject();
+        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsDouble();
+        foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
+        trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
+        netProb = constants.getAsJsonPrimitive("netProb").getAsDouble();
+        colorCost = constants.getAsJsonPrimitive("colorCost").getAsDouble();
+        sickCost = constants.getAsJsonPrimitive("sickCost").getAsDouble();
+        updateCost = constants.getAsJsonPrimitive("updateCost").getAsDouble();
+        detMoveCost = constants.getAsJsonPrimitive("detMoveCost").getAsDouble();
+        killQueenScore = constants.getAsJsonPrimitive("killQueenScore").getAsDouble();
+        killBothQueenScore = constants.getAsJsonPrimitive("killBothQueenScore").getAsDouble();
+        killFishScore = constants.getAsJsonPrimitive("killFishScore").getAsDouble();
+        queenCollisionScore = constants.getAsJsonPrimitive("queenCollisionScore").getAsDouble();
+        fishFoodScore = constants.getAsJsonPrimitive("fishFoodScore").getAsDouble();
+        queenFoodScore = constants.getAsJsonPrimitive("queenFoodScore").getAsDouble();
+        sickLifeTime = constants.getAsJsonPrimitive("sickLifeTime").getAsDouble();
+        powerRatio = constants.getAsJsonPrimitive("powerRatio").getAsDouble();
+        endRatio = constants.getAsJsonPrimitive("endRatio").getAsDouble();
+        disobeyNum = constants.getAsJsonPrimitive("disobeyNum").getAsDouble();
+        foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsDouble();
+        trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsDouble();
+
     }
 
-    public long getTurnTimePassed() {
-        return System.currentTimeMillis() - turnStartTime;
-    }
-
-    public long getTurnRemainingTime() {
-        return turnTimeout - getTurnTimePassed();
-    }
-
-    @Override
-    public int getMyID() {
-        return myID;
-    }
-
-    @Override
-    public Graph getMap() {
-        return map;
-    }
-
-    @Override
-    public Node[] getMyNodes() {
-        return nodes[myID + 1];
-    }
-
-    @Override
-    public Node[] getOpponentNodes() {
-        return nodes[2 - myID];
-    }
-
-    @Override
-    public Node[] getFreeNodes() {
-        return nodes[0];
-    }
-
-    @Override
     public int getTotalTurns() {
         return totalTurns;
     }
 
-    @Override
-    public int getTurnNumber() {
-        return turn;
+    public int getCurrentTurn() {
+        return currentTurn;
     }
 
-    @Override
-    public long getTotalTurnTime() {
-        return turnTimeout;
+    public long totalTime() {
+        return totalTime;
     }
 
-    @Override
-    public void moveArmy(Node src, Node dst, int count) {
-        moveArmy(src.getIndex(), dst.getIndex(), count);
+    public long getTimePassed() {
+        return System.currentTimeMillis() - startTime;
     }
 
-    @Override
-    public void moveArmy(int src, int dst, int count) {
-        sender.accept(new Message(Event.EVENT, new Event("m", new Object[]{src, dst, count})));
+    public long getRemainingTime() {
+        return totalTime - getTimePassed();
     }
 
-    @Override
-    public int getEscapeConstant() {
-        return escape;
+    public int getMyID() {
+        return teamID;
     }
 
-    @Override
-    public int getNodeBonusConstant() {
-        return nodeBonus;
-    }
-
-    @Override
-    public int getEdgeBonusConstant() {
-        return edgeBonus;
-    }
-
-    @Override
-    public int getLowArmyBound() {
-        return firstlvl;
-    }
-
-    @Override
-    public int getMediumArmyBound() {
-        return secondlvl;
-    }
-
-    @Override
-    public double getMediumCasualtyCoefficient() {
-        return lossRate1;
-    }
-
-    @Override
-    public double getLowCasualtyCoefficient() {
-        return lossRate2;
-    }
 
 }
