@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 
 public class Tile
 {
+	private String kind;		//"teleport"-"net"-"trash"-"food"-"fish"-""
 	private int x;
 	private int y;
 	private int id = -1;
@@ -27,6 +28,7 @@ public class Tile
 		queen = fishInfo.get(5).getAsInt();
 		sick = fishInfo.get(6).getAsInt();
 		team = fishInfo.get(7).getAsInt();
+		this.setKind("fish");
 	}
 	
 	public void setId(int id)
@@ -99,6 +101,22 @@ public class Tile
 		return y;
 	}
 
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
+	public int getTargetId() {
+		return targetId;
+	}
+
+	public void setTargetId(int targetId) {
+		this.targetId = targetId;
+	}
+
 	public void resetConstants(int id) {
 		this.id = id;
 		this.direction = -1;
@@ -107,12 +125,14 @@ public class Tile
 		this.sick = -1;
 		this.team = -1;
 		this.targetId = -1;
+		this.kind = "";
 	}
 
 	public void addTeleport(JsonArray teleInfo){
 		int id = teleInfo.get(0).getAsInt();
 		resetConstants(id);
 		targetId = teleInfo.get(3).getAsInt();
+		this.setKind("teleport");
 	}
 
 	public void addFishInfo(int id, int direction, int color, int queen, int team) {
@@ -123,5 +143,17 @@ public class Tile
 		this.team = team;
 		this.sick = -1;
 		this.targetId = -1;
+		this.setKind("fish");
+	}
+
+	public void move(Tile tile) {
+		tile.setId(this.id);
+		tile.setDirection(this.direction);
+		tile.setColor(this.color);
+		tile.setQueen(this.queen);
+		tile.setTeam(this.team);
+		tile.setSick(this.sick);
+		tile.setTargetId(this.targetId);
+		tile.setKind(this.kind);
 	}
 }

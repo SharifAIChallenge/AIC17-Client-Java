@@ -1,5 +1,5 @@
-import client.model.Map;
-import client.model.Tile;
+package client.model;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -59,7 +59,6 @@ public class Game {
     public Game(Consumer<Message> sender) {
         this.sender = sender;
     }
-
 
 
     public void changeStrategy(int color, int i, int j, int k, int s) {
@@ -192,28 +191,104 @@ public class Game {
                             break;
                     }
                 }
-            }
-            else if(type.equals("d"))
-            {
-
-            }
-            else if(type.equals("m"))
-            {
-
-            }
-            else if(type.equals("c"))
-            {
+            } else if (type.equals("d")) {
+                ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
+                for (int j = 0; j < allDeletes.size(); j++) {
+                    ArrayList<Integer> deleteChange = allDeletes.get(j);
+                    delete(deleteChange);
+                }
+            } else if (type.equals("m")) {
+                ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
+                for (int j = 0; j < allMoves.size(); j++) {
+                    ArrayList<Integer> moveChange = allMoves.get(j);
+                    moveFish(moveChange);
+                }
+            } else if (type.equals("c")) {
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
-                    ArrayList<Integer> alter = allAlters.get(j);
+                    ArrayList<Integer> alter = allAlter.get(j);
+                    fishAlter(alter);
+                }
+            } else if (type.equals("d")) {
+                ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
+                for (int j = 0; j < allDeletes.size(); j++) {
+                    ArrayList<Integer> deleteChange = allDeletes.get(j);
+                    delete(deleteChange);
+                }
+            } else if (type.equals("m")) {
+                ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
+                for (int j = 0; j < allMoves.size(); j++) {
+                    ArrayList<Integer> moveChange = allMoves.get(j);
+                    moveFish(moveChange);
+                }
+            } else if (type.equals("c")) {
+                ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
+                for (int j = 0; j < allAlters.size(); j++) {
+                    ArrayList<Integer> alter = allAlter.get(j);
                     fishAlter(alter);
                 }
             }
         }
     }
 
-    private void fishAlter(ArrayList<Integer> changes)
-    {
+    private void delete(ArrayList<Integer> changes) {
+        int id = changes.get(0);
+        Tile theChosenTile = idMap.get(id);
+        idMap.remove(id);
+        String kind = theChosenTile.getKind();
+        if (kind.equals("fish")) {
+            if (theChosenTile.getTeam() == teamID) {
+                ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
+                fishList.remove(theChosenTile);
+                fishes[0] = (Tile[]) fishList.toArray();
+            } else {
+                ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
+                fishList.remove(theChosenTile);
+                fishes[1] = (Tile[]) fishList.toArray();
+            }
+        } else if (kind.equals("food")) {
+            ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
+            foodList.remove(theChosenTile);
+            items[3] = (Tile[]) foodList.toArray();
+        } else if (kind.equals("trash")) {
+            ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
+            trashList.remove(theChosenTile);
+            items[2] = (Tile[]) trashList.toArray();
+        } else if (kind.equals("net")) {
+            ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
+            netList.remove(theChosenTile);
+            items[1] = (Tile[]) netList.toArray();
+        }
+    }
+
+    private void moveFish(ArrayList<Integer> changes) {
+        int id = changes.get(0);
+        int move = changes.get(1);
+        Tile theChosenTile = idMap.get(id);
+        switch (move) {
+            case 0:
+                theChosenTile.setDirection((theChosenTile.getDirection() + 3) % 4);
+                break;
+            case 1:
+                int tileX = nextX(theChosenTile);
+                int tileY = nextY(theChosenTile);
+                theChosenTile.move(map.getTile(tileX, tileY));
+                break;
+            case 2:
+                theChosenTile.setDirection((theChosenTile.getDirection() + 1) % 4);
+                break;
+        }
+    }
+
+    private int nextX(Tile tile) {
+        // TODO
+    }
+
+    private int nextY(Tile tile) {
+        // TODO
+    }
+
+    private void fishAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int color = changes.get(1);
         int sick = changes.get(2);
@@ -222,7 +297,7 @@ public class Game {
         theChosenTile.setSick(sick);
     }
 
-    private void setConstants(JsonObject constants){
+    private void setConstants(JsonObject constants) {
         turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
         foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
         trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
@@ -256,6 +331,7 @@ public class Game {
         int team = changes.get(7);
         Tile[][] tiles = map.getTiles();
         Tile theChosenTile = tiles[tileX][tileY];
+        idMap.put(id, theChosenTile);
         theChosenTile.addFishInfo(id, direction, color, queen, team);
         if (team == teamID) {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
@@ -275,6 +351,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
+        idMap.put(id, theChosenTile);
         ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
         foodList.add(theChosenTile);
         items[3] = (Tile[]) foodList.toArray();
@@ -287,6 +364,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
+        idMap.put(id, theChosenTile);
         ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
         trashList.add(theChosenTile);
         items[2] = (Tile[]) trashList.toArray();
@@ -299,6 +377,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
+        idMap.put(id, theChosenTile);
         ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
         netList.add(theChosenTile);
         items[1] = (Tile[]) netList.toArray();
@@ -328,5 +407,83 @@ public class Game {
         return teamID;
     }
 
+    public double getFoodProb() {
+        return foodProb;
+    }
 
+    public double getTrashProb() {
+        return trashProb;
+    }
+
+    public double getNetProb() {
+        return netProb;
+    }
+
+    public int getTurnTimeout() {
+        return turnTimeout;
+    }
+
+    public int getColorCost() {
+        return colorCost;
+    }
+
+    public int getSickCost() {
+        return sickCost;
+    }
+
+    public int getUpdateCost() {
+        return updateCost;
+    }
+
+    public int getDetMoveCost() {
+        return detMoveCost;
+    }
+
+    public int getKillQueenScore() {
+        return killQueenScore;
+    }
+
+    public int getKillBothQueenScore() {
+        return killBothQueenScore;
+    }
+
+    public int getKillFishScore() {
+        return killFishScore;
+    }
+
+    public int getQueenCollisionScore() {
+        return queenCollisionScore;
+    }
+
+    public int getFishFoodScore() {
+        return fishFoodScore;
+    }
+
+    public int getQueenFoodScore() {
+        return queenFoodScore;
+    }
+
+    public int getSickLifeTime() {
+        return sickLifeTime;
+    }
+
+    public double getPowerRatio() {
+        return powerRatio;
+    }
+
+    public double getEndRatio() {
+        return endRatio;
+    }
+
+    public int getDisobeyNum() {
+        return disobeyNum;
+    }
+
+    public int getFoodValidTime() {
+        return foodValidTime;
+    }
+
+    public int getTrashValidTime() {
+        return trashValidTime;
+    }
 }
