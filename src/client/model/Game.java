@@ -19,28 +19,30 @@ public class Game {
     private int teamID;
     private int width;
     private int height;
+    private int myScore;
+    private int oppScore;
 
     // Constants
-    private double turnTimeout;
     private double foodProb;
     private double trashProb;
     private double netProb;
-    private double colorCost;
-    private double sickCost;
-    private double updateCost;
-    private double detMoveCost;
-    private double killQueenScore;
-    private double killBothQueenScore;
-    private double killFishScore;
-    private double queenCollisionScore;
-    private double fishFoodScore;
-    private double queenFoodScore;
-    private double sickLifeTime;
+    private int turnTimeout;
+    private int colorCost;
+    private int sickCost;
+    private int updateCost;
+    private int detMoveCost;
+    private int killQueenScore;
+    private int killBothQueenScore;
+    private int killFishScore;
+    private int queenCollisionScore;
+    private int fishFoodScore;
+    private int queenFoodScore;
+    private int sickLifeTime;
     private double powerRatio;
     private double endRatio;
-    private double disobeyNum;
-    private double foodValidTime;
-    private double trashValidTime;
+    private int disobeyNum;
+    private int foodValidTime;
+    private int trashValidTime;
 
 
     private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
@@ -58,12 +60,21 @@ public class Game {
         this.sender = sender;
     }
 
-    public void moveArmy(String src, String dst, String count) {
 
+
+    public void changeStrategy(int color, int i, int j, int k, int s) {
+        Event event = new Event("s", new Object[]{color, i, j, k, s});
+        sender.accept(new Message(Event.EVENT, event));
     }
 
-    public void sendEvent(String type, Object[] args) {
-        sender.accept(new Message(Event.EVENT, new Event(type, args)));
+    public void deterministicMove(int id, int s) {
+        Event event = new Event("m", new Object[]{id, s});
+        sender.accept(new Message(Event.EVENT, event));
+    }
+
+    public void antennaChange(int id, int c) {
+        Event event = new Event("c", new Object[]{id, c});
+        sender.accept(new Message(Event.EVENT, event));
     }
 
     public void handleInitMessage(Message msg) {
@@ -146,47 +157,27 @@ public class Game {
         items[0] = teleportTiles;
 
         JsonObject constants = msg.args.get(7).getAsJsonObject();
-        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsDouble();
-        foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
-        trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
-        netProb = constants.getAsJsonPrimitive("netProb").getAsDouble();
-        colorCost = constants.getAsJsonPrimitive("colorCost").getAsDouble();
-        sickCost = constants.getAsJsonPrimitive("sickCost").getAsDouble();
-        updateCost = constants.getAsJsonPrimitive("updateCost").getAsDouble();
-        detMoveCost = constants.getAsJsonPrimitive("detMoveCost").getAsDouble();
-        killQueenScore = constants.getAsJsonPrimitive("killQueenScore").getAsDouble();
-        killBothQueenScore = constants.getAsJsonPrimitive("killBothQueenScore").getAsDouble();
-        killFishScore = constants.getAsJsonPrimitive("killFishScore").getAsDouble();
-        queenCollisionScore = constants.getAsJsonPrimitive("queenCollisionScore").getAsDouble();
-        fishFoodScore = constants.getAsJsonPrimitive("fishFoodScore").getAsDouble();
-        queenFoodScore = constants.getAsJsonPrimitive("queenFoodScore").getAsDouble();
-        sickLifeTime = constants.getAsJsonPrimitive("sickLifeTime").getAsDouble();
-        powerRatio = constants.getAsJsonPrimitive("powerRatio").getAsDouble();
-        endRatio = constants.getAsJsonPrimitive("endRatio").getAsDouble();
-        disobeyNum = constants.getAsJsonPrimitive("disobeyNum").getAsDouble();
-        foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsDouble();
-        trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsDouble();
+        this.setConstants(constants);
 
     }
 
-    public void handleTurnMessage(Message msg)
-    {
-        JsonArray allChanges = msg.args.get(0).getAsJsonArray();
-        for(int i = 0; i < allChanges.size(); i++)
-        {
+    public void handleTurnMessage(Message msg) {
+        currentTurn = msg.args.get(0).getAsInt();
+        JsonArray scores = msg.args.get(1).getAsJsonArray();
+        myScore = scores.get(teamID).getAsInt();
+        oppScore = scores.get(1 - teamID).getAsInt();
+        JsonArray allChanges = msg.args.get(2).getAsJsonArray();
+        for (int i = 0; i < allChanges.size(); i++) {
             Gson gson = new Gson();
             JsonObject changes = allChanges.get(i).getAsJsonObject();
             String jsonString = changes.toString();
             Change change = gson.fromJson(jsonString, Change.class);
             String type = change.getType();
-            if(type.equals("a"))
-            {
+            if (type.equals("a")) {
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
-                for(int j = 0; j < allAdds.size(); j++)
-                {
+                for (int j = 0; j < allAdds.size(); j++) {
                     ArrayList<Integer> addChange = allAdds.get(j);
-                    switch(addChange.get(1))
-                    {
+                    switch (addChange.get(1)) {
                         case 0:
                             addFish(addChange);
                             break;
@@ -205,8 +196,30 @@ public class Game {
         }
     }
 
-    public void addFish(ArrayList<Integer> changes)
-    {
+    private void setConstants(JsonObject constants){
+        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
+        foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
+        trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
+        netProb = constants.getAsJsonPrimitive("netProb").getAsDouble();
+        colorCost = constants.getAsJsonPrimitive("colorCost").getAsInt();
+        sickCost = constants.getAsJsonPrimitive("sickCost").getAsInt();
+        updateCost = constants.getAsJsonPrimitive("updateCost").getAsInt();
+        detMoveCost = constants.getAsJsonPrimitive("detMoveCost").getAsInt();
+        killQueenScore = constants.getAsJsonPrimitive("killQueenScore").getAsInt();
+        killBothQueenScore = constants.getAsJsonPrimitive("killBothQueenScore").getAsInt();
+        killFishScore = constants.getAsJsonPrimitive("killFishScore").getAsInt();
+        queenCollisionScore = constants.getAsJsonPrimitive("queenCollisionScore").getAsInt();
+        fishFoodScore = constants.getAsJsonPrimitive("fishFoodScore").getAsInt();
+        queenFoodScore = constants.getAsJsonPrimitive("queenFoodScore").getAsInt();
+        sickLifeTime = constants.getAsJsonPrimitive("sickLifeTime").getAsInt();
+        powerRatio = constants.getAsJsonPrimitive("powerRatio").getAsDouble();
+        endRatio = constants.getAsJsonPrimitive("endRatio").getAsDouble();
+        disobeyNum = constants.getAsJsonPrimitive("disobeyNum").getAsInt();
+        foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsInt();
+        trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsInt();
+    }
+
+    private void addFish(ArrayList<Integer> changes) {
         ArrayList<Tile> fishList;
         int id = changes.get(0);
         int tileX = changes.get(2);
@@ -218,22 +231,18 @@ public class Game {
         Tile[][] tiles = map.getTiles();
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.addFishInfo(id, direction, color, queen, team);
-        if(team == teamID)
-        {
+        if (team == teamID) {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
             fishList.add(theChosenTile);
             fishes[0] = (Tile[]) fishList.toArray();
-        }
-        else
-        {
+        } else {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
             fishList.add(theChosenTile);
             fishes[1] = (Tile[]) fishList.toArray();
         }
     }
 
-    public void addFood(ArrayList<Integer> changes)
-    {
+    private void addFood(ArrayList<Integer> changes) {
         Tile[][] tiles = map.getTiles();
         int id = changes.get(0);
         int tileX = changes.get(2);
@@ -245,8 +254,7 @@ public class Game {
         items[3] = (Tile[]) foodList.toArray();
     }
 
-    public void addTrash(ArrayList<Integer> changes)
-    {
+    private void addTrash(ArrayList<Integer> changes) {
         Tile[][] tiles = map.getTiles();
         int id = changes.get(0);
         int tileX = changes.get(2);
@@ -258,8 +266,7 @@ public class Game {
         items[2] = (Tile[]) trashList.toArray();
     }
 
-    public void addNet(ArrayList<Integer> changes)
-    {
+    private void addNet(ArrayList<Integer> changes) {
         Tile[][] tiles = map.getTiles();
         int id = changes.get(0);
         int tileX = changes.get(2);
