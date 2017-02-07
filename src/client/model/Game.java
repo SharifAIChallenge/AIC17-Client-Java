@@ -100,7 +100,9 @@ public class Game {
             JsonArray fishInfo = fishes.get(i).getAsJsonArray();
             tileX = fishInfo.get(1).getAsInt();
             tileY = fishInfo.get(2).getAsInt();
-            tiles[tileX][tileY].addFishInfo(fishInfo);
+            Tile theChosenTile = tiles[tileX][tileY];
+            theChosenTile.addFishInfo(fishInfo);
+            idMap.put(fishInfo.get(0).getAsInt(),theChosenTile);
             if (teamID == fishInfo.get(7).getAsInt()) {
                 this.fishes[0][myfish++] = tiles[tileX][tileY];
             } else {
@@ -115,8 +117,10 @@ public class Game {
             int id = foodInfo.get(0).getAsInt();
             int tileX = foodInfo.get(1).getAsInt();
             int tileY = foodInfo.get(2).getAsInt();
-            tiles[tileX][tileY].resetConstants(id);
-            foodTiles[i] = tiles[tileX][tileY];
+            Tile theChosenTile = tiles[tileX][tileY];
+            theChosenTile.resetConstants(id);
+            foodTiles[i] = theChosenTile;
+            idMap.put(id, theChosenTile);
         }
         items[3] = foodTiles;
 
@@ -127,8 +131,10 @@ public class Game {
             int id = trashInfo.get(0).getAsInt();
             int tileX = trashInfo.get(1).getAsInt();
             int tileY = trashInfo.get(2).getAsInt();
-            tiles[tileX][tileY].resetConstants(id);
-            trashTiles[i] = tiles[tileX][tileY];
+            Tile theChosenTile = tiles[tileX][tileY];
+            theChosenTile.resetConstants(id);
+            trashTiles[i] = theChosenTile;
+            idMap.put(id, theChosenTile);
         }
         items[2] = trashTiles;
 
@@ -139,8 +145,10 @@ public class Game {
             int id = netInfo.get(0).getAsInt();
             int tileX = netInfo.get(1).getAsInt();
             int tileY = netInfo.get(2).getAsInt();
-            tiles[tileX][tileY].resetConstants(id);
-            netTiles[i] = tiles[tileX][tileY];
+            Tile theChosenTile = tiles[tileX][tileY];
+            theChosenTile.resetConstants(id);
+            netTiles[i] = theChosenTile;
+            idMap.put(id, theChosenTile);
         }
         items[1] = netTiles;
 
@@ -148,10 +156,14 @@ public class Game {
         Tile[] teleportTiles = new Tile[teleports.size()];
         for (int i = 0; i < teleports.size(); i++) {
             JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
+            int id = teleportInfo.get(0).getAsInt();
             int tileX = teleportInfo.get(1).getAsInt();
             int tileY = teleportInfo.get(2).getAsInt();
             tiles[tileX][tileY].addTeleport(teleportInfo);
-            teleportTiles[i] = tiles[tileX][tileY];
+            Tile theChosenTile = tiles[tileX][tileY];
+            theChosenTile.addTeleport(teleportInfo);
+            teleportTiles[i] = theChosenTile;
+            idMap.put(id, theChosenTile);
         }
         items[0] = teleportTiles;
 
