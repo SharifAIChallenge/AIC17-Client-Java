@@ -8,6 +8,7 @@ import common.network.data.Message;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class Game {
@@ -47,9 +48,8 @@ public class Game {
 
     private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
     private Tile[][] fishes = new Tile[2][]; // My normal-0, sick-1 and queen-2 fish tiles
-    //	private Tile[][][] myRedFish = new Tile[3][][]; // My normal-0, sick-1 and queen-2 fish tiles
-//	private Tile[][][] opponentBlueFish = new Tile[3][][]; // Opponent's normal-0, sick-1 and queen-2 fish tiles;
-//	private Tile[][][] opponentRedFish = new Tile[3][][]; // Opponent's normal-0, sick-1 and queen-2 fish tiles;
+    private HashMap<Integer, Tile> idMap = new HashMap<>();
+
     private Tile[][] freeTiles;
 
     private Consumer<Message> sender;
@@ -193,7 +193,33 @@ public class Game {
                     }
                 }
             }
+            else if(type.equals("d"))
+            {
+
+            }
+            else if(type.equals("m"))
+            {
+
+            }
+            else if(type.equals("c"))
+            {
+                ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
+                for (int j = 0; j < allAlters.size(); j++) {
+                    ArrayList<Integer> alter = allAlters.get(j);
+                    fishAlter(alter);
+                }
+            }
         }
+    }
+
+    private void fishAlter(ArrayList<Integer> changes)
+    {
+        int id = changes.get(0);
+        int color = changes.get(1);
+        int sick = changes.get(2);
+        Tile theChosenTile = idMap.get(id);
+        theChosenTile.setColor(color);
+        theChosenTile.setSick(sick);
     }
 
     private void setConstants(JsonObject constants){
