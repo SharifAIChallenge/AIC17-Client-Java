@@ -118,7 +118,7 @@ public class Game {
             int tileX = foodInfo.get(1).getAsInt();
             int tileY = foodInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.resetConstants(id);
+            theChosenTile.resetConstants(id, 1);
             theChosenTile.setContentLevel("food");
             foodTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
@@ -133,7 +133,7 @@ public class Game {
             int tileX = trashInfo.get(1).getAsInt();
             int tileY = trashInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.resetConstants(id);
+            theChosenTile.resetConstants(id, 2);
             theChosenTile.setContentLevel("trash");
             trashTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
@@ -417,7 +417,7 @@ public class Game {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
-        theChosenTile.resetConstants(id);
+        theChosenTile.resetConstants(id, 1);
         theChosenTile.setContentLevel("food");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
@@ -431,7 +431,7 @@ public class Game {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
-        theChosenTile.resetConstants(id);
+        theChosenTile.resetConstants(id, 1);
         theChosenTile.setContentLevel("trash");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));

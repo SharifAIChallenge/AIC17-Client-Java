@@ -7,6 +7,7 @@ public class Tile {
     private int x;
     private int y;
     private int[] ids = {-1, -1, -1}; // content id-0, net id-1, teleport id-2
+    private int contentValue = -1; // fish -0, food-1, trash-2
     private int direction = -1;
     private int color = -1;
     private int queen = -1;
@@ -29,6 +30,7 @@ public class Tile {
         queen = fishInfo.get(5).getAsInt();
         sick = fishInfo.get(6).getAsInt();
         team = fishInfo.get(7).getAsInt();
+        contentValue = 0;
         this.setContentLevel("fish");
     }
 
@@ -112,7 +114,15 @@ public class Tile {
         this.targetId = targetId;
     }
 
-    public void resetConstants(int id) {
+    public int getContentValue() {
+        return contentValue;
+    }
+
+    public void setContentValue(int contentValue) {
+        this.contentValue = contentValue;
+    }
+
+    public void resetConstants(int id, int contentValue) {
         this.ids[0] = id;
         this.direction = -1;
         this.color = -1;
@@ -121,6 +131,7 @@ public class Tile {
         this.team = -1;
         this.targetId = -1;
         this.contentLevel = "";
+        this.contentValue = contentValue;
     }
 
     public void resetConstantsNet(int id) {
@@ -131,11 +142,12 @@ public class Tile {
         this.sick = -1;
         this.team = -1;
         this.targetId = -1;
+        this.contentValue = -1;
     }
 
     public void addTeleport(JsonArray teleInfo) {
         int id = teleInfo.get(0).getAsInt();
-        resetConstants(id);
+        resetConstants(id, -1);
         targetId = teleInfo.get(3).getAsInt();
         this.setContentLevel("teleport");
     }
@@ -149,6 +161,7 @@ public class Tile {
         this.sick = 0;
         this.targetId = -1;
         this.setContentLevel("fish");
+        this.contentValue = 0;
     }
 
     public void move(Tile tile) {
@@ -160,14 +173,15 @@ public class Tile {
         tile.setSick(this.sick);
         tile.setTargetId(this.targetId);
         tile.setContentLevel(this.contentLevel);
+        tile.setContentValue(this.contentValue);
         if (tile != this)
         {
-            resetConstants(-1);
+            resetConstants(-1, -1);
         }
     }
 
     public void clear() {
-        resetConstants(-1);
+        resetConstants(-1, -1);
     }
 
     public void cleanNet() {
