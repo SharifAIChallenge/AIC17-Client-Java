@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class Game {
     // Yo!
     private int totalTurns;
-    private int currentTurn;
+    private int currentTurn = 0;
     private long totalTime;
     private long startTime;
     private int teamID;
@@ -27,6 +27,7 @@ public class Game {
     private double foodProb;
     private double trashProb;
     private double netProb;
+    private int netValidTime;
     private int turnTimeout;
     private int colorCost;
     private int sickCost;
@@ -43,15 +44,15 @@ public class Game {
     private double endRatio;
     private int disobeyNum;
     private int foodValidTime;
+
+
     private int trashValidTime;
-
-
     private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
     private Tile[][] fishes = new Tile[2][]; // my fish - 0, opp fish - 1
+
     private HashMap<Integer, Tile> idMap = new HashMap<>();
 
     private Consumer<Message> sender;
-
     private Map map;
 
     public Game(Consumer<Message> sender) {
@@ -118,7 +119,7 @@ public class Game {
             int tileY = foodInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.resetConstants(id);
-            theChosenTile.setKind("food");
+            theChosenTile.setContentLevel("food");
             foodTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -133,7 +134,7 @@ public class Game {
             int tileY = trashInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.resetConstants(id);
-            theChosenTile.setKind("trash");
+            theChosenTile.setContentLevel("trash");
             trashTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -147,8 +148,8 @@ public class Game {
             int tileX = netInfo.get(1).getAsInt();
             int tileY = netInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.resetConstants(id);
-            theChosenTile.setKind("net");
+            theChosenTile.resetConstantsNet(id);
+            theChosenTile.setHasNet(true);
             netTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -164,13 +165,13 @@ public class Game {
             tiles[tileX][tileY].addTeleport(teleportInfo);
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.addTeleport(teleportInfo);
-            theChosenTile.setKind("teleport");
+            theChosenTile.setHasTeleport(true);
             teleportTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
         items[0] = teleportTiles;
 
-        JsonObject constants = msg.args.get(7).getAsJsonObject();
+        JsonArray constants = msg.args.get(7).getAsJsonArray();
         this.setConstants(constants);
 
     }
@@ -232,8 +233,8 @@ public class Game {
         int id = changes.get(0);
         Tile theChosenTile = idMap.get(id);
         idMap.remove(id);
-        String kind = theChosenTile.getKind();
-        if (kind.equals("fish")) {
+        String kind = theChosenTile.getContentLevel();
+        if (kind.equals("fish") && id == theChosenTile.getIds()[0]) {
             if (theChosenTile.getTeam() == teamID) {
                 ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
                 fishList.remove(theChosenTile);
@@ -243,20 +244,26 @@ public class Game {
                 fishList.remove(theChosenTile);
                 fishes[1] = (Tile[]) fishList.toArray();
             }
-        } else if (kind.equals("food")) {
+        } else if (kind.equals("food") && id == theChosenTile.getIds()[0]) {
             ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
             foodList.remove(theChosenTile);
             items[3] = (Tile[]) foodList.toArray();
-        } else if (kind.equals("trash")) {
+        } else if (kind.equals("trash") && id == theChosenTile.getIds()[0]) {
             ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
             trashList.remove(theChosenTile);
             items[2] = (Tile[]) trashList.toArray();
-        } else if (kind.equals("net")) {
+        }
+        if (theChosenTile.isHasNet() && id == theChosenTile.getIds()[1]) {
             ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
             netList.remove(theChosenTile);
+            theChosenTile.setHasNet(false);
             items[1] = (Tile[]) netList.toArray();
         }
-        theChosenTile.clear();
+        if (id == theChosenTile.getIds()[0]) {
+            theChosenTile.clear();
+        } else {
+            theChosenTile.cleanNet();
+        }
     }
 
     private void moveFish(ArrayList<Integer> changes) {
@@ -311,34 +318,72 @@ public class Game {
 
     private void fishAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
-        int color = changes.get(1);
-        int sick = changes.get(2);
+        int newX = changes.get(1);
+        int newY = changes.get(2);
+        int color = changes.get(3);
+        int sick = changes.get(4);
         Tile theChosenTile = idMap.get(id);
-        theChosenTile.setColor(color);
-        theChosenTile.setSick(sick);
+        Tile[][] tiles = map.getTiles();
+        Tile targetTile = tiles[newX][newY];
+        theChosenTile.move(targetTile);
+        targetTile.setColor(color);
+        targetTile.setSick(sick);
     }
 
-    private void setConstants(JsonObject constants) {
-        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
-        foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
-        trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
-        netProb = constants.getAsJsonPrimitive("netProb").getAsDouble();
-        colorCost = constants.getAsJsonPrimitive("colorCost").getAsInt();
-        sickCost = constants.getAsJsonPrimitive("sickCost").getAsInt();
-        updateCost = constants.getAsJsonPrimitive("updateCost").getAsInt();
-        detMoveCost = constants.getAsJsonPrimitive("detMoveCost").getAsInt();
-        killQueenScore = constants.getAsJsonPrimitive("killQueenScore").getAsInt();
-        killBothQueenScore = constants.getAsJsonPrimitive("killBothQueenScore").getAsInt();
-        killFishScore = constants.getAsJsonPrimitive("killFishScore").getAsInt();
-        queenCollisionScore = constants.getAsJsonPrimitive("queenCollisionScore").getAsInt();
-        fishFoodScore = constants.getAsJsonPrimitive("fishFoodScore").getAsInt();
-        queenFoodScore = constants.getAsJsonPrimitive("queenFoodScore").getAsInt();
-        sickLifeTime = constants.getAsJsonPrimitive("sickLifeTime").getAsInt();
-        powerRatio = constants.getAsJsonPrimitive("powerRatio").getAsDouble();
-        endRatio = constants.getAsJsonPrimitive("endRatio").getAsDouble();
-        disobeyNum = constants.getAsJsonPrimitive("disobeyNum").getAsInt();
-        foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsInt();
-        trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsInt();
+    private void setConstants(JsonArray constants) {
+//        JsonArray constants = constant.getAsJsonArray();
+
+        turnTimeout = (int) constants.get(0).getAsDouble();
+        foodProb = constants.get(1).getAsDouble();
+        trashProb = constants.get(2).getAsDouble();
+        netProb = constants.get(3).getAsDouble();
+        netValidTime = (int) constants.get(4).getAsDouble();
+        colorCost = (int) constants.get(5).getAsDouble();
+        sickCost = (int) constants.get(6).getAsDouble();
+        updateCost = (int) constants.get(7).getAsDouble();
+        detMoveCost = (int) constants.get(8).getAsDouble();
+        killQueenScore = (int) constants.get(9).getAsDouble();
+        killBothQueenScore = (int) constants.get(10).getAsDouble();
+        killFishScore = (int) constants.get(11).getAsDouble();
+        queenCollisionScore = (int) constants.get(12).getAsDouble();
+        fishFoodScore = (int) constants.get(13).getAsDouble();
+        queenFoodScore = (int) constants.get(14).getAsDouble();
+        sickLifeTime = (int) constants.get(15).getAsDouble();
+        powerRatio = constants.get(16).getAsDouble();
+        endRatio = constants.get(17).getAsDouble();
+        disobeyNum = (int) constants.get(18).getAsDouble();
+        foodValidTime = (int) constants.get(19).getAsDouble();
+        trashValidTime = (int) constants.get(20).getAsDouble();
+
+
+//        turnTimeout = constants.getAsJsonPrimitive("turnTimeout").getAsInt();
+//        foodProb = constants.getAsJsonPrimitive("foodProb").getAsDouble();
+//        trashProb = constants.getAsJsonPrimitive("trashProb").getAsDouble();
+//        netProb = constants.getAsJsonPrimitive("netProb").getAsDouble();
+//        netValidTime = constants.getAsJsonPrimitive("netValidTime").getAsInt();
+//        colorCost = constants.getAsJsonPrimitive("colorCost").getAsInt();
+//        sickCost = constants.getAsJsonPrimitive("sickCost").getAsInt();
+//        updateCost = constants.getAsJsonPrimitive("updateCost").getAsInt();
+//        detMoveCost = constants.getAsJsonPrimitive("detMoveCost").getAsInt();
+//        killQueenScore = constants.getAsJsonPrimitive("killQueenScore").getAsInt();
+//        killBothQueenScore = constants.getAsJsonPrimitive("killBothQueenScore").getAsInt();
+//        killFishScore = constants.getAsJsonPrimitive("killFishScore").getAsInt();
+//        queenCollisionScore = constants.getAsJsonPrimitive("queenCollisionScore").getAsInt();
+//        fishFoodScore = constants.getAsJsonPrimitive("fishFoodScore").getAsInt();
+//        queenFoodScore = constants.getAsJsonPrimitive("queenFoodScore").getAsInt();
+//        sickLifeTime = constants.getAsJsonPrimitive("sickLifeTime").getAsInt();
+//        powerRatio = constants.getAsJsonPrimitive("powerRatio").getAsDouble();
+//        endRatio = constants.getAsJsonPrimitive("endRatio").getAsDouble();
+//        disobeyNum = constants.getAsJsonPrimitive("disobeyNum").getAsInt();
+//        foodValidTime = constants.getAsJsonPrimitive("foodValidTime").getAsInt();
+//        trashValidTime = constants.getAsJsonPrimitive("trashValidTime").getAsInt();
+        /*
+         turnTimeout, foodProb, trashProb,
+  netProb, netValidTime, colorCost, sickCost, updateCost,
+  detMoveCost, killQueenScore, killBothQueenScore, killFishScore,
+  queenCollisionScore, fishFoodScore, queenFoodScore, sickLifeTime, powerRatio,
+  endRatio, disobeyNum,foodValidTime, trashValidTime
+         */
     }
 
     private void addFish(ArrayList<Integer> changes) {
@@ -352,7 +397,7 @@ public class Game {
         int team = changes.get(7);
         Tile[][] tiles = map.getTiles();
         Tile theChosenTile = tiles[tileX][tileY];
-        theChosenTile.setKind("fish");
+        theChosenTile.setContentLevel("fish");
         idMap.put(id, theChosenTile);
         theChosenTile.addFishInfo(id, direction, color, queen, team);
         if (team == teamID) {
@@ -373,7 +418,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
-        theChosenTile.setKind("food");
+        theChosenTile.setContentLevel("food");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
         foodList.add(theChosenTile);
@@ -387,7 +432,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
-        theChosenTile.setKind("trash");
+        theChosenTile.setContentLevel("trash");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
         trashList.add(theChosenTile);
@@ -400,8 +445,8 @@ public class Game {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
-        theChosenTile.setKind("net");
-        theChosenTile.resetConstants(id);
+        theChosenTile.setHasNet(true);
+        theChosenTile.resetConstantsNet(id);
         idMap.put(id, theChosenTile);
         ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
         netList.add(theChosenTile);

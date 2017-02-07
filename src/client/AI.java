@@ -1,6 +1,9 @@
 package client;
 
+import client.model.Game;
 import client.model.Node;
+
+import java.util.Random;
 
 /**
  * AI class.
@@ -14,19 +17,24 @@ import client.model.Node;
  */
 public class AI {
 
-    public void doTurn(World world) {
+    public void doTurn(Game game) {
         // fill this method, we've presented a stupid AI for example!
+        Random rand = new Random();
 
-        Node[] myNodes = world.getMyNodes();
-        for (Node source : myNodes) {
-            // get neighbours
-            Node[] neighbours = source.getNeighbours();
-            if (neighbours.length > 0) {
-                // select a random neighbour
-                Node destination = neighbours[(int) (neighbours.length * Math.random())];
-                // move half of the node's army to the neighbor node
-                world.moveArmy(source, destination, source.getArmyCount()/2);
+        if (game.getCurrentTurn() == 0)
+        {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 2; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        game.changeStrategy(0, i, j, k,rand.nextInt(2));
+                        game.changeStrategy(1, i, j, k,rand.nextInt(2));
+                    }
+                }
             }
+        }
+        else
+        {
+            // no strategy change
         }
 
     }
