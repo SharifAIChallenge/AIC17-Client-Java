@@ -60,8 +60,8 @@ public class Game {
     }
 
 
-    public void changeStrategy(int color, int i, int j, int k, int s) {
-        Event event = new Event("s", new Object[]{color, i, j, k, s});
+    public void changeStrategy(int color, int right, int front, int left, int s) {
+        Event event = new Event("s", new Object[]{color, right, front, left, s});
         sender.accept(new Message(Event.EVENT, event));
     }
 
@@ -652,5 +652,9 @@ public class Game {
 
     public Map getMap() {
         return map;
+    }
+
+    public int getNetValidTime() {
+        return netValidTime;
     }
 }
