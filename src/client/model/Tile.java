@@ -156,4 +156,8 @@ public class Tile
 		tile.setTargetId(this.targetId);
 		tile.setKind(this.kind);
 	}
+
+	public void clear() {
+		resetConstants(-1);
+	}
 }

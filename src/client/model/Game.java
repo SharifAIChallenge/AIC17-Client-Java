@@ -119,6 +119,7 @@ public class Game {
             int tileY = foodInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.resetConstants(id);
+            theChosenTile.setKind("food");
             foodTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -133,6 +134,7 @@ public class Game {
             int tileY = trashInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.resetConstants(id);
+            theChosenTile.setKind("trash");
             trashTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -147,6 +149,7 @@ public class Game {
             int tileY = netInfo.get(2).getAsInt();
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.resetConstants(id);
+            theChosenTile.setKind("net");
             netTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -162,6 +165,7 @@ public class Game {
             tiles[tileX][tileY].addTeleport(teleportInfo);
             Tile theChosenTile = tiles[tileX][tileY];
             theChosenTile.addTeleport(teleportInfo);
+            theChosenTile.setKind("teleport");
             teleportTiles[i] = theChosenTile;
             idMap.put(id, theChosenTile);
         }
@@ -221,24 +225,6 @@ public class Game {
                     ArrayList<Integer> alter = allAlter.get(j);
                     fishAlter(alter);
                 }
-            } else if (type.equals("d")) {
-                ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
-                for (int j = 0; j < allDeletes.size(); j++) {
-                    ArrayList<Integer> deleteChange = allDeletes.get(j);
-                    delete(deleteChange);
-                }
-            } else if (type.equals("m")) {
-                ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
-                for (int j = 0; j < allMoves.size(); j++) {
-                    ArrayList<Integer> moveChange = allMoves.get(j);
-                    moveFish(moveChange);
-                }
-            } else if (type.equals("c")) {
-                ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
-                for (int j = 0; j < allAlters.size(); j++) {
-                    ArrayList<Integer> alter = allAlter.get(j);
-                    fishAlter(alter);
-                }
             }
         }
     }
@@ -271,6 +257,7 @@ public class Game {
             netList.remove(theChosenTile);
             items[1] = (Tile[]) netList.toArray();
         }
+        theChosenTile.clear();
     }
 
     private void moveFish(ArrayList<Integer> changes) {
@@ -285,6 +272,7 @@ public class Game {
                 int tileX = nextX(theChosenTile);
                 int tileY = nextY(theChosenTile);
                 theChosenTile.move(map.getTile(tileX, tileY));
+                theChosenTile.clear();
                 break;
             case 2:
                 theChosenTile.setDirection((theChosenTile.getDirection() + 1) % 4);
@@ -293,11 +281,33 @@ public class Game {
     }
 
     private int nextX(Tile tile) {
-        // TODO
+        int direction = tile.getDirection();
+        int x = tile.getX();
+        switch(direction)
+        {
+            case 0:
+                x++;
+                break;
+            case 2:
+                x--;
+                break;
+        }
+        return x;
     }
 
     private int nextY(Tile tile) {
-        // TODO
+        int direction = tile.getDirection();
+        int y = tile.getY();
+        switch(direction)
+        {
+            case 1:
+                y--;
+                break;
+            case 3:
+                y++;
+                break;
+        }
+        return y;
     }
 
     private void fishAlter(ArrayList<Integer> changes) {
@@ -343,6 +353,7 @@ public class Game {
         int team = changes.get(7);
         Tile[][] tiles = map.getTiles();
         Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.setKind("fish");
         idMap.put(id, theChosenTile);
         theChosenTile.addFishInfo(id, direction, color, queen, team);
         if (team == teamID) {
@@ -363,6 +374,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
+        theChosenTile.setKind("food");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
         foodList.add(theChosenTile);
@@ -376,6 +388,7 @@ public class Game {
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
         theChosenTile.resetConstants(id);
+        theChosenTile.setKind("trash");
         idMap.put(id, theChosenTile);
         ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
         trashList.add(theChosenTile);
@@ -388,6 +401,7 @@ public class Game {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
         Tile theChosenTile = tiles[tileX][tileY];
+        theChosenTile.setKind("net");
         theChosenTile.resetConstants(id);
         idMap.put(id, theChosenTile);
         ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
