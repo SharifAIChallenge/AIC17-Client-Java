@@ -3,7 +3,8 @@ package client.model;
 import com.google.gson.JsonArray;
 
 public class Tile {
-    private String contentLevel;        //"trash"-"food"-"fish"-""
+//    public void moveFood
+    private String contentLevel = "";        //"trash"-"food"-"fish"-""
     private int x;
     private int y;
     private int[] ids = {-1, -1, -1}; // content id-0, net id-1, teleport id-2
@@ -16,7 +17,6 @@ public class Tile {
     private int targetId = -1;
     private boolean hasTeleport = false;
     private boolean hasNet = false;
-
 
     public Tile(int x, int y) {
         this.x = x;
@@ -31,7 +31,7 @@ public class Tile {
         sick = fishInfo.get(6).getAsInt();
         team = fishInfo.get(7).getAsInt();
         contentValue = 0;
-        this.setContentLevel("fish");
+        this.contentLevel = "fish";
     }
 
     public int[] getIds() {
@@ -149,7 +149,7 @@ public class Tile {
         int id = teleInfo.get(0).getAsInt();
         resetConstants(id, -1);
         targetId = teleInfo.get(3).getAsInt();
-        this.setContentLevel("teleport");
+        this.contentLevel = "teleport";
     }
 
     public void addFishInfo(int id, int direction, int color, int queen, int team) {
@@ -160,12 +160,13 @@ public class Tile {
         this.team = team;
         this.sick = 0;
         this.targetId = -1;
-        this.setContentLevel("fish");
+        this.contentLevel = "fish";
         this.contentValue = 0;
     }
 
-    public void move(Tile tile) {
-        tile.setIds(this.ids);
+    public void moveContent(Tile tile, int content) {
+
+        tile.getIds()[content] = this.ids[content];
         tile.setDirection(this.direction);
         tile.setColor(this.color);
         tile.setQueen(this.queen);
@@ -174,8 +175,7 @@ public class Tile {
         tile.setTargetId(this.targetId);
         tile.setContentLevel(this.contentLevel);
         tile.setContentValue(this.contentValue);
-        if (tile != this)
-        {
+        if (tile != this) {
             resetConstants(-1, -1);
         }
     }

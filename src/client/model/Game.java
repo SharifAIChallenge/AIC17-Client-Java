@@ -128,7 +128,7 @@ public class Game {
         JsonArray trashes = msg.args.get(4).getAsJsonArray();
         Tile[] trashTiles = new Tile[trashes.size()];
         for (int i = 0; i < trashes.size(); i++) {
-            JsonArray trashInfo = foods.get(i).getAsJsonArray();
+            JsonArray trashInfo = trashes.get(i).getAsJsonArray();
             int id = trashInfo.get(0).getAsInt();
             int tileX = trashInfo.get(1).getAsInt();
             int tileY = trashInfo.get(2).getAsInt();
@@ -213,7 +213,7 @@ public class Game {
                     ArrayList<Integer> deleteChange = allDeletes.get(j);
                     delete(deleteChange);
                 }
-            } else if (type == 'm') { // move
+            } else if (type == 'm') { // moveContent
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
@@ -223,41 +223,71 @@ public class Game {
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
-                    fishAlter(alter);
+                    if (alter.size() == 5) {
+                        fishAlter(alter);
+                    } else {
+                        handleAlter(alter);
+                    }
                 }
             }
         }
+    }
+
+    private void handleAlter(ArrayList<Integer> changes){
+        int id = changes.get(0);
+        int x = changes.get(1);
+        int y = changes.get(2);
+        Tile theChosenTile = idMap.get(id);
+        Tile[][] tiles = map.getTiles();
+        Tile targetTile = tiles[x][y];
+        theChosenTile.moveContent(targetTile, theChosenTile.getContentValue());
     }
 
     private void delete(ArrayList<Integer> changes) {
         int id = changes.get(0);
         Tile theChosenTile = idMap.get(id);
         idMap.remove(id);
-        String kind = theChosenTile.getContentLevel();
+        String kind = theChosenTile.getContentLevel();;
+//        try{
+//            kind = theChosenTile.getContentLevel();
+//        } catch (Exception e)
+//        {
+//            System.out.println("LOl");
+//        }
+//        if (kind.equals(""))
+//        {
+//            return;
+//        }
+
         if (kind.equals("fish") && id == theChosenTile.getIds()[0]) {
             if (theChosenTile.getTeam() == teamID) {
                 ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
                 fishList.remove(theChosenTile);
-                fishes[0] = (Tile[]) fishList.toArray();
+                Tile[] tempTile = new Tile[fishList.size()];
+                fishes[0] = fishList.toArray(tempTile);
             } else {
                 ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
                 fishList.remove(theChosenTile);
-                fishes[1] = (Tile[]) fishList.toArray();
+                Tile[] tempTile = new Tile[fishList.size()];
+                fishes[1] = fishList.toArray(tempTile);
             }
         } else if (kind.equals("food") && id == theChosenTile.getIds()[0]) {
             ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
             foodList.remove(theChosenTile);
-            items[3] = (Tile[]) foodList.toArray();
+            Tile[] tempTile = new Tile[foodList.size()];
+            items[3] = foodList.toArray(tempTile);
         } else if (kind.equals("trash") && id == theChosenTile.getIds()[0]) {
             ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
             trashList.remove(theChosenTile);
-            items[2] = (Tile[]) trashList.toArray();
+            Tile[] tempTile = new Tile[trashList.size()];
+            items[2] = trashList.toArray(tempTile);
         }
         if (theChosenTile.isHasNet() && id == theChosenTile.getIds()[1]) {
             ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
             netList.remove(theChosenTile);
             theChosenTile.setHasNet(false);
-            items[1] = (Tile[]) netList.toArray();
+            Tile[] tempTile = new Tile[netList.size()];
+            items[1] = netList.toArray(tempTile);
         }
         if (id == theChosenTile.getIds()[0]) {
             theChosenTile.clear();
@@ -277,7 +307,7 @@ public class Game {
             case 1:
                 int tileX = nextX(theChosenTile);
                 int tileY = nextY(theChosenTile);
-                theChosenTile.move(map.getTile(tileX, tileY));
+                theChosenTile.moveContent(map.getTile(tileX, tileY), 0);
                 theChosenTile.clear();
                 break;
             case 2:
@@ -292,10 +322,10 @@ public class Game {
         switch(direction)
         {
             case 0:
-                x++;
+                x = (x + 1) % 8;
                 break;
             case 2:
-                x--;
+                x = (x + 7) % 8;
                 break;
         }
         return x;
@@ -307,10 +337,10 @@ public class Game {
         switch(direction)
         {
             case 1:
-                y--;
+                y = (y + 7) % 8;
                 break;
             case 3:
-                y++;
+                y = (y + 1) % 8;
                 break;
         }
         return y;
@@ -325,7 +355,7 @@ public class Game {
         Tile theChosenTile = idMap.get(id);
         Tile[][] tiles = map.getTiles();
         Tile targetTile = tiles[newX][newY];
-        theChosenTile.move(targetTile);
+        theChosenTile.moveContent(targetTile, 0);
         targetTile.setColor(color);
         targetTile.setSick(sick);
     }
@@ -403,11 +433,13 @@ public class Game {
         if (team == teamID) {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
             fishList.add(theChosenTile);
-            fishes[0] = (Tile[]) fishList.toArray();
+            Tile[] tempTile = new Tile[fishList.size()];
+            fishes[0] = fishList.toArray(tempTile);
         } else {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
             fishList.add(theChosenTile);
-            fishes[1] = (Tile[]) fishList.toArray();
+            Tile[] tempTile = new Tile[fishList.size()];
+            fishes[1] = fishList.toArray(tempTile);
         }
     }
 
@@ -422,7 +454,8 @@ public class Game {
         idMap.put(id, theChosenTile);
         ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
         foodList.add(theChosenTile);
-        items[3] = (Tile[]) foodList.toArray();
+        Tile[] tempTile = new Tile[foodList.size()];
+        items[3] = foodList.toArray(tempTile);
     }
 
     private void addTrash(ArrayList<Integer> changes) {
@@ -436,7 +469,8 @@ public class Game {
         idMap.put(id, theChosenTile);
         ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
         trashList.add(theChosenTile);
-        items[2] = (Tile[]) trashList.toArray();
+        Tile[] tempTile = new Tile[trashList.size()];
+        items[2] = trashList.toArray(tempTile);
     }
 
     private void addNet(ArrayList<Integer> changes) {
@@ -450,7 +484,8 @@ public class Game {
         idMap.put(id, theChosenTile);
         ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
         netList.add(theChosenTile);
-        items[1] = (Tile[]) netList.toArray();
+        Tile[] tempTile = new Tile[netList.size()];
+        items[1] = netList.toArray(tempTile);
     }
 
     public int getTotalTurns() {

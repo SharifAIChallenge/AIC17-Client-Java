@@ -124,10 +124,10 @@ public class Network {
         try {
             messageHandler.accept(socket.get(Message.class));
         } catch (IOException e) {
-            Log.e(TAG, "Can not receive server's message.");
+            Log.e(TAG, "Can not receive server's message.", e);
             handleIOE(e);
         } catch (Exception e) {
-            Log.e(TAG, "Can not recieve server's message.");
+            Log.e(TAG, "Can not recieve server's message.", e);
         }
     }
 
