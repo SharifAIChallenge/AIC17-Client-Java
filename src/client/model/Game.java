@@ -47,10 +47,8 @@ public class Game {
 
 
     private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
-    private Tile[][] fishes = new Tile[2][]; // My normal-0, sick-1 and queen-2 fish tiles
+    private Tile[][] fishes = new Tile[2][]; // my fish - 0, opp fish - 1
     private HashMap<Integer, Tile> idMap = new HashMap<>();
-
-    private Tile[][] freeTiles;
 
     private Consumer<Message> sender;
 
@@ -83,12 +81,13 @@ public class Game {
         width = size.get(0).getAsInt();
         height = size.get(1).getAsInt();
 
-        Tile[][] tiles = new Tile[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        Tile[][] tiles = new Tile[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 tiles[i][j] = new Tile(i, j);
             }
         }
+        map = new Map(tiles);
 
 
         JsonArray fishes = msg.args.get(2).getAsJsonArray();
@@ -187,8 +186,8 @@ public class Game {
             JsonObject changes = allChanges.get(i).getAsJsonObject();
             String jsonString = changes.toString();
             Change change = gson.fromJson(jsonString, Change.class);
-            String type = change.getType();
-            if (type.equals("a")) {
+            char type = change.getType();
+            if (type == 'a') { // add
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
                 for (int j = 0; j < allAdds.size(); j++) {
                     ArrayList<Integer> addChange = allAdds.get(j);
@@ -207,22 +206,22 @@ public class Game {
                             break;
                     }
                 }
-            } else if (type.equals("d")) {
+            } else if (type == 'd') { // delete
                 ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
                 for (int j = 0; j < allDeletes.size(); j++) {
                     ArrayList<Integer> deleteChange = allDeletes.get(j);
                     delete(deleteChange);
                 }
-            } else if (type.equals("m")) {
+            } else if (type == 'm') { // move
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
                     moveFish(moveChange);
                 }
-            } else if (type.equals("c")) {
+            } else if (type == 'c') { // change condition
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
-                    ArrayList<Integer> alter = allAlter.get(j);
+                    ArrayList<Integer> alter = allAlters.get(j);
                     fishAlter(alter);
                 }
             }
@@ -511,5 +510,67 @@ public class Game {
 
     public int getTrashValidTime() {
         return trashValidTime;
+    }
+
+    public long getTotalTime() {
+        return totalTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public int getTeamID() {
+        return teamID;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getMyScore() {
+        return myScore;
+    }
+
+    public int getOppScore() {
+        return oppScore;
+    }
+
+    public Tile[] getMyTiles()
+    {
+        return fishes[0];
+    }
+
+    public Tile[] getOppTiles()
+    {
+        return fishes[1];
+    }
+
+    public Tile[] getTeleportTiles()
+    {
+        return items[0];
+    }
+
+    public Tile[] getNetTiles()
+    {
+        return items[1];
+    }
+
+    public Tile[] getTrashTiles()
+    {
+        return items[2];
+    }
+
+    public Tile[] getFoodTiles()
+    {
+        return items[3];
+    }
+
+    public Map getMap() {
+        return map;
     }
 }
