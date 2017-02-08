@@ -82,24 +82,24 @@ public interface World {
     long getTurnRemainingTime();
 
     /**
-     * The moveContent is the only action in this game. You can request a moveContent by
+     * The recieveContent is the only action in this game. You can request a recieveContent by
      * calling this method and by passing with source, destination, and number
-     * of armies you want to moveContent from source to destination.
+     * of armies you want to recieveContent from source to destination.
      *
      * @param src   source node
      * @param dst   destination node
-     * @param count number of armies you want to moveContent from source to destination
+     * @param count number of armies you want to recieveContent from source to destination
      */
     void moveArmy(Node src, Node dst, int count);
 
     /**
-     * The moveContent is the only action in this game. You can request a moveContent by
+     * The recieveContent is the only action in this game. You can request a recieveContent by
      * calling this method and by passing with source, destination, and number
-     * of armies you want to moveContent from source to destination.
+     * of armies you want to recieveContent from source to destination.
      *
      * @param src   source node's index, you can get index of a node by calling node.getIndex().
      * @param dst   destination node's index, you can get index of a node by calling node.getIndex().
-     * @param count number of armies you want to moveContent from source to destination.
+     * @param count number of armies you want to recieveContent from source to destination.
      */
     void moveArmy(int src, int dst, int count);
 
