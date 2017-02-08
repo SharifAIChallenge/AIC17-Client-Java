@@ -51,7 +51,7 @@ public class Game {
     private Tile[][] fishes = new Tile[2][]; // my fish - 0, opp fish - 1
 
     private HashMap<Integer, Tile> idMap = new HashMap<>();
-	private HashMap<Integer, Information> infoMap = new HashMap<>(); // Don't use this on your doTurn method :\
+    private HashMap<Integer, Information> infoMap = new HashMap<>(); // Don't use this on your doTurn method :\
 
     private Consumer<Message> sender;
     private Map map;
@@ -107,9 +107,9 @@ public class Game {
             theChosenTile.addFishInfo(fishInfo);
 
             idMap.put(id, theChosenTile);
-			infoMap.put(id, theChosenTile.getFishInformation());
+            infoMap.put(id, theChosenTile.getFishInformation());
 
-			if (teamID == fishInfo.get(7).getAsInt()) {
+            if (teamID == fishInfo.get(7).getAsInt()) {
                 this.fishes[0][myfish++] = theChosenTile;
             } else {
                 this.fishes[1][opfish++] = theChosenTile;
@@ -125,11 +125,11 @@ public class Game {
             int tileY = foodInfo.get(2).getAsInt();
 
             Tile theChosenTile = map.getTile(tileX, tileY);
-			theChosenTile.addItem(id, 0);
+            theChosenTile.addItem(id, 0);
             foodTiles[i] = theChosenTile;
 
             idMap.put(id, theChosenTile);
-			infoMap.put(id, theChosenTile.getItemInformation());
+            infoMap.put(id, theChosenTile.getItemInformation());
         }
         items[3] = foodTiles;
 
@@ -142,11 +142,11 @@ public class Game {
             int tileY = trashInfo.get(2).getAsInt();
 
             Tile theChosenTile = tiles[tileX][tileY];
-			theChosenTile.addItem(id, 1);
+            theChosenTile.addItem(id, 1);
             trashTiles[i] = theChosenTile;
 
             idMap.put(id, theChosenTile);
-			infoMap.put(id, theChosenTile.getItemInformation());
+            infoMap.put(id, theChosenTile.getItemInformation());
         }
         items[2] = trashTiles;
 
@@ -159,11 +159,11 @@ public class Game {
             int tileY = netInfo.get(2).getAsInt();
 
             Tile theChosenTile = tiles[tileX][tileY];
-			theChosenTile.addNet(id);
+            theChosenTile.addNet(id);
             netTiles[i] = theChosenTile;
 
             idMap.put(id, theChosenTile);
-			infoMap.put(id, theChosenTile.getNetInformation());
+            infoMap.put(id, theChosenTile.getNetInformation());
         }
         items[1] = netTiles;
 
@@ -176,11 +176,11 @@ public class Game {
             int tileY = teleportInfo.get(2).getAsInt();
 
             Tile theChosenTile = tiles[tileX][tileY];
-			theChosenTile.addTeleport(id, teleportInfo.get(3).getAsInt());
+            theChosenTile.addTeleport(id, teleportInfo.get(3).getAsInt());
             teleportTiles[i] = theChosenTile;
 
             idMap.put(id, theChosenTile);
-			infoMap.put(id, theChosenTile.getTeleportInformation());
+            infoMap.put(id, theChosenTile.getTeleportInformation());
         }
         items[0] = teleportTiles;
 
@@ -202,8 +202,7 @@ public class Game {
             JsonObject changes = allChanges.get(i).getAsJsonObject();
             String jsonString = changes.toString();
             Change change = gson.fromJson(jsonString, Change.class);
-            if (currentTurn == 1)
-            {
+            if (currentTurn == 1) {
                 System.out.println("Lol");
             }
 
@@ -253,7 +252,7 @@ public class Game {
         }
     }
 
-    private void itemAlter(ArrayList<Integer> changes){
+    private void itemAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int x = changes.get(1);
         int y = changes.get(2);
@@ -263,7 +262,8 @@ public class Game {
         Tile targetTile = tiles[x][y];
 
         targetTile.receiveInfo(theChosenTile.getItemInformation());
-		theChosenTile.setItemInformation(null);
+        idMap.put(id, targetTile);
+        theChosenTile.setItemInformation(null);
     }
 
     private void delete(ArrayList<Integer> changes) {
@@ -273,7 +273,7 @@ public class Game {
         idMap.remove(id);
 
         Information theChosenInfo = infoMap.get(id);
-		infoMap.remove(id);
+        infoMap.remove(id);
 
         if (theChosenInfo instanceof FishInformation) {
             FishInformation chosenFishInfo = (FishInformation) theChosenInfo;
@@ -288,34 +288,33 @@ public class Game {
                 Tile[] tempTile = new Tile[fishList.size()];
                 fishes[1] = fishList.toArray(tempTile);
             }
-			theChosenTile.clear();
+            theChosenTile.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 0) {
             ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
             foodList.remove(theChosenTile);
             Tile[] tempTile = new Tile[foodList.size()];
             items[3] = foodList.toArray(tempTile);
-			theChosenTile.clear();
+            theChosenTile.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 1) {
             ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
             trashList.remove(theChosenTile);
             Tile[] tempTile = new Tile[trashList.size()];
             items[2] = trashList.toArray(tempTile);
-			theChosenTile.clear();
-        } else if (theChosenInfo instanceof NetInformation)
-		{
-			ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
+            theChosenTile.clear();
+        } else if (theChosenInfo instanceof NetInformation) {
+            ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
             netList.remove(theChosenTile);
             Tile[] tempTile = new Tile[netList.size()];
             items[1] = netList.toArray(tempTile);
-			theChosenTile.cleanNet();
-		}
+            theChosenTile.cleanNet();
+        }
     }
 
     private void moveFish(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int move = changes.get(1);
         Tile theChosenTile = idMap.get(id);
-		FishInformation theChosenInfo = (FishInformation) (infoMap.get(id));
+        FishInformation theChosenInfo = (FishInformation) (infoMap.get(id));
         switch (move) {
             case 0:
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
@@ -323,9 +322,12 @@ public class Game {
             case 1:
                 int tileX = nextX(theChosenTile, theChosenInfo.getDirection());
                 int tileY = nextY(theChosenTile, theChosenInfo.getDirection());
-				Tile targetTile = map.getTile(tileX, tileY);
-				targetTile.receiveInfo(theChosenInfo);
-                theChosenTile.clear();
+                Tile targetTile = map.getTile(tileX, tileY);
+                targetTile.receiveInfo(theChosenInfo);
+                idMap.put(id, targetTile);
+                if (targetTile.getFishInformation().getId() == theChosenTile.getFishInformation().getId()) {
+                    theChosenTile.clear();
+                }
                 break;
             case 2:
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 1) % 4);
@@ -336,8 +338,7 @@ public class Game {
     private int nextX(Tile tile, int dir) {
         int direction = dir;
         int x = tile.getX();
-        switch(direction)
-        {
+        switch (direction) {
             case 3:
                 x = (x + 1) % 8;
                 break;
@@ -351,8 +352,7 @@ public class Game {
     private int nextY(Tile tile, int dir) {
         int direction = dir;
         int y = tile.getY();
-        switch(direction)
-        {
+        switch (direction) {
             case 2:
                 y = (y + 7) % 8;
                 break;
@@ -369,12 +369,16 @@ public class Game {
         int newY = changes.get(2);
         int color = changes.get(3);
         int sick = changes.get(4);
-//        Tile theChosenTile = idMap.get(id);
-		FishInformation theChosenInfo = (FishInformation) infoMap.get(id);
+        Tile theChosenTile = idMap.get(id);
+        FishInformation theChosenInfo = (FishInformation) infoMap.get(id);
         Tile targetTile = map.getTile(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
-		targetTile.receiveInfo(theChosenInfo);
+        targetTile.receiveInfo(theChosenInfo);
+        idMap.put(id, targetTile);
+        if (targetTile != theChosenTile) {
+            theChosenTile.clear();
+        }
     }
 
     private void setConstants(JsonArray constants) {
@@ -416,9 +420,9 @@ public class Game {
         theChosenTile.addFishInfo(id, direction, color, queen, team);
 
         idMap.put(id, theChosenTile);
-		infoMap.put(id, theChosenTile.getFishInformation());
+        infoMap.put(id, theChosenTile.getFishInformation());
 
-		if (team == teamID) {
+        if (team == teamID) {
             fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
             fishList.add(theChosenTile);
             Tile[] tempTile = new Tile[fishList.size()];
@@ -437,12 +441,12 @@ public class Game {
         int tileY = changes.get(3);
 
         Tile theChosenTile = map.getTile(tileX, tileY);
-		theChosenTile.addItem(id, 0);
+        theChosenTile.addItem(id, 0);
 
-		idMap.put(id, theChosenTile);
-		infoMap.put(id, theChosenTile.getItemInformation());
+        idMap.put(id, theChosenTile);
+        infoMap.put(id, theChosenTile.getItemInformation());
 
-		ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
+        ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
         foodList.add(theChosenTile);
         Tile[] tempTile = new Tile[foodList.size()];
         items[3] = foodList.toArray(tempTile);
@@ -475,9 +479,9 @@ public class Game {
         theChosenTile.addNet(id);
 
         idMap.put(id, theChosenTile);
-		infoMap.put(id, theChosenTile.getNetInformation());
+        infoMap.put(id, theChosenTile.getNetInformation());
 
-		ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
+        ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
         netList.add(theChosenTile);
         Tile[] tempTile = new Tile[netList.size()];
         items[1] = netList.toArray(tempTile);
@@ -615,33 +619,27 @@ public class Game {
         return oppScore;
     }
 
-    public Tile[] getMyTiles()
-    {
+    public Tile[] getMyTiles() {
         return fishes[0];
     }
 
-    public Tile[] getOppTiles()
-    {
+    public Tile[] getOppTiles() {
         return fishes[1];
     }
 
-    public Tile[] getTeleportTiles()
-    {
+    public Tile[] getTeleportTiles() {
         return items[0];
     }
 
-    public Tile[] getNetTiles()
-    {
+    public Tile[] getNetTiles() {
         return items[1];
     }
 
-    public Tile[] getTrashTiles()
-    {
+    public Tile[] getTrashTiles() {
         return items[2];
     }
 
-    public Tile[] getFoodTiles()
-    {
+    public Tile[] getFoodTiles() {
         return items[3];
     }
 
