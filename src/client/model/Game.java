@@ -202,6 +202,10 @@ public class Game {
             JsonObject changes = allChanges.get(i).getAsJsonObject();
             String jsonString = changes.toString();
             Change change = gson.fromJson(jsonString, Change.class);
+            if (currentTurn == 1)
+            {
+                System.out.println("Lol");
+            }
 
             char type = change.getType();
             if (type == 'a') { // add
@@ -334,10 +338,10 @@ public class Game {
         int x = tile.getX();
         switch(direction)
         {
-            case 0:
+            case 3:
                 x = (x + 1) % 8;
                 break;
-            case 2:
+            case 1:
                 x = (x + 7) % 8;
                 break;
         }
@@ -349,10 +353,10 @@ public class Game {
         int y = tile.getY();
         switch(direction)
         {
-            case 1:
+            case 2:
                 y = (y + 7) % 8;
                 break;
-            case 3:
+            case 0:
                 y = (y + 1) % 8;
                 break;
         }

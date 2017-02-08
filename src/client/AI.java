@@ -2,6 +2,7 @@ package client;
 
 import client.model.Game;
 import client.model.Node;
+import client.model.Tile;
 
 import java.util.Random;
 
@@ -22,13 +23,20 @@ public class AI {
         Random rand = new Random();
 
 
+        Tile[][] tiles = game.getMap().getTiles();
+
+        if (game.getCurrentTurn() == 1)
+        {
+            System.out.println("LOL");
+        }
+
         if (game.getCurrentTurn() == 0)
         {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 3; k++) {
-                        game.changeStrategy(0, i, j, k,rand.nextInt(2));
-                        game.changeStrategy(1, i, j, k,rand.nextInt(2));
+                        game.changeStrategy(0, i, j, k,/*rand.nextInt(2)*/1);
+                        game.changeStrategy(1, i, j, k,1);
                     }
                 }
             }
