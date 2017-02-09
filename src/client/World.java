@@ -1,7 +1,7 @@
 package client;
 
-import client.model.Graph;
-import client.model.Node;
+import client.model.Map;
+import client.model.Tile;
 
 /**
  * Game Interface
@@ -12,151 +12,251 @@ import client.model.Node;
  */
 public interface World {
     /**
-     * get ID of your team. it will be useful when you want to check if a node is yours or not.
+     * Changing the strategy of the cockroaches with the given antenna type
      *
-     * @return ID of your team
+     * @param color Antenna type of the cockroach (0 for single antenna and 1 for double antenna)
+     * @param right Condition of the top-right neighbour
+     * @param front Condition of the front
+     * @param left Condition of the top-left neighbour
+     * @param strategy The command given to the cockroach (0 for turning right, 1 for going forward and 2 for turning left
      */
-    int getMyID();
+    void changeStrategy(int color, int right, int front, int left, int strategy);
 
     /**
-     * get map of the game.
+     * Give command to a specific Cockroach with the given id
      *
-     * @return a graph that represents the map of the game.
+     * @param id Cockroach id
+     * @param s The command given to the cockroach(same as the previous method)
      */
-    Graph getMap();
+    void deterministicMove(int id, int s);
 
     /**
-     * get nodes that you are owner of them.
+     * Changes antenna type of the given cockroach
      *
-     * @return your nodes
+     * @param id Cockroach id
+     * @param c Antenna type
      */
-    Node[] getMyNodes();
+    void antennaChange(int id, int c);
 
     /**
-     * get nodes that your opponent is owner of them.
+     * Number of turns passed from the beginning of the game
      *
-     * @return opponent's nodes
+     * @return current turn number
      */
-    Node[] getOpponentNodes();
+    int getCurrentTurn();
 
     /**
-     * get nodes of the game that none of the two players are owner of them.
+     * Probability of a food showing up in any of the tiles without content(Cockroach or food)
      *
-     * @return free (without owner) nodes
+     * @return Food probability
      */
-    Node[] getFreeNodes();
+    public double getFoodProb();
 
     /**
-     * total (maximum) turns of the game.
+     * Probability of a trash showing up in any of the tiles without content(Cockroach or food)
      *
-     * @return total turns
+     * @return Trash probability
      */
-    int getTotalTurns();
+    public double getTrashProb();
 
     /**
-     * number of turns that passed as long as game started.
+     * Probability of a net showing up in any of the tiles without a net
      *
-     * @return turn number
+     * @return Net probability
      */
-    int getTurnNumber();
+    public double getNetProb();
 
     /**
-     * get time limit of each turn.
      *
-     * @return total turn time (ms)
+     * @return Maximum amount of turns
      */
-    long getTotalTurnTime();
+    public int getTurnTimeout();
 
     /**
-     * get time passed from when the last turn is started.
+     * Cost of changing the antenna of a cockroach
      *
-     * @return turn time passed (ms)
+     * @return Antenna cost
      */
-    long getTurnTimePassed();
+    public int getColorCost();
 
     /**
-     * get the remaining time of the current turn.
+     * Sick cockroaches give points to the opposing team of all their 8 neighbours
      *
-     * @return turn remaining time (ms)
+     * @return Given points for each neighbour
      */
-    long getTurnRemainingTime();
+    public int getSickCost();
 
     /**
-     * The recieveContent is the only action in this game. You can request a recieveContent by
-     * calling this method and by passing with source, destination, and number
-     * of armies you want to recieveContent from source to destination.
      *
-     * @param src   source node
-     * @param dst   destination node
-     * @param count number of armies you want to recieveContent from source to destination
+     * @return Cost of changing strategy
      */
-    void moveArmy(Node src, Node dst, int count);
+    public int getUpdateCost();
 
     /**
-     * The recieveContent is the only action in this game. You can request a recieveContent by
-     * calling this method and by passing with source, destination, and number
-     * of armies you want to recieveContent from source to destination.
      *
-     * @param src   source node's index, you can get index of a node by calling node.getIndex().
-     * @param dst   destination node's index, you can get index of a node by calling node.getIndex().
-     * @param count number of armies you want to recieveContent from source to destination.
+     * @return Cost of a deterministic move
      */
-    void moveArmy(int src, int dst, int count);
+    public int getDetMoveCost();
 
     /**
-     * Maximum number of armies that can escape from a battle.
      *
-     * @return escape constant
+     * @return Points achieved
      */
-    int getEscapeConstant();
+    public int getKillQueenScore();
 
     /**
-     * Amount of armies awarded for getting ownership of a node.
-     *
-     * @return node bonus constant
-     */
-    int getNodeBonusConstant();
-
-    /**
-     * Amount of armies added to a node for each adjacent node with the same ownership.
-     *
-     * @return edge bonus constant
-     */
-    int getEdgeBonusConstant();
-
-    /**
-     * Maximum amount of army that indicated as low.
      *
      * @return
      */
-    int getLowArmyBound();
+    public int getKillBothQueenScore();
 
     /**
-     * Maximum amount of army that indicated as medium.
      *
-     * @return medium army bound
+     * @return
      */
-    int getMediumArmyBound();
+    public int getKillFishScore();
 
     /**
-     * The winner of the battle losses some of his armies. The coefficient of loss
-     * is a function of the army count of both sides of the battle (in terms of
-     * low, medium, and high). When the level difference of the winner and loser is
-     * at most 1 (e.g. winner is high and loser is medium, or winner is low and
-     * medium is low), the loss coefficient can be determined by calling this function.
      *
-     * @return loss coefficient
+     * @return
      */
-    double getMediumCasualtyCoefficient();
+    public int getQueenCollisionScore();
 
     /**
-     * The winner of the battle losses some of his armies. The coefficient of loss
-     * is a function of the army count of both sides of the battle (in terms of
-     * low, medium, and high). When the level difference of the winner and loser
-     * is 2 (i.e. winner is high and loser is low), the loss coefficient can be
-     * determined by calling this function.
      *
-     * @return loss coefficient
+     * @return
      */
-    double getLowCasualtyCoefficient();
+    public int getFishFoodScore();
+
+    /**
+     *
+     * @return
+     */
+    public int getQueenFoodScore();
+
+    /**
+     *
+     * @return
+     */
+    public int getSickLifeTime();
+
+    /**
+     *
+     * @return
+     */
+    public double getPowerRatio();
+
+    /**
+     *
+     * @return
+     */
+    public double getEndRatio();
+
+    /**
+     *
+     * @return
+     */
+    public int getDisobeyNum();
+
+    /**
+     *
+     * @return
+     */
+    public int getFoodValidTime();
+
+    /**
+     *
+     * @return
+     */
+    public int getTrashValidTime();
+
+    /**
+     *
+     * @return
+     */
+    public long getTotalTime();
+
+    /**
+     *
+     * @return
+     */
+    public long getStartTime();
+
+    /**
+     *
+     * @return
+     */
+    public int getTeamID();
+
+    /**
+     *
+     * @return
+     */
+    public int getWidth();
+
+    /**
+     *
+     * @return
+     */
+    public int getHeight();
+
+    /**
+     *
+     * @return
+     */
+    public int getMyScore();
+
+    /**
+     *
+     * @return
+     */
+    public int getOppScore();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getMyTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getOppTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getTeleportTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getNetTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getTrashTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Tile[] getFoodTiles();
+
+    /**
+     *
+     * @return
+     */
+    public Map getMap();
+
+    /**
+     *
+     * @return
+     */
+    public int getNetValidTime();
 }
