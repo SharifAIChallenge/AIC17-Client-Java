@@ -11,28 +11,28 @@ import client.model.*;
  */
 public interface World {
     /**
-     * Changing the strategy of the cockroaches with the given antenna type
+     * Changing the strategy of the beetles with the given antenna type
      *
-     * @param color Antenna type of the cockroach (0 for single antenna and 1 for double antenna)
+     * @param color Antenna type of the beetle (0 for single antenna and 1 for double antenna)
      * @param right Condition of the top-right neighbour
      * @param front Condition of the front
      * @param left Condition of the top-left neighbour
-     * @param strategy The command given to the cockroach (0 for turning right, 1 for going forward and 2 for turning left
+     * @param strategy The command given to the beetle (0 for turning right, 1 for going forward and 2 for turning left
      */
     void changeStrategy(int color, int right, int front, int left, int strategy);
 
     /**
-     * Give command to a specific Cockroach with the given id
+     * Give command to a specific Beetle with the given id
      *
-     * @param id Cockroach id
-     * @param s The command given to the cockroach(same as the previous method)
+     * @param id Beetle id
+     * @param s The command given to the beetle(same as the previous method)
      */
     void deterministicMove(int id, int s);
 
     /**
-     * Changes antenna type of the given cockroach
+     * Changes antenna type of the given beetle
      *
-     * @param id Cockroach id
+     * @param id Beetle id
      * @param c Antenna type
      */
     void antennaChange(int id, int c);
@@ -45,14 +45,14 @@ public interface World {
     int getCurrentTurn();
 
     /**
-     * Probability of a food showing up in any of the tiles without content(Cockroach or food)
+     * Probability of a food showing up in any of the tiles without content(Beetle or food)
      *
      * @return Food probability
      */
     double getFoodProb();
 
     /**
-     * Probability of a trash showing up in any of the tiles without content(Cockroach or food)
+     * Probability of a trash showing up in any of the tiles without content(Beetle or food)
      *
      * @return Trash probability
      */
@@ -72,14 +72,14 @@ public interface World {
     int getTurnTimeout();
 
     /**
-     * Cost of changing the antenna of a cockroach
+     * Cost of changing the antenna of a beetle
      *
      * @return Antenna cost
      */
     int getColorCost();
 
     /**
-     * Sick cockroaches give points to the opposing team of all their 8 neighbours
+     * Sick beetles give points to the opposing team of all their 8 neighbours
      *
      * @return Given points for each neighbour
      */
@@ -99,191 +99,180 @@ public interface World {
 
     /**
      *
-     * @return Points achieved
+     * @return Points achieved when a normal beetle kills a queen
      */
     int getKillQueenScore();
 
     /**
      *
-     * @return
+     * @return Points achieved when two queens kill each other
      */
     int getKillBothQueenScore();
 
     /**
      *
-     * @return
+     * @return Points achieved from killing a normal beetle
      */
     int getKillFishScore();
 
     /**
      *
-     * @return
-     */
-    int getQueenCollisionScore();
-
-    /**
-     *
-     * @return
+     * @return Points achieved when a normal beetle consumes food
      */
     int getFishFoodScore();
 
     /**
      *
-     * @return
+     * @return Points achieved when a queen beetle consumes food
      */
     int getQueenFoodScore();
 
     /**
      *
-     * @return
+     * @return Beetle's lifespan since getting sick
      */
     int getSickLifeTime();
 
     /**
      *
-     * @return
+     * @return Amount of power that a beetle achieves each turn
      */
     double getPowerRatio();
 
     /**
+     * If the map is "end ratio" percent full, the game ends
      *
-     * @return
+     * @return End ratio
      */
     double getEndRatio();
 
     /**
      *
-     * @return
+     * @return Minimum beetle population required for a beetle to disobey
      */
     int getDisobeyNum();
 
     /**
      *
-     * @return
+     * @return Amount of turns a food stays on the map
      */
     int getFoodValidTime();
 
     /**
      *
-     * @return
+     * @return Amount of turns a trash stays on the map
      */
     int getTrashValidTime();
 
     /**
      *
-     * @return
+     * @return Milliseconds that the turn started
      */
     long getTotalTime();
 
     /**
      *
-     * @return
-     */
-    long getStartTime();
-
-    /**
-     *
-     * @return
+     * @return Team id
      */
     int getTeamID();
 
     /**
      *
-     * @return
+     * @return width
      */
     int getWidth();
 
     /**
      *
-     * @return
+     * @return height
      */
     int getHeight();
 
     /**
      *
-     * @return
+     * @return User's score
      */
     int getMyScore();
 
     /**
      *
-     * @return
+     * @return Opponent's score
      */
     int getOppScore();
 
     /**
      *
-     * @return
+     * @return Tiles which contains user's beetles
      */
     Tile[] getMyTiles();
 
     /**
      *
-     * @return
+     * @return Tiles which contains opponent's beetles
      */
     Tile[] getOppTiles();
 
     /**
      *
-     * @return
+     * @return Tiles which contains Teleporting devices
      */
     Tile[] getTeleportTiles();
 
     /**
      *
-     * @return
+     * @return Tiles which contains net
      */
     Tile[] getNetTiles();
 
     /**
      *
-     * @return
+     * @return Tiles which contains trash
      */
     Tile[] getTrashTiles();
 
     /**
      *
-     * @return
+     * @return Tiles which contains food
      */
     Tile[] getFoodTiles();
 
     /**
      *
-     * @param id
-     * @return
+     * @param id Beetle id
+     * @return Information object related to the given beetle
      */
     FishInformation getFishInformation(int id);
 
     /**
      *
-     * @param id
-     * @return
+     * @param id Item id(food or trash)
+     * @return Information object related to the given item
      */
     ItemInformation getItemInformation(int id);
 
     /**
      *
-     * @param id
-     * @return
+     * @param id Net id
+     * @return Information object related to the given net
      */
     NetInformation getNetInformation(int id);
 
     /**
      *
-     * @param id
-     * @return
+     * @param id Teleport device id
+     * @return Information object related to the given teleport device
      */
     TeleportInformation getTeleportInformation(int id);
 
     /**
      *
-     * @return
+     * @return Map of the game
      */
     Map getMap();
 
     /**
      *
-     * @return
+     * @return Turns the net stays before hunting beetles
      */
     int getNetValidTime();
 }
