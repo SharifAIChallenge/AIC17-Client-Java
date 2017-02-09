@@ -5,55 +5,44 @@ import com.google.gson.JsonArray;
 public class Tile {
     private int x;
     private int y;
-	private Information fishInformation;
-	private Information itemInformation;
-	private Information netInformation;
-	private Information teleportInformation;
+    private Information fishInformation;
+    private Information itemInformation;
+    private Information netInformation;
+    private Information teleportInformation;
 
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
     }
-	
-	public void addItem(int id, int itemId)
-	{
-		itemInformation = new ItemInformation(id, itemId);
-	}
-	
-	public void addNet(int id)
-	{
-		netInformation = new NetInformation(id);
-	}
-	
-	public void addTeleport(int id, int targetId)
-	{
-		teleportInformation = new TeleportInformation(id, targetId);
-	}
-	
-	public void receiveInfo(Information information)
-	{
-		if(information instanceof FishInformation)
-		{
-			fishInformation = information;
-		}
-		else if (information instanceof ItemInformation)
-		{
-			itemInformation = information;
-		}
-		else if (information instanceof NetInformation)
-		{
-			netInformation = information;
-		}
-		else if (information instanceof TeleportInformation)
-		{
-			teleportInformation = information;
-		}
-	}
+
+    public void addItem(int id, int itemId) {
+        itemInformation = new ItemInformation(id, itemId);
+    }
+
+    public void addNet(int id) {
+        netInformation = new NetInformation(id);
+    }
+
+    public void addTeleport(int id, int targetId) {
+        teleportInformation = new TeleportInformation(id, targetId);
+    }
+
+    public void receiveInfo(Information information) {
+        if (information instanceof FishInformation) {
+            fishInformation = information;
+        } else if (information instanceof ItemInformation) {
+            itemInformation = information;
+        } else if (information instanceof NetInformation) {
+            netInformation = information;
+        } else if (information instanceof TeleportInformation) {
+            teleportInformation = information;
+        }
+    }
 
     public void addFishInfo(JsonArray fishInfo) {
-		fishInformation = new FishInformation();
-		fishInformation.setId(fishInfo.get(0).getAsInt());
-		FishInformation chosenFishInfo = (FishInformation) fishInformation;
+        fishInformation = new FishInformation();
+        fishInformation.setId(fishInfo.get(0).getAsInt());
+        FishInformation chosenFishInfo = (FishInformation) fishInformation;
         chosenFishInfo.setDirection(fishInfo.get(3).getAsInt());
         chosenFishInfo.setColor(fishInfo.get(4).getAsInt());
         chosenFishInfo.setQueen(fishInfo.get(5).getAsInt());
@@ -79,7 +68,7 @@ public class Tile {
 
     public void addFishInfo(int id, int direction, int color, int queen, int team) {
         fishInformation = new FishInformation();
-		fishInformation.setId(id);
+        fishInformation.setId(id);
         FishInformation chosenFishInfo = (FishInformation) fishInformation;
         chosenFishInfo.setDirection(direction);
         chosenFishInfo.setColor(color);
@@ -89,12 +78,12 @@ public class Tile {
     }
 
     public void clear() {
-		fishInformation = null;
-		itemInformation = null;
+        fishInformation = null;
+        itemInformation = null;
     }
 
     public void cleanNet() {
-		netInformation = null;
+        netInformation = null;
     }
 
     public Information getFishInformation() {

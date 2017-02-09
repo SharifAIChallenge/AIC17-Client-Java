@@ -2,7 +2,6 @@ package client;
 
 import client.model.FishInformation;
 import client.model.Game;
-import client.model.Node;
 import client.model.Tile;
 
 import java.util.Random;

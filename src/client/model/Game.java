@@ -1,6 +1,7 @@
 package client.model;
 
 //import client.World;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,14 +46,13 @@ public class Game {
     private double endRatio;
     private int disobeyNum;
     private int foodValidTime;
-
-
     private int trashValidTime;
-    private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash(:D)-2 and food-3 tiles
+
+    private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
     private Tile[][] fishes = new Tile[2][]; // my fish - 0, opp fish - 1
 
     private HashMap<Integer, Tile> idMap = new HashMap<>();
-    private HashMap<Integer, Information> infoMap = new HashMap<>(); // Don't use this on your doTurn method :\
+    private HashMap<Integer, Information> infoMap = new HashMap<>(); // This field is not usefull for user
 
     private Consumer<Message> sender;
     private Map map;
@@ -647,8 +647,7 @@ public class Game {
         return items[3];
     }
 
-    public FishInformation getFishInformation(int id)
-    {
+    public FishInformation getFishInformation(int id) {
         Tile fishTile = idMap.get(id);
         FishInformation theChosenInfo = (FishInformation) fishTile.getFishInformation();
         theChosenInfo.setX(fishTile.getX());
@@ -656,8 +655,7 @@ public class Game {
         return theChosenInfo;
     }
 
-    public ItemInformation getItemInformation(int id)
-    {
+    public ItemInformation getItemInformation(int id) {
         Tile itemTile = idMap.get(id);
         ItemInformation theChosenInfo = (ItemInformation) itemTile.getItemInformation();
         theChosenInfo.setX(itemTile.getX());
@@ -665,8 +663,7 @@ public class Game {
         return theChosenInfo;
     }
 
-    public NetInformation getNetInformation(int id)
-    {
+    public NetInformation getNetInformation(int id) {
         Tile netTile = idMap.get(id);
         NetInformation theChosenInfo = (NetInformation) netTile.getNetInformation();
         theChosenInfo.setX(netTile.getX());
@@ -674,8 +671,7 @@ public class Game {
         return theChosenInfo;
     }
 
-    public TeleportInformation getTeleportInformation(int id)
-    {
+    public TeleportInformation getTeleportInformation(int id) {
         Tile teleTile = idMap.get(id);
         TeleportInformation theChosenInfo = (TeleportInformation) teleTile.getTeleportInformation();
         theChosenInfo.setX(teleTile.getX());
