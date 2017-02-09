@@ -1,8 +1,7 @@
 package client.model;
 
-public class FishInformation extends ContentInformation
-{
-	private int direction = -1;
+public class FishInformation extends ContentInformation {
+    private int direction = -1;
     private int color = -1;
     private int queen = -1;
     private int sick = -1;
