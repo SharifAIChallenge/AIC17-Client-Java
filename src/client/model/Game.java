@@ -2,6 +2,7 @@ package client.model;
 
 //import client.World;
 
+import client.World;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -13,9 +14,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class Game {
+public class Game implements World {
     // Yo!
-    private int totalTurns;
     private int currentTurn = 0;
     private long totalTime;
     private long startTime;
@@ -495,134 +495,6 @@ public class Game {
         items[1] = netList.toArray(tempTile);
     }
 
-    public int getTotalTurns() {
-        return totalTurns;
-    }
-
-    public int getCurrentTurn() {
-        return currentTurn;
-    }
-
-    public long totalTime() {
-        return totalTime;
-    }
-
-    public long getTimePassed() {
-        return System.currentTimeMillis() - startTime;
-    }
-
-    public long getRemainingTime() {
-        return totalTime - getTimePassed();
-    }
-
-    public double getFoodProb() {
-        return foodProb;
-    }
-
-    public double getTrashProb() {
-        return trashProb;
-    }
-
-    public double getNetProb() {
-        return netProb;
-    }
-
-    public int getTurnTimeout() {
-        return turnTimeout;
-    }
-
-    public int getColorCost() {
-        return colorCost;
-    }
-
-    public int getSickCost() {
-        return sickCost;
-    }
-
-    public int getUpdateCost() {
-        return updateCost;
-    }
-
-    public int getDetMoveCost() {
-        return detMoveCost;
-    }
-
-    public int getKillQueenScore() {
-        return killQueenScore;
-    }
-
-    public int getKillBothQueenScore() {
-        return killBothQueenScore;
-    }
-
-    public int getKillFishScore() {
-        return killFishScore;
-    }
-
-    public int getQueenCollisionScore() {
-        return queenCollisionScore;
-    }
-
-    public int getFishFoodScore() {
-        return fishFoodScore;
-    }
-
-    public int getQueenFoodScore() {
-        return queenFoodScore;
-    }
-
-    public int getSickLifeTime() {
-        return sickLifeTime;
-    }
-
-    public double getPowerRatio() {
-        return powerRatio;
-    }
-
-    public double getEndRatio() {
-        return endRatio;
-    }
-
-    public int getDisobeyNum() {
-        return disobeyNum;
-    }
-
-    public int getFoodValidTime() {
-        return foodValidTime;
-    }
-
-    public int getTrashValidTime() {
-        return trashValidTime;
-    }
-
-    public long getTotalTime() {
-        return totalTime;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public int getTeamID() {
-        return teamID;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getMyScore() {
-        return myScore;
-    }
-
-    public int getOppScore() {
-        return oppScore;
-    }
-
     public Tile[] getMyTiles() {
         return fishes[0];
     }
@@ -683,9 +555,111 @@ public class Game {
         return map;
     }
 
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public double getFoodProb() {
+        return foodProb;
+    }
+
+    public double getTrashProb() {
+        return trashProb;
+    }
+
+    public double getNetProb() {
+        return netProb;
+    }
+
+    public int getTurnTimeout() {
+        return turnTimeout;
+    }
+
+    public int getColorCost() {
+        return colorCost;
+    }
+
+    public int getSickCost() {
+        return sickCost;
+    }
+
+    public int getUpdateCost() {
+        return updateCost;
+    }
+
+    public int getDetMoveCost() {
+        return detMoveCost;
+    }
+
+    public int getKillQueenScore() {
+        return killQueenScore;
+    }
+
+    public int getKillBothQueenScore() {
+        return killBothQueenScore;
+    }
+
+    public int getKillFishScore() {
+        return killFishScore;
+    }
+
+    public int getFishFoodScore() {
+        return fishFoodScore;
+    }
+
+    public int getQueenFoodScore() {
+        return queenFoodScore;
+    }
+
+    public int getSickLifeTime() {
+        return sickLifeTime;
+    }
+
+    public double getPowerRatio() {
+        return powerRatio;
+    }
+
+    public double getEndRatio() {
+        return endRatio;
+    }
+
+    public int getDisobeyNum() {
+        return disobeyNum;
+    }
+
+    public int getFoodValidTime() {
+        return foodValidTime;
+    }
+
+    public int getTrashValidTime() {
+        return trashValidTime;
+    }
+
+    public long getTotalTime() {
+        return System.currentTimeMillis() - startTime;
+    }
+
+    public int getTeamID() {
+        return teamID;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getMyScore() {
+        return myScore;
+    }
+
+    public int getOppScore() {
+        return oppScore;
+    }
+
     public int getNetValidTime() {
         return netValidTime;
     }
-
-
 }

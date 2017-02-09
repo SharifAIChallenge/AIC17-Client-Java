@@ -166,7 +166,7 @@ public interface World {
 
     /**
      *
-     * @return Milliseconds that the turn started
+     * @return Passed time(in milliseconds)
      */
     long getTotalTime();
 

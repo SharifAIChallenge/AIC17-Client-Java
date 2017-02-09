@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class AI {
 
-    public void doTurn(Game game) {
+    public void doTurn(World game) {
         // fill this method, we've presented a stupid AI for example!
         Random rand = new Random();
 
