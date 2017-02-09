@@ -1,5 +1,6 @@
 package client.model;
 
+//import client.World;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -204,6 +205,8 @@ public class Game {
             Change change = gson.fromJson(jsonString, Change.class);
             if (currentTurn == 1) {
                 System.out.println("Lol");
+            } else if (currentTurn == 2) {
+                System.out.println();
             }
 
             char type = change.getType();
@@ -325,6 +328,11 @@ public class Game {
                 Tile targetTile = map.getTile(tileX, tileY);
                 targetTile.receiveInfo(theChosenInfo);
                 idMap.put(id, targetTile);
+                System.out.println("-----------------------");
+                System.out.println(id);
+                System.out.println(targetTile.getFishInformation());
+                System.out.println(theChosenTile.getFishInformation());
+                System.out.println("-----------------------");
                 if (targetTile.getFishInformation().getId() == theChosenTile.getFishInformation().getId()) {
                     theChosenTile.clear();
                 }
@@ -507,10 +515,6 @@ public class Game {
         return totalTime - getTimePassed();
     }
 
-    public int getMyID() {
-        return teamID;
-    }
-
     public double getFoodProb() {
         return foodProb;
     }
@@ -643,6 +647,42 @@ public class Game {
         return items[3];
     }
 
+    public FishInformation getFishInformation(int id)
+    {
+        Tile fishTile = idMap.get(id);
+        FishInformation theChosenInfo = (FishInformation) fishTile.getFishInformation();
+        theChosenInfo.setX(fishTile.getX());
+        theChosenInfo.setY(fishTile.getY());
+        return theChosenInfo;
+    }
+
+    public ItemInformation getItemInformation(int id)
+    {
+        Tile itemTile = idMap.get(id);
+        ItemInformation theChosenInfo = (ItemInformation) itemTile.getItemInformation();
+        theChosenInfo.setX(itemTile.getX());
+        theChosenInfo.setY(itemTile.getY());
+        return theChosenInfo;
+    }
+
+    public NetInformation getNetInformation(int id)
+    {
+        Tile netTile = idMap.get(id);
+        NetInformation theChosenInfo = (NetInformation) netTile.getNetInformation();
+        theChosenInfo.setX(netTile.getX());
+        theChosenInfo.setY(netTile.getY());
+        return theChosenInfo;
+    }
+
+    public TeleportInformation getTeleportInformation(int id)
+    {
+        Tile teleTile = idMap.get(id);
+        TeleportInformation theChosenInfo = (TeleportInformation) teleTile.getTeleportInformation();
+        theChosenInfo.setX(teleTile.getX());
+        theChosenInfo.setY(teleTile.getY());
+        return theChosenInfo;
+    }
+
     public Map getMap() {
         return map;
     }
@@ -650,4 +690,6 @@ public class Game {
     public int getNetValidTime() {
         return netValidTime;
     }
+
+
 }

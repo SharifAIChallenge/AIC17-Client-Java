@@ -1,7 +1,6 @@
 package client;
 
-import client.model.Map;
-import client.model.Tile;
+import client.model.*;
 
 /**
  * Game Interface
@@ -50,213 +49,241 @@ public interface World {
      *
      * @return Food probability
      */
-    public double getFoodProb();
+    double getFoodProb();
 
     /**
      * Probability of a trash showing up in any of the tiles without content(Cockroach or food)
      *
      * @return Trash probability
      */
-    public double getTrashProb();
+    double getTrashProb();
 
     /**
      * Probability of a net showing up in any of the tiles without a net
      *
      * @return Net probability
      */
-    public double getNetProb();
+    double getNetProb();
 
     /**
      *
      * @return Maximum amount of turns
      */
-    public int getTurnTimeout();
+    int getTurnTimeout();
 
     /**
      * Cost of changing the antenna of a cockroach
      *
      * @return Antenna cost
      */
-    public int getColorCost();
+    int getColorCost();
 
     /**
      * Sick cockroaches give points to the opposing team of all their 8 neighbours
      *
      * @return Given points for each neighbour
      */
-    public int getSickCost();
+    int getSickCost();
 
     /**
      *
      * @return Cost of changing strategy
      */
-    public int getUpdateCost();
+    int getUpdateCost();
 
     /**
      *
      * @return Cost of a deterministic move
      */
-    public int getDetMoveCost();
+    int getDetMoveCost();
 
     /**
      *
      * @return Points achieved
      */
-    public int getKillQueenScore();
+    int getKillQueenScore();
 
     /**
      *
      * @return
      */
-    public int getKillBothQueenScore();
+    int getKillBothQueenScore();
 
     /**
      *
      * @return
      */
-    public int getKillFishScore();
+    int getKillFishScore();
 
     /**
      *
      * @return
      */
-    public int getQueenCollisionScore();
+    int getQueenCollisionScore();
 
     /**
      *
      * @return
      */
-    public int getFishFoodScore();
+    int getFishFoodScore();
 
     /**
      *
      * @return
      */
-    public int getQueenFoodScore();
+    int getQueenFoodScore();
 
     /**
      *
      * @return
      */
-    public int getSickLifeTime();
+    int getSickLifeTime();
 
     /**
      *
      * @return
      */
-    public double getPowerRatio();
+    double getPowerRatio();
 
     /**
      *
      * @return
      */
-    public double getEndRatio();
+    double getEndRatio();
 
     /**
      *
      * @return
      */
-    public int getDisobeyNum();
+    int getDisobeyNum();
 
     /**
      *
      * @return
      */
-    public int getFoodValidTime();
+    int getFoodValidTime();
 
     /**
      *
      * @return
      */
-    public int getTrashValidTime();
+    int getTrashValidTime();
 
     /**
      *
      * @return
      */
-    public long getTotalTime();
+    long getTotalTime();
 
     /**
      *
      * @return
      */
-    public long getStartTime();
+    long getStartTime();
 
     /**
      *
      * @return
      */
-    public int getTeamID();
+    int getTeamID();
 
     /**
      *
      * @return
      */
-    public int getWidth();
+    int getWidth();
 
     /**
      *
      * @return
      */
-    public int getHeight();
+    int getHeight();
 
     /**
      *
      * @return
      */
-    public int getMyScore();
+    int getMyScore();
 
     /**
      *
      * @return
      */
-    public int getOppScore();
+    int getOppScore();
 
     /**
      *
      * @return
      */
-    public Tile[] getMyTiles();
+    Tile[] getMyTiles();
 
     /**
      *
      * @return
      */
-    public Tile[] getOppTiles();
+    Tile[] getOppTiles();
 
     /**
      *
      * @return
      */
-    public Tile[] getTeleportTiles();
+    Tile[] getTeleportTiles();
 
     /**
      *
      * @return
      */
-    public Tile[] getNetTiles();
+    Tile[] getNetTiles();
 
     /**
      *
      * @return
      */
-    public Tile[] getTrashTiles();
+    Tile[] getTrashTiles();
 
     /**
      *
      * @return
      */
-    public Tile[] getFoodTiles();
+    Tile[] getFoodTiles();
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    FishInformation getFishInformation(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    ItemInformation getItemInformation(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    NetInformation getNetInformation(int id);
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    TeleportInformation getTeleportInformation(int id);
 
     /**
      *
      * @return
      */
-    public Map getMap();
+    Map getMap();
 
     /**
      *
      * @return
      */
-    public int getNetValidTime();
+    int getNetValidTime();
 }

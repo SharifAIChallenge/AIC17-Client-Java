@@ -1,5 +1,6 @@
 package client;
 
+import client.model.FishInformation;
 import client.model.Game;
 import client.model.Node;
 import client.model.Tile;
@@ -24,6 +25,8 @@ public class AI {
 
 
         Tile[][] tiles = game.getMap().getTiles();
+        Tile[] myFishTile = game.getMyTiles();
+        FishInformation fishInformation = (FishInformation) myFishTile[0].getFishInformation();
 
         if (game.getCurrentTurn() == 1)
         {
@@ -40,6 +43,7 @@ public class AI {
                     }
                 }
             }
+            game.antennaChange(fishInformation.getId(), 1 - fishInformation.getColor());
         }
         else
         {
