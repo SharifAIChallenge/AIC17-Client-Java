@@ -6,9 +6,9 @@ package client.model;
 public class Food extends Entity{
     private int remainingTurn;
 
-    Food(int id, int currentTurn) {
+    Food(int id, int foodValidTime) {
         super(id, EntityType.Food);
-        remainingTurn = currentTurn--;
+        remainingTurn = foodValidTime--;
     }
 
     public int getRemainingTurns(){

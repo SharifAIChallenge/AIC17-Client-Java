@@ -28,7 +28,7 @@ public class Game implements World {
 
 
 
-    private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 Cells
+    private Cell[][] items = new Cell[4][]; // Teleport-0, slipper-1, Trash-2 and food-3 Cells
     private Cell[][] beetles = new Cell[2][]; // my Beetle - 0, opp Beetle - 1
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
@@ -40,7 +40,6 @@ public class Game implements World {
     public Game(Consumer<Message> sender) {
         this.sender = sender;
     }
-
 
     public void changeStrategy(int color, int right, int front, int left, int strategy) {
         Event event = new Event("s", new Object[]{color, right, front, left, strategy});
@@ -58,6 +57,9 @@ public class Game implements World {
     }
 
     public void handleInitMessage(Message msg) {
+        JsonArray constants = msg.args.get(7).getAsJsonArray();
+        this.setConstants(constants);
+
         teamID = msg.args.get(0).getAsInt();
 
         JsonArray size = msg.args.get(1).getAsJsonArray();
@@ -106,7 +108,7 @@ public class Game implements World {
             int cellY = foodInfo.get(2).getAsInt();
 
             Cell theChosenCell = map.getCell(cellX, cellY);
-            theChosenCell.addItem(id, 0);
+            theChosenCell.addFood(id, this.constants.getFoodValidTime());
             foodCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
@@ -123,7 +125,7 @@ public class Game implements World {
             int cellY = trashInfo.get(2).getAsInt();
 
             Cell theChosenCell = cells[cellX][cellY];
-            theChosenCell.addItem(id, 1);
+            theChosenCell.addTrash(id, this.constants.getTrashValidTime());
             trashCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
@@ -131,22 +133,22 @@ public class Game implements World {
         }
         items[2] = trashCells;
 
-        JsonArray nets = msg.args.get(5).getAsJsonArray();
-        Cell[] netCells = new Cell[nets.size()];
-        for (int i = 0; i < nets.size(); i++) {
-            JsonArray netInfo = nets.get(i).getAsJsonArray();
-            int id = netInfo.get(0).getAsInt();
-            int cellX = netInfo.get(1).getAsInt();
-            int cellY = netInfo.get(2).getAsInt();
+        JsonArray slippers = msg.args.get(5).getAsJsonArray();
+        Cell[] slipperCells = new Cell[slippers.size()];
+        for (int i = 0; i < slippers.size(); i++) {
+            JsonArray slipperInfo = slippers.get(i).getAsJsonArray();
+            int id = slipperInfo.get(0).getAsInt();
+            int cellX = slipperInfo.get(1).getAsInt();
+            int cellY = slipperInfo.get(2).getAsInt();
 
             Cell theChosenCell = cells[cellX][cellY];
-            theChosenCell.addSlipper(id, currentTurn);
-            netCells[i] = theChosenCell;
+            theChosenCell.addSlipper(id, this.constants.getNetValidTime());
+            slipperCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getNetEntity());
+            infoMap.put(id, theChosenCell.getSlipperEntity());
         }
-        items[1] = netCells;
+        items[1] = slipperCells;
 
         JsonArray teleports = msg.args.get(6).getAsJsonArray();
         Cell[] teleportCells = new Cell[teleports.size()];
@@ -165,8 +167,7 @@ public class Game implements World {
         }
         items[0] = teleportCells;
 
-        JsonArray constants = msg.args.get(7).getAsJsonArray();
-        this.setConstants(constants);
+
 
     }
 
@@ -285,11 +286,11 @@ public class Game implements World {
             items[2] = trashList.toArray(tempCell);
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Slipper) {
-            ArrayList<Cell> netList = new ArrayList<Cell>(Arrays.asList(items[1]));
-            netList.remove(theChosenCell);
-            Cell[] tempCell = new Cell[netList.size()];
-            items[1] = netList.toArray(tempCell);
-            theChosenCell.cleanNet();
+            ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(items[1]));
+            slipperList.remove(theChosenCell);
+            Cell[] tempCell = new Cell[slipperList.size()];
+            items[1] = slipperList.toArray(tempCell);
+            theChosenCell.cleanSlipper();
         }
     }
 
@@ -429,7 +430,7 @@ public class Game implements World {
         int cellY = changes.get(3);
 
         Cell theChosenCell = map.getCell(cellX, cellY);
-        theChosenCell.addItem(id, 0);
+        theChosenCell.addFood(id, constants.getFoodValidTime());
 
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
@@ -447,7 +448,7 @@ public class Game implements World {
         int cellY = changes.get(3);
 
         Cell theChosenCell = map.getCell(cellX, cellY);
-        theChosenCell.addItem(id, 1);
+        theChosenCell.addTrash(id, constants.getTrashValidTime());
 
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
@@ -464,15 +465,15 @@ public class Game implements World {
         int cellY = changes.get(3);
 
         Cell theChosenCell = map.getCell(cellX, cellY);
-        theChosenCell.addSlipper(id, currentTurn);
+        theChosenCell.addSlipper(id, constants.getNetValidTime());
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getNetEntity());
+        infoMap.put(id, theChosenCell.getSlipperEntity());
 
-        ArrayList<Cell> netList = new ArrayList<Cell>(Arrays.asList(items[1]));
-        netList.add(theChosenCell);
-        Cell[] tempCell = new Cell[netList.size()];
-        items[1] = netList.toArray(tempCell);
+        ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(items[1]));
+        slipperList.add(theChosenCell);
+        Cell[] tempCell = new Cell[slipperList.size()];
+        items[1] = slipperList.toArray(tempCell);
     }
 
     public Cell[] getMyCells() {
@@ -487,7 +488,7 @@ public class Game implements World {
         return items[0];
     }
 
-    public Cell[] getNetCells() {
+    public Cell[] getSlipperCells() {
         return items[1];
     }
 
@@ -515,11 +516,11 @@ public class Game implements World {
         return theChosenInfo;
     }
 
-    public Slipper getNetInformation(int id) {
-        Cell netCell = idMap.get(id);
-        Slipper theChosenInfo = (Slipper) netCell.getNetEntity();
-        theChosenInfo.setX(netCell.getX());
-        theChosenInfo.setY(netCell.getY());
+    public Slipper getSlipperInformation(int id) {
+        Cell slipperCell = idMap.get(id);
+        Slipper theChosenInfo = (Slipper) slipperCell.getSlipperEntity();
+        theChosenInfo.setX(slipperCell.getX());
+        theChosenInfo.setY(slipperCell.getY());
         return theChosenInfo;
     }
 

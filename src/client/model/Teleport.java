@@ -2,12 +2,10 @@ package client.model;
 
 public class Teleport extends Entity{
     protected int targetId;
-    private int remainingTurn;
 
-    Teleport(int id, int targetId, int currentTurn) {
+    Teleport(int id, int targetId) {
         super(id, EntityType.Teleport);
         this.targetId = targetId;
-        this.remainingTurn = currentTurn--;
     }
 
 
@@ -19,7 +17,4 @@ public class Teleport extends Entity{
         this.targetId = targetId;
     }
 
-    public int getRemainingTurns(){
-        return this.remainingTurn;
-    }
 }

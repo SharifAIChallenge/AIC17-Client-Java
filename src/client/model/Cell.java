@@ -7,20 +7,30 @@ public class Cell {
     private int y;
     private Entity beetleEntity;
     private Entity itemEntity;
-    private Entity netEntity;
+    private Entity slipperEntity;
     private Entity teleportEntity;
+    private Entity food;
+    private Entity trash;
 
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void addItem(int id, int itemId) {
-        itemEntity = new ItemEntity(id, itemId);
+
+    void addTrash(int id, int trashValidTime) {
+        trash = new Trash(id, trashValidTime);
     }
 
-    public void addSlipper(int id, int currentTurn) {
-        netEntity = new Slipper(id, currentTurn);
+
+    void addFood(int id, int foodValidTime) {
+        food = new Food(id, foodValidTime);
+    }
+
+
+
+    public void addSlipper(int id, int slipperValidTime) {
+        slipperEntity = new Slipper(id, slipperValidTime);
     }
 
     public void addTeleport(int id, int targetId) {
@@ -33,7 +43,7 @@ public class Cell {
         } else if (entity instanceof ItemEntity) {
             itemEntity = entity;
         } else if (entity instanceof Slipper) {
-            netEntity = entity;
+            slipperEntity = entity;
         } else if (entity instanceof Teleport) {
             teleportEntity = entity;
         }
@@ -77,11 +87,13 @@ public class Cell {
 
     public void clear() {
         beetleEntity = null;
+        food = null;
+        trash = null;
         itemEntity = null;
     }
 
-    public void cleanNet() {
-        netEntity = null;
+    public void cleanSlipper() {
+        slipperEntity = null;
     }
 
     public Entity getBeetleEntity() {
@@ -100,12 +112,12 @@ public class Cell {
         this.itemEntity = itemEntity;
     }
 
-    public Entity getNetEntity() {
-        return netEntity;
+    public Entity getSlipperEntity() {
+        return slipperEntity;
     }
 
-    public void setNetEntity(Entity netEntity) {
-        this.netEntity = netEntity;
+    public void setSlipperEntity(Entity slipperEntity) {
+        this.slipperEntity = slipperEntity;
     }
 
     public Entity getTeleportEntity() {

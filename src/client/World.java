@@ -103,7 +103,7 @@ public interface World {
      *
      * @return Cells which contains net
      */
-    Cell[] getNetCells();
+    Cell[] getSlipperCells();
 
     /**
      *
@@ -136,7 +136,7 @@ public interface World {
      * @param id Net id
      * @return Entity object related to the given net
      */
-    Slipper getNetInformation(int id);
+    Slipper getSlipperInformation(int id);
 
     /**
      *
