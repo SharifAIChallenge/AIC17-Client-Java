@@ -234,6 +234,7 @@ public class Game implements World {
                 }
             }
         }
+		handleFinalChanges();
     }
 
 	private void handleFinalChanges()
