@@ -2,6 +2,8 @@ package client.model;
 
 public class Map {
     private Cell[][] cells;
+	private int height;
+	private int width;
 
 	private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 Cells
     private Cell[][] beetles = new Cell[2][]; // my Beetle - 0, opp Beetle - 1
