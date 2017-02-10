@@ -24,12 +24,8 @@ public class Game implements World {
     private int height;
     private int myScore;
     private int oppScore;
+	
     private Constants constants;
-
-
-
-    private Cell[][] items = new Cell[4][]; // Teleport-0, slipper-1, Trash-2 and food-3 Cells
-    private Cell[][] beetles = new Cell[2][]; // my Beetle - 0, opp Beetle - 1
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
     private HashMap<Integer, Entity> infoMap = new HashMap<>(); // This field is not usefull for user
