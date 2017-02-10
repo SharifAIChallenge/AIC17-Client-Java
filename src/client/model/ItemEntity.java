@@ -1,9 +1,9 @@
 package client.model;
 
-public class ItemInformation extends ContentInformation {
+public class ItemEntity extends Entity {
     private int itemId = -1; // food-0, trash-1
 
-    ItemInformation(int id, int itemId) {
+    ItemEntity(int id, int itemId) {
         super(id);
         this.itemId = itemId;
     }

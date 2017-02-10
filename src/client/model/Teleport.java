@@ -1,10 +1,9 @@
 package client.model;
 
-public class TeleportInformation extends Information {
+public class Teleport extends Entity{
     protected int targetId;
 
-    TeleportInformation(int id, int targetId) {
-        super(id);
+    Teleport(int id, int targetId) {
         this.targetId = targetId;
     }
 

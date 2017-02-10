@@ -5,10 +5,10 @@ import com.google.gson.JsonArray;
 public class Cell {
     private int x;
     private int y;
-    private Information beetleInformation;
-    private Information itemInformation;
-    private Information netInformation;
-    private Information teleportInformation;
+    private Entity beetleEntity;
+    private Entity itemEntity;
+    private Entity netEntity;
+    private Entity teleportEntity;
 
     public Cell(int x, int y) {
         this.x = x;
@@ -16,33 +16,33 @@ public class Cell {
     }
 
     public void addItem(int id, int itemId) {
-        itemInformation = new ItemInformation(id, itemId);
+        itemEntity = new ItemEntity(id, itemId);
     }
 
     public void addNet(int id) {
-        netInformation = new NetInformation(id);
+        netEntity = new Slipper(id);
     }
 
     public void addTeleport(int id, int targetId) {
-        teleportInformation = new TeleportInformation(id, targetId);
+        teleportEntity = new Teleport(id, targetId);
     }
 
-    public void receiveInfo(Information information) {
-        if (information instanceof BeetleInformation) {
-            beetleInformation = information;
-        } else if (information instanceof ItemInformation) {
-            itemInformation = information;
-        } else if (information instanceof NetInformation) {
-            netInformation = information;
-        } else if (information instanceof TeleportInformation) {
-            teleportInformation = information;
+    public void receiveInfo(Entity entity) {
+        if (entity instanceof Beetle) {
+            beetleEntity = entity;
+        } else if (entity instanceof ItemEntity) {
+            itemEntity = entity;
+        } else if (entity instanceof Slipper) {
+            netEntity = entity;
+        } else if (entity instanceof Teleport) {
+            teleportEntity = entity;
         }
     }
 
     public void addBeetleInfo(JsonArray beetleInfo) {
-        beetleInformation = new BeetleInformation();
-        beetleInformation.setId(beetleInfo.get(0).getAsInt());
-        BeetleInformation chosenBeetleInfo = (BeetleInformation) beetleInformation;
+        beetleEntity = new Beetle();
+        beetleEntity.setId(beetleInfo.get(0).getAsInt());
+        Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(beetleInfo.get(3).getAsInt());
         chosenBeetleInfo.setColor(beetleInfo.get(4).getAsInt());
         chosenBeetleInfo.setQueen(beetleInfo.get(5).getAsInt());
@@ -67,9 +67,9 @@ public class Cell {
     }
 
     public void addBeetleInfo(int id, int direction, int color, int queen, int team) {
-        beetleInformation = new BeetleInformation();
-        beetleInformation.setId(id);
-        BeetleInformation chosenBeetleInfo = (BeetleInformation) beetleInformation;
+        beetleEntity = new Beetle();
+        beetleEntity.setId(id);
+        Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(direction);
         chosenBeetleInfo.setColor(color);
         chosenBeetleInfo.setQueen(queen);
@@ -78,43 +78,43 @@ public class Cell {
     }
 
     public void clear() {
-        beetleInformation = null;
-        itemInformation = null;
+        beetleEntity = null;
+        itemEntity = null;
     }
 
     public void cleanNet() {
-        netInformation = null;
+        netEntity = null;
     }
 
-    public Information getBeetleInformation() {
-        return beetleInformation;
+    public Entity getBeetleEntity() {
+        return beetleEntity;
     }
 
-    public void setBeetleInformation(Information beetleInformation) {
-        this.beetleInformation = beetleInformation;
+    public void setBeetleEntity(Entity beetleEntity) {
+        this.beetleEntity = beetleEntity;
     }
 
-    public Information getItemInformation() {
-        return itemInformation;
+    public Entity getItemEntity() {
+        return itemEntity;
     }
 
-    public void setItemInformation(Information itemInformation) {
-        this.itemInformation = itemInformation;
+    public void setItemEntity(Entity itemEntity) {
+        this.itemEntity = itemEntity;
     }
 
-    public Information getNetInformation() {
-        return netInformation;
+    public Entity getNetEntity() {
+        return netEntity;
     }
 
-    public void setNetInformation(Information netInformation) {
-        this.netInformation = netInformation;
+    public void setNetEntity(Entity netEntity) {
+        this.netEntity = netEntity;
     }
 
-    public Information getTeleportInformation() {
-        return teleportInformation;
+    public Entity getTeleportEntity() {
+        return teleportEntity;
     }
 
-    public void setTeleportInformation(Information teleportInformation) {
-        this.teleportInformation = teleportInformation;
+    public void setTeleportEntity(Entity teleportEntity) {
+        this.teleportEntity = teleportEntity;
     }
 }

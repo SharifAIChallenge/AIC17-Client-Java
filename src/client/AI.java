@@ -1,6 +1,6 @@
 package client;
 
-import client.model.BeetleInformation;
+import client.model.Beetle;
 import client.model.Cell;
 
 import java.util.Random;
@@ -24,7 +24,7 @@ public class AI {
 
         Cell[][] cells = game.getMap().getCells();
         Cell[] myFishCell = game.getMyTiles();
-        BeetleInformation beetleInformation = (BeetleInformation) myFishCell[0].getBeetleInformation();
+        Beetle beetleInformation = (Beetle) myFishCell[0].getBeetleEntity();
 
         if (game.getCurrentTurn() == 1)
         {

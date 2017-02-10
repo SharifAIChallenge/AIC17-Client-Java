@@ -1,6 +1,6 @@
 package client.model;
 
-public class BeetleInformation extends ContentInformation {
+public class Beetle extends Entity {
     private int direction = -1;
     private int color = -1;
     private int queen = -1;

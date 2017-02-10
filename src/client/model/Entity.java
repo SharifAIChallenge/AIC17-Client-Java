@@ -1,19 +1,19 @@
 package client.model;
 
-public class Information {
+public class Entity {
     private int id = -1;
 
     /*
      * These two fields are only used when we are
-     * passing an Information object to user
+     * passing an Entity object to user
      */
     private int x;
     private int y;
 
-    Information() {
+    Entity() {
     }
 
-    Information(int id) {
+    Entity(int id) {
         this.id = id;
     }
 
