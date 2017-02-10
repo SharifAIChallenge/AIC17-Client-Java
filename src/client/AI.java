@@ -23,8 +23,6 @@ public class AI {
 
 
         Cell[][] cells = game.getMap().getCells();
-        Cell[] myFishCell = game.getMyTiles();
-        Beetle beetleInformation = (Beetle) myFishCell[0].getBeetleEntity();
 
         if (game.getCurrentTurn() == 1)
         {
@@ -41,7 +39,6 @@ public class AI {
                     }
                 }
             }
-            game.antennaChange(beetleInformation.getId(), 1 - beetleInformation.getColor());
         }
         else
         {

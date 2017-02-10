@@ -1,7 +1,7 @@
 package client.model;
 
 public class Map {
-    private Cell[][] cells;
+    static Cell[][] cells;
 
     public Map(Cell[][] cells) {
         this.cells = cells;

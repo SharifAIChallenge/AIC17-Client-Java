@@ -19,8 +19,8 @@ public class Cell {
         itemEntity = new ItemEntity(id, itemId);
     }
 
-    public void addNet(int id) {
-        netEntity = new Slipper(id);
+    public void addSlipper(int id, int currentTurn) {
+        netEntity = new Slipper(id, currentTurn);
     }
 
     public void addTeleport(int id, int targetId) {
@@ -40,8 +40,7 @@ public class Cell {
     }
 
     public void addBeetleInfo(JsonArray beetleInfo) {
-        beetleEntity = new Beetle();
-        beetleEntity.setId(beetleInfo.get(0).getAsInt());
+        beetleEntity = new Beetle(beetleInfo.get(0).getAsInt());
         Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(beetleInfo.get(3).getAsInt());
         chosenBeetleInfo.setColor(beetleInfo.get(4).getAsInt());
@@ -67,8 +66,7 @@ public class Cell {
     }
 
     public void addBeetleInfo(int id, int direction, int color, int queen, int team) {
-        beetleEntity = new Beetle();
-        beetleEntity.setId(id);
+        beetleEntity = new Beetle(id);
         Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(direction);
         chosenBeetleInfo.setColor(color);

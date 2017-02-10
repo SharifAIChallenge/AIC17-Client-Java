@@ -1,38 +1,59 @@
 package client.model;
 
 public class Beetle extends Entity {
-    private int direction = -1;
+    private Direction direction;
+    private BeetleType beetleType;
+    private int directionInt = -1;
     private int color = -1;
     private int queen = -1;
     private int sick = -1;
     private int team = -1;
 
-    int getDirection() {
-        return direction;
+
+    Beetle(int id) {
+        super(id, EntityType.Beetle);
     }
 
-    void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public int getColor() {
+    int getColor() {
         return color;
     }
 
-    void setColor(int color) {
-        this.color = color;
+    void setDirection(int direction) {
+        switch (direction) {
+            case 0:
+                this.direction = Direction.Right;
+                break;
+            case 1:
+                this.direction = Direction.Up;
+                break;
+            case 2:
+                this.direction = Direction.Left;
+                break;
+            case 3:
+                this.direction = Direction.Down;
+                break;
+        }
+        this.directionInt = direction;
     }
 
-    public int getQueen() {
-        return queen;
+    int getDirectionInt() {
+        return this.directionInt;
+    }
+
+    void setColor(int color) {
+        switch (color) {
+            case 0:
+                this.beetleType = BeetleType.LOW;
+                break;
+            case 1:
+                this.beetleType = BeetleType.HIGH;
+                break;
+        }
+        this.color = color;
     }
 
     void setQueen(int queen) {
         this.queen = queen;
-    }
-
-    public int getSick() {
-        return sick;
     }
 
     void setSick(int sick) {
@@ -45,5 +66,29 @@ public class Beetle extends Entity {
 
     void setTeam(int team) {
         this.team = team;
+    }
+
+    public boolean is_sick() {
+        return (sick == 1);
+    }
+
+    public int getRow(){
+        return this.getX();
+    }
+
+    public int getColumn(){
+        return this.getY();
+    }
+
+    public Direction getDirection(){
+        return this.direction;
+    }
+
+    public BeetleType getBeetleType(){
+        return this.beetleType;
+    }
+
+    public boolean has_winge(){
+        return (queen == 1);
     }
 }

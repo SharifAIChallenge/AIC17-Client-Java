@@ -26,7 +26,6 @@ public class Game implements World {
     private int oppScore;
     private Constants constants;
 
-    // Constants
 
 
     private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 Cells
@@ -141,7 +140,7 @@ public class Game implements World {
             int cellY = netInfo.get(2).getAsInt();
 
             Cell theChosenCell = cells[cellX][cellY];
-            theChosenCell.addNet(id);
+            theChosenCell.addSlipper(id, currentTurn);
             netCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
@@ -206,7 +205,7 @@ public class Game implements World {
                             addTrash(addChange);
                             break;
                         case 3:
-                            addNet(addChange);
+                            addSlipper(addChange);
                             break;
                     }
                 }
@@ -301,11 +300,11 @@ public class Game implements World {
         Beetle theChosenInfo = (Beetle) (infoMap.get(id));
         switch (move) {
             case 0:
-                theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
+                theChosenInfo.setDirection((theChosenInfo.getDirectionInt() + 3) % 4);
                 break;
             case 1:
-                int cellX = nextX(theChosenCell, theChosenInfo.getDirection());
-                int cellY = nextY(theChosenCell, theChosenInfo.getDirection());
+                int cellX = nextX(theChosenCell, theChosenInfo.getDirectionInt());
+                int cellY = nextY(theChosenCell, theChosenInfo.getDirectionInt());
                 Cell targetCell = map.getCell(cellX, cellY);
                 targetCell.receiveInfo(theChosenInfo);
                 idMap.put(id, targetCell);
@@ -319,7 +318,7 @@ public class Game implements World {
                 }
                 break;
             case 2:
-                theChosenInfo.setDirection((theChosenInfo.getDirection() + 1) % 4);
+                theChosenInfo.setDirection((theChosenInfo.getDirectionInt() + 1) % 4);
                 break;
         }
     }
@@ -459,13 +458,13 @@ public class Game implements World {
         items[2] = trashList.toArray(tempCell);
     }
 
-    private void addNet(ArrayList<Integer> changes) {
+    private void addSlipper(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int cellX = changes.get(2);
         int cellY = changes.get(3);
 
         Cell theChosenCell = map.getCell(cellX, cellY);
-        theChosenCell.addNet(id);
+        theChosenCell.addSlipper(id, currentTurn);
 
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getNetEntity());

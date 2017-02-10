@@ -2,7 +2,8 @@ package client.model;
 
 public class Entity {
     private int id = -1;
-
+    private EntityType entityType;
+    private Cell cell;
     /*
      * These two fields are only used when we are
      * passing an Entity object to user
@@ -15,6 +16,11 @@ public class Entity {
 
     Entity(int id) {
         this.id = id;
+    }
+
+    Entity(int id, EntityType entityType) {
+        this.id = id;
+        this.entityType = entityType;
     }
 
     public int getId() {
@@ -39,5 +45,17 @@ public class Entity {
 
     void setY(int y) {
         this.y = y;
+    }
+
+    void setCell(Cell cell) {
+        this.cell = cell;
+    }
+
+    public Cell getPosition() {
+        return this.cell;
+    }
+
+    public EntityType getType(){
+        return this.entityType;
     }
 }
