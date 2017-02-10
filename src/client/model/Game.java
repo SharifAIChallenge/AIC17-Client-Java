@@ -236,6 +236,28 @@ public class Game implements World {
         }
     }
 
+	private void handleFinalChanges()
+	{
+		map.setIdMap(idMap);
+		handleTeleports();
+		handleEntityCells();
+		handleFoodRemainings();
+		handleTrashRemainings();
+		handleSlipperRemainings();
+	}
+	
+	private void handleTeleports()
+	{
+		Cell[] teleportCells = map.getTeleportCells();
+		for(Cell cell : teleportCells)
+		{
+			Teleport theChosenTeleport = (Teleport) cell.getTeleport();
+			int targetId = theChosenTeleport.getTargetId();
+			Teleport targetTeleport = (Teleport) idMap.get(targetId).getTeleport();
+			theChosenTeleport.setPair(targetTeleport);
+		}
+	}
+	
     private void itemAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int x = changes.get(1);
