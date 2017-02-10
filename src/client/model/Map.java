@@ -99,4 +99,14 @@ public class Map {
 	public EntityType getEntityType(int id) {
 		return idMap.get(id).getType();
 	}
+	
+	public void setBeetles(Cell[][] beetles)
+	{
+		this.beetles = beetles;
+	}
+	
+	public void setItems(Cell[][] items)
+	{
+		this.items = items;
+	}
 }

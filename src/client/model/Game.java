@@ -72,7 +72,7 @@ public class Game implements World {
 
 
         JsonArray Beetles = msg.args.get(2).getAsJsonArray();
-        this.beetles = new Cell[2][Beetles.size()];
+        Cell[][] beetles = new Cell[2][Beetles.size()];
         int myBeetle = 0;
         int oppBeetle = 0;
         for (int i = 0; i < Beetles.size(); i++) {
@@ -94,6 +94,7 @@ public class Game implements World {
                 this.beetles[1][oppBeetle++] = theChosenCell;
             }
         }
+		map.setBeetles(beetles);
 
         JsonArray foods = msg.args.get(3).getAsJsonArray();
         Cell[] foodCells = new Cell[foods.size()];
@@ -110,7 +111,7 @@ public class Game implements World {
             idMap.put(id, theChosenCell);
             infoMap.put(id, theChosenCell.getItemEntity());
         }
-        items[3] = foodCells;
+        map.setFoodCells(foodCells);
 
         JsonArray trashes = msg.args.get(4).getAsJsonArray();
         Cell[] trashCells = new Cell[trashes.size()];
@@ -127,7 +128,7 @@ public class Game implements World {
             idMap.put(id, theChosenCell);
             infoMap.put(id, theChosenCell.getItemEntity());
         }
-        items[2] = trashCells;
+        map.setTrashCells(targetCells);
 
         JsonArray slippers = msg.args.get(5).getAsJsonArray();
         Cell[] slipperCells = new Cell[slippers.size()];
@@ -144,7 +145,7 @@ public class Game implements World {
             idMap.put(id, theChosenCell);
             infoMap.put(id, theChosenCell.getSlipperEntity());
         }
-        items[1] = slipperCells;
+        map.setSlipperCells(slipperCells);
 
         JsonArray teleports = msg.args.get(6).getAsJsonArray();
         Cell[] teleportCells = new Cell[teleports.size()];
@@ -161,10 +162,7 @@ public class Game implements World {
             idMap.put(id, theChosenCell);
             infoMap.put(id, theChosenCell.getTeleportEntity());
         }
-        items[0] = teleportCells;
-
-
-
+        map.setTeleportCells(teleportCells);
     }
 
     public void handleTurnMessage(Message msg) {
