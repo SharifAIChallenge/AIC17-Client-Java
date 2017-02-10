@@ -204,37 +204,37 @@ public interface World {
      *
      * @return Tiles which contains user's beetles
      */
-    Tile[] getMyTiles();
+    Cell[] getMyTiles();
 
     /**
      *
      * @return Tiles which contains opponent's beetles
      */
-    Tile[] getOppTiles();
+    Cell[] getOppTiles();
 
     /**
      *
      * @return Tiles which contains Teleporting devices
      */
-    Tile[] getTeleportTiles();
+    Cell[] getTeleportTiles();
 
     /**
      *
      * @return Tiles which contains net
      */
-    Tile[] getNetTiles();
+    Cell[] getNetTiles();
 
     /**
      *
      * @return Tiles which contains trash
      */
-    Tile[] getTrashTiles();
+    Cell[] getTrashTiles();
 
     /**
      *
      * @return Tiles which contains food
      */
-    Tile[] getFoodTiles();
+    Cell[] getFoodTiles();
 
     /**
      *

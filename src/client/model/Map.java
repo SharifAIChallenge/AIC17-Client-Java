@@ -1,17 +1,17 @@
 package client.model;
 
 public class Map {
-    private Tile[][] tiles;
+    private Cell[][] cells;
 
-    public Map(Tile[][] tiles) {
-        this.tiles = tiles;
+    public Map(Cell[][] cells) {
+        this.cells = cells;
     }
 
-    public Tile[][] getTiles() {
-        return tiles;
+    public Cell[][] getCells() {
+        return cells;
     }
 
-    public Tile getTile(int x, int y) {
-        return tiles[x][y];
+    public Cell getTile(int x, int y) {
+        return cells[x][y];
     }
 }

@@ -1,7 +1,7 @@
 package client;
 
 import client.model.CockroachInformation;
-import client.model.Tile;
+import client.model.Cell;
 
 import java.util.Random;
 
@@ -22,9 +22,9 @@ public class AI {
         Random rand = new Random();
 
 
-        Tile[][] tiles = game.getMap().getTiles();
-        Tile[] myFishTile = game.getMyTiles();
-        CockroachInformation cockroachInformation = (CockroachInformation) myFishTile[0].getCockroachInformation();
+        Cell[][] cells = game.getMap().getCells();
+        Cell[] myFishCell = game.getMyTiles();
+        CockroachInformation cockroachInformation = (CockroachInformation) myFishCell[0].getCockroachInformation();
 
         if (game.getCurrentTurn() == 1)
         {

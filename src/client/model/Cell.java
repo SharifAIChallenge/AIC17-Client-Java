@@ -2,7 +2,7 @@ package client.model;
 
 import com.google.gson.JsonArray;
 
-public class Tile {
+public class Cell {
     private int x;
     private int y;
     private Information cockroachInformation;
@@ -10,7 +10,7 @@ public class Tile {
     private Information netInformation;
     private Information teleportInformation;
 
-    public Tile(int x, int y) {
+    public Cell(int x, int y) {
         this.x = x;
         this.y = y;
     }

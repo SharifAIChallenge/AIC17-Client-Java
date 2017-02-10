@@ -48,10 +48,10 @@ public class Game implements World {
     private int foodValidTime;
     private int trashValidTime;
 
-    private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
-    private Tile[][] Cockroaches = new Tile[2][]; // my Cockroach - 0, opp Cockroach - 1
+    private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
+    private Cell[][] Cockroaches = new Cell[2][]; // my Cockroach - 0, opp Cockroach - 1
 
-    private HashMap<Integer, Tile> idMap = new HashMap<>();
+    private HashMap<Integer, Cell> idMap = new HashMap<>();
     private HashMap<Integer, Information> infoMap = new HashMap<>(); // This field is not usefull for user
 
     private Consumer<Message> sender;
@@ -84,17 +84,17 @@ public class Game implements World {
         width = size.get(0).getAsInt();
         height = size.get(1).getAsInt();
 
-        Tile[][] tiles = new Tile[height][width];
+        Cell[][] cells = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                tiles[i][j] = new Tile(i, j);
+                cells[i][j] = new Cell(i, j);
             }
         }
-        map = new Map(tiles);
+        map = new Map(cells);
 
 
         JsonArray Cockroaches = msg.args.get(2).getAsJsonArray();
-        this.Cockroaches = new Tile[2][Cockroaches.size()];
+        this.Cockroaches = new Cell[2][Cockroaches.size()];
         int myCockroach = 0;
         int oppCockroach = 0;
         for (int i = 0; i < Cockroaches.size(); i++) {
@@ -104,86 +104,86 @@ public class Game implements World {
             tileX = CockroachInfo.get(1).getAsInt();
             tileY = CockroachInfo.get(2).getAsInt();
 
-            Tile theChosenTile = map.getTile(tileX, tileY);
-            theChosenTile.addCockroachInfo(CockroachInfo);
+            Cell theChosenCell = map.getTile(tileX, tileY);
+            theChosenCell.addCockroachInfo(CockroachInfo);
 
-            idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getCockroachInformation());
+            idMap.put(id, theChosenCell);
+            infoMap.put(id, theChosenCell.getCockroachInformation());
 
             if (teamID == CockroachInfo.get(7).getAsInt()) {
-                this.Cockroaches[0][myCockroach++] = theChosenTile;
+                this.Cockroaches[0][myCockroach++] = theChosenCell;
             } else {
-                this.Cockroaches[1][oppCockroach++] = theChosenTile;
+                this.Cockroaches[1][oppCockroach++] = theChosenCell;
             }
         }
 
         JsonArray foods = msg.args.get(3).getAsJsonArray();
-        Tile[] foodTiles = new Tile[foods.size()];
+        Cell[] foodCells = new Cell[foods.size()];
         for (int i = 0; i < foods.size(); i++) {
             JsonArray foodInfo = foods.get(i).getAsJsonArray();
             int id = foodInfo.get(0).getAsInt();
             int tileX = foodInfo.get(1).getAsInt();
             int tileY = foodInfo.get(2).getAsInt();
 
-            Tile theChosenTile = map.getTile(tileX, tileY);
-            theChosenTile.addItem(id, 0);
-            foodTiles[i] = theChosenTile;
+            Cell theChosenCell = map.getTile(tileX, tileY);
+            theChosenCell.addItem(id, 0);
+            foodCells[i] = theChosenCell;
 
-            idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getItemInformation());
+            idMap.put(id, theChosenCell);
+            infoMap.put(id, theChosenCell.getItemInformation());
         }
-        items[3] = foodTiles;
+        items[3] = foodCells;
 
         JsonArray trashes = msg.args.get(4).getAsJsonArray();
-        Tile[] trashTiles = new Tile[trashes.size()];
+        Cell[] trashCells = new Cell[trashes.size()];
         for (int i = 0; i < trashes.size(); i++) {
             JsonArray trashInfo = trashes.get(i).getAsJsonArray();
             int id = trashInfo.get(0).getAsInt();
             int tileX = trashInfo.get(1).getAsInt();
             int tileY = trashInfo.get(2).getAsInt();
 
-            Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.addItem(id, 1);
-            trashTiles[i] = theChosenTile;
+            Cell theChosenCell = cells[tileX][tileY];
+            theChosenCell.addItem(id, 1);
+            trashCells[i] = theChosenCell;
 
-            idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getItemInformation());
+            idMap.put(id, theChosenCell);
+            infoMap.put(id, theChosenCell.getItemInformation());
         }
-        items[2] = trashTiles;
+        items[2] = trashCells;
 
         JsonArray nets = msg.args.get(5).getAsJsonArray();
-        Tile[] netTiles = new Tile[nets.size()];
+        Cell[] netCells = new Cell[nets.size()];
         for (int i = 0; i < nets.size(); i++) {
             JsonArray netInfo = nets.get(i).getAsJsonArray();
             int id = netInfo.get(0).getAsInt();
             int tileX = netInfo.get(1).getAsInt();
             int tileY = netInfo.get(2).getAsInt();
 
-            Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.addNet(id);
-            netTiles[i] = theChosenTile;
+            Cell theChosenCell = cells[tileX][tileY];
+            theChosenCell.addNet(id);
+            netCells[i] = theChosenCell;
 
-            idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getNetInformation());
+            idMap.put(id, theChosenCell);
+            infoMap.put(id, theChosenCell.getNetInformation());
         }
-        items[1] = netTiles;
+        items[1] = netCells;
 
         JsonArray teleports = msg.args.get(6).getAsJsonArray();
-        Tile[] teleportTiles = new Tile[teleports.size()];
+        Cell[] teleportCells = new Cell[teleports.size()];
         for (int i = 0; i < teleports.size(); i++) {
             JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
             int id = teleportInfo.get(0).getAsInt();
             int tileX = teleportInfo.get(1).getAsInt();
             int tileY = teleportInfo.get(2).getAsInt();
 
-            Tile theChosenTile = tiles[tileX][tileY];
-            theChosenTile.addTeleport(id, teleportInfo.get(3).getAsInt());
-            teleportTiles[i] = theChosenTile;
+            Cell theChosenCell = cells[tileX][tileY];
+            theChosenCell.addTeleport(id, teleportInfo.get(3).getAsInt());
+            teleportCells[i] = theChosenCell;
 
-            idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getTeleportInformation());
+            idMap.put(id, theChosenCell);
+            infoMap.put(id, theChosenCell.getTeleportInformation());
         }
-        items[0] = teleportTiles;
+        items[0] = teleportCells;
 
         JsonArray constants = msg.args.get(7).getAsJsonArray();
         this.setConstants(constants);
@@ -260,19 +260,19 @@ public class Game implements World {
         int x = changes.get(1);
         int y = changes.get(2);
 
-        Tile theChosenTile = idMap.get(id);
-        Tile[][] tiles = map.getTiles();
-        Tile targetTile = tiles[x][y];
+        Cell theChosenCell = idMap.get(id);
+        Cell[][] cells = map.getCells();
+        Cell targetCell = cells[x][y];
 
-        targetTile.receiveInfo(theChosenTile.getItemInformation());
-        idMap.put(id, targetTile);
-        theChosenTile.setItemInformation(null);
+        targetCell.receiveInfo(theChosenCell.getItemInformation());
+        idMap.put(id, targetCell);
+        theChosenCell.setItemInformation(null);
     }
 
     private void delete(ArrayList<Integer> changes) {
         int id = changes.get(0);
 
-        Tile theChosenTile = idMap.get(id);
+        Cell theChosenCell = idMap.get(id);
         idMap.remove(id);
 
         Information theChosenInfo = infoMap.get(id);
@@ -281,60 +281,60 @@ public class Game implements World {
         if (theChosenInfo instanceof CockroachInformation) {
             CockroachInformation chosenCockroachInfo = (CockroachInformation) theChosenInfo;
             if (chosenCockroachInfo.getTeam() == teamID) {
-                ArrayList<Tile> CockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[0]));
-                CockroachList.remove(theChosenTile);
-                Tile[] tempTile = new Tile[CockroachList.size()];
-                Cockroaches[0] = CockroachList.toArray(tempTile);
+                ArrayList<Cell> CockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[0]));
+                CockroachList.remove(theChosenCell);
+                Cell[] tempCell = new Cell[CockroachList.size()];
+                Cockroaches[0] = CockroachList.toArray(tempCell);
             } else {
-                ArrayList<Tile> cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[1]));
-                cockroachList.remove(theChosenTile);
-                Tile[] tempTile = new Tile[cockroachList.size()];
-                Cockroaches[1] = cockroachList.toArray(tempTile);
+                ArrayList<Cell> cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[1]));
+                cockroachList.remove(theChosenCell);
+                Cell[] tempCell = new Cell[cockroachList.size()];
+                Cockroaches[1] = cockroachList.toArray(tempCell);
             }
-            theChosenTile.clear();
+            theChosenCell.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 0) {
-            ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
-            foodList.remove(theChosenTile);
-            Tile[] tempTile = new Tile[foodList.size()];
-            items[3] = foodList.toArray(tempTile);
-            theChosenTile.clear();
+            ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(items[3]));
+            foodList.remove(theChosenCell);
+            Cell[] tempCell = new Cell[foodList.size()];
+            items[3] = foodList.toArray(tempCell);
+            theChosenCell.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 1) {
-            ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
-            trashList.remove(theChosenTile);
-            Tile[] tempTile = new Tile[trashList.size()];
-            items[2] = trashList.toArray(tempTile);
-            theChosenTile.clear();
+            ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(items[2]));
+            trashList.remove(theChosenCell);
+            Cell[] tempCell = new Cell[trashList.size()];
+            items[2] = trashList.toArray(tempCell);
+            theChosenCell.clear();
         } else if (theChosenInfo instanceof NetInformation) {
-            ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
-            netList.remove(theChosenTile);
-            Tile[] tempTile = new Tile[netList.size()];
-            items[1] = netList.toArray(tempTile);
-            theChosenTile.cleanNet();
+            ArrayList<Cell> netList = new ArrayList<Cell>(Arrays.asList(items[1]));
+            netList.remove(theChosenCell);
+            Cell[] tempCell = new Cell[netList.size()];
+            items[1] = netList.toArray(tempCell);
+            theChosenCell.cleanNet();
         }
     }
 
     private void moveCockroach(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int move = changes.get(1);
-        Tile theChosenTile = idMap.get(id);
+        Cell theChosenCell = idMap.get(id);
         CockroachInformation theChosenInfo = (CockroachInformation) (infoMap.get(id));
         switch (move) {
             case 0:
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
                 break;
             case 1:
-                int tileX = nextX(theChosenTile, theChosenInfo.getDirection());
-                int tileY = nextY(theChosenTile, theChosenInfo.getDirection());
-                Tile targetTile = map.getTile(tileX, tileY);
-                targetTile.receiveInfo(theChosenInfo);
-                idMap.put(id, targetTile);
+                int tileX = nextX(theChosenCell, theChosenInfo.getDirection());
+                int tileY = nextY(theChosenCell, theChosenInfo.getDirection());
+                Cell targetCell = map.getTile(tileX, tileY);
+                targetCell.receiveInfo(theChosenInfo);
+                idMap.put(id, targetCell);
                 System.out.println("-----------------------");
                 System.out.println(id);
-                System.out.println(targetTile.getCockroachInformation());
-                System.out.println(theChosenTile.getCockroachInformation());
+                System.out.println(targetCell.getCockroachInformation());
+                System.out.println(theChosenCell.getCockroachInformation());
                 System.out.println("-----------------------");
-                if (targetTile.getCockroachInformation().getId() == theChosenTile.getCockroachInformation().getId()) {
-                    theChosenTile.clear();
+                if (targetCell.getCockroachInformation().getId() == theChosenCell.getCockroachInformation().getId()) {
+                    theChosenCell.clear();
                 }
                 break;
             case 2:
@@ -343,9 +343,9 @@ public class Game implements World {
         }
     }
 
-    private int nextX(Tile tile, int dir) {
+    private int nextX(Cell cell, int dir) {
         int direction = dir;
-        int x = tile.getX();
+        int x = cell.getX();
         switch (direction) {
             case 3:
                 x = (x + 1) % 8;
@@ -357,9 +357,9 @@ public class Game implements World {
         return x;
     }
 
-    private int nextY(Tile tile, int dir) {
+    private int nextY(Cell cell, int dir) {
         int direction = dir;
-        int y = tile.getY();
+        int y = cell.getY();
         switch (direction) {
             case 2:
                 y = (y + 7) % 8;
@@ -377,15 +377,15 @@ public class Game implements World {
         int newY = changes.get(2);
         int color = changes.get(3);
         int sick = changes.get(4);
-        Tile theChosenTile = idMap.get(id);
+        Cell theChosenCell = idMap.get(id);
         CockroachInformation theChosenInfo = (CockroachInformation) infoMap.get(id);
-        Tile targetTile = map.getTile(newX, newY);
+        Cell targetCell = map.getTile(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
-        targetTile.receiveInfo(theChosenInfo);
-        idMap.put(id, targetTile);
-        if (targetTile != theChosenTile) {
-            theChosenTile.clear();
+        targetCell.receiveInfo(theChosenInfo);
+        idMap.put(id, targetCell);
+        if (targetCell != theChosenCell) {
+            theChosenCell.clear();
         }
     }
 
@@ -415,7 +415,7 @@ public class Game implements World {
     }
 
     private void addCockroach(ArrayList<Integer> changes) {
-        ArrayList<Tile> cockroachList;
+        ArrayList<Cell> cockroachList;
         int id = changes.get(0);
         int tileX = changes.get(2);
         int tileY = changes.get(3);
@@ -424,22 +424,22 @@ public class Game implements World {
         int queen = changes.get(6);
         int team = changes.get(7);
 
-        Tile theChosenTile = map.getTile(tileX, tileY);
-        theChosenTile.addCockroachInfo(id, direction, color, queen, team);
+        Cell theChosenCell = map.getTile(tileX, tileY);
+        theChosenCell.addCockroachInfo(id, direction, color, queen, team);
 
-        idMap.put(id, theChosenTile);
-        infoMap.put(id, theChosenTile.getCockroachInformation());
+        idMap.put(id, theChosenCell);
+        infoMap.put(id, theChosenCell.getCockroachInformation());
 
         if (team == teamID) {
-            cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[0]));
-            cockroachList.add(theChosenTile);
-            Tile[] tempTile = new Tile[cockroachList.size()];
-            Cockroaches[0] = cockroachList.toArray(tempTile);
+            cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[0]));
+            cockroachList.add(theChosenCell);
+            Cell[] tempCell = new Cell[cockroachList.size()];
+            Cockroaches[0] = cockroachList.toArray(tempCell);
         } else {
-            cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[1]));
-            cockroachList.add(theChosenTile);
-            Tile[] tempTile = new Tile[cockroachList.size()];
-            Cockroaches[1] = cockroachList.toArray(tempTile);
+            cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[1]));
+            cockroachList.add(theChosenCell);
+            Cell[] tempCell = new Cell[cockroachList.size()];
+            Cockroaches[1] = cockroachList.toArray(tempCell);
         }
     }
 
@@ -448,34 +448,34 @@ public class Game implements World {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
 
-        Tile theChosenTile = map.getTile(tileX, tileY);
-        theChosenTile.addItem(id, 0);
+        Cell theChosenCell = map.getTile(tileX, tileY);
+        theChosenCell.addItem(id, 0);
 
-        idMap.put(id, theChosenTile);
-        infoMap.put(id, theChosenTile.getItemInformation());
+        idMap.put(id, theChosenCell);
+        infoMap.put(id, theChosenCell.getItemInformation());
 
-        ArrayList<Tile> foodList = new ArrayList<Tile>(Arrays.asList(items[3]));
-        foodList.add(theChosenTile);
-        Tile[] tempTile = new Tile[foodList.size()];
-        items[3] = foodList.toArray(tempTile);
+        ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(items[3]));
+        foodList.add(theChosenCell);
+        Cell[] tempCell = new Cell[foodList.size()];
+        items[3] = foodList.toArray(tempCell);
     }
 
     private void addTrash(ArrayList<Integer> changes) {
-//        Tile[][] tiles = map.getTiles();
+//        Cell[][] tiles = map.getCells();
         int id = changes.get(0);
         int tileX = changes.get(2);
         int tileY = changes.get(3);
 
-        Tile theChosenTile = map.getTile(tileX, tileY);
-        theChosenTile.addItem(id, 1);
+        Cell theChosenCell = map.getTile(tileX, tileY);
+        theChosenCell.addItem(id, 1);
 
-        idMap.put(id, theChosenTile);
-        infoMap.put(id, theChosenTile.getItemInformation());
+        idMap.put(id, theChosenCell);
+        infoMap.put(id, theChosenCell.getItemInformation());
 
-        ArrayList<Tile> trashList = new ArrayList<Tile>(Arrays.asList(items[2]));
-        trashList.add(theChosenTile);
-        Tile[] tempTile = new Tile[trashList.size()];
-        items[2] = trashList.toArray(tempTile);
+        ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(items[2]));
+        trashList.add(theChosenCell);
+        Cell[] tempCell = new Cell[trashList.size()];
+        items[2] = trashList.toArray(tempCell);
     }
 
     private void addNet(ArrayList<Integer> changes) {
@@ -483,71 +483,71 @@ public class Game implements World {
         int tileX = changes.get(2);
         int tileY = changes.get(3);
 
-        Tile theChosenTile = map.getTile(tileX, tileY);
-        theChosenTile.addNet(id);
+        Cell theChosenCell = map.getTile(tileX, tileY);
+        theChosenCell.addNet(id);
 
-        idMap.put(id, theChosenTile);
-        infoMap.put(id, theChosenTile.getNetInformation());
+        idMap.put(id, theChosenCell);
+        infoMap.put(id, theChosenCell.getNetInformation());
 
-        ArrayList<Tile> netList = new ArrayList<Tile>(Arrays.asList(items[1]));
-        netList.add(theChosenTile);
-        Tile[] tempTile = new Tile[netList.size()];
-        items[1] = netList.toArray(tempTile);
+        ArrayList<Cell> netList = new ArrayList<Cell>(Arrays.asList(items[1]));
+        netList.add(theChosenCell);
+        Cell[] tempCell = new Cell[netList.size()];
+        items[1] = netList.toArray(tempCell);
     }
 
-    public Tile[] getMyTiles() {
+    public Cell[] getMyTiles() {
         return Cockroaches[0];
     }
 
-    public Tile[] getOppTiles() {
+    public Cell[] getOppTiles() {
         return Cockroaches[1];
     }
 
-    public Tile[] getTeleportTiles() {
+    public Cell[] getTeleportTiles() {
         return items[0];
     }
 
-    public Tile[] getNetTiles() {
+    public Cell[] getNetTiles() {
         return items[1];
     }
 
-    public Tile[] getTrashTiles() {
+    public Cell[] getTrashTiles() {
         return items[2];
     }
 
-    public Tile[] getFoodTiles() {
+    public Cell[] getFoodTiles() {
         return items[3];
     }
 
     public CockroachInformation getCockroachInformation(int id) {
-        Tile cockroachTile = idMap.get(id);
-        CockroachInformation theChosenInfo = (CockroachInformation) cockroachTile.getCockroachInformation();
-        theChosenInfo.setX(cockroachTile.getX());
-        theChosenInfo.setY(cockroachTile.getY());
+        Cell cockroachCell = idMap.get(id);
+        CockroachInformation theChosenInfo = (CockroachInformation) cockroachCell.getCockroachInformation();
+        theChosenInfo.setX(cockroachCell.getX());
+        theChosenInfo.setY(cockroachCell.getY());
         return theChosenInfo;
     }
 
     public ItemInformation getItemInformation(int id) {
-        Tile itemTile = idMap.get(id);
-        ItemInformation theChosenInfo = (ItemInformation) itemTile.getItemInformation();
-        theChosenInfo.setX(itemTile.getX());
-        theChosenInfo.setY(itemTile.getY());
+        Cell itemCell = idMap.get(id);
+        ItemInformation theChosenInfo = (ItemInformation) itemCell.getItemInformation();
+        theChosenInfo.setX(itemCell.getX());
+        theChosenInfo.setY(itemCell.getY());
         return theChosenInfo;
     }
 
     public NetInformation getNetInformation(int id) {
-        Tile netTile = idMap.get(id);
-        NetInformation theChosenInfo = (NetInformation) netTile.getNetInformation();
-        theChosenInfo.setX(netTile.getX());
-        theChosenInfo.setY(netTile.getY());
+        Cell netCell = idMap.get(id);
+        NetInformation theChosenInfo = (NetInformation) netCell.getNetInformation();
+        theChosenInfo.setX(netCell.getX());
+        theChosenInfo.setY(netCell.getY());
         return theChosenInfo;
     }
 
     public TeleportInformation getTeleportInformation(int id) {
-        Tile teleTile = idMap.get(id);
-        TeleportInformation theChosenInfo = (TeleportInformation) teleTile.getTeleportInformation();
-        theChosenInfo.setX(teleTile.getX());
-        theChosenInfo.setY(teleTile.getY());
+        Cell teleCell = idMap.get(id);
+        TeleportInformation theChosenInfo = (TeleportInformation) teleCell.getTeleportInformation();
+        theChosenInfo.setX(teleCell.getX());
+        theChosenInfo.setY(teleCell.getY());
         return theChosenInfo;
     }
 
