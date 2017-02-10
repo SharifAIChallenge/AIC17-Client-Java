@@ -11,7 +11,7 @@ public class Map {
         return cells;
     }
 
-    public Cell getTile(int x, int y) {
+    public Cell getCell(int x, int y) {
         return cells[x][y];
     }
 }

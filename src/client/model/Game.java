@@ -29,7 +29,7 @@ public class Game implements World {
     // Constants
 
 
-    private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
+    private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 Cells
     private Cell[][] beetles = new Cell[2][]; // my Beetle - 0, opp Beetle - 1
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
@@ -79,13 +79,13 @@ public class Game implements World {
         int myBeetle = 0;
         int oppBeetle = 0;
         for (int i = 0; i < Beetles.size(); i++) {
-            int tileX, tileY;
+            int cellX, cellY;
             JsonArray beetleInfo = Beetles.get(i).getAsJsonArray();
             int id = beetleInfo.get(0).getAsInt();
-            tileX = beetleInfo.get(1).getAsInt();
-            tileY = beetleInfo.get(2).getAsInt();
+            cellX = beetleInfo.get(1).getAsInt();
+            cellY = beetleInfo.get(2).getAsInt();
 
-            Cell theChosenCell = map.getTile(tileX, tileY);
+            Cell theChosenCell = map.getCell(cellX, cellY);
             theChosenCell.addBeetleInfo(beetleInfo);
 
             idMap.put(id, theChosenCell);
@@ -103,10 +103,10 @@ public class Game implements World {
         for (int i = 0; i < foods.size(); i++) {
             JsonArray foodInfo = foods.get(i).getAsJsonArray();
             int id = foodInfo.get(0).getAsInt();
-            int tileX = foodInfo.get(1).getAsInt();
-            int tileY = foodInfo.get(2).getAsInt();
+            int cellX = foodInfo.get(1).getAsInt();
+            int cellY = foodInfo.get(2).getAsInt();
 
-            Cell theChosenCell = map.getTile(tileX, tileY);
+            Cell theChosenCell = map.getCell(cellX, cellY);
             theChosenCell.addItem(id, 0);
             foodCells[i] = theChosenCell;
 
@@ -120,10 +120,10 @@ public class Game implements World {
         for (int i = 0; i < trashes.size(); i++) {
             JsonArray trashInfo = trashes.get(i).getAsJsonArray();
             int id = trashInfo.get(0).getAsInt();
-            int tileX = trashInfo.get(1).getAsInt();
-            int tileY = trashInfo.get(2).getAsInt();
+            int cellX = trashInfo.get(1).getAsInt();
+            int cellY = trashInfo.get(2).getAsInt();
 
-            Cell theChosenCell = cells[tileX][tileY];
+            Cell theChosenCell = cells[cellX][cellY];
             theChosenCell.addItem(id, 1);
             trashCells[i] = theChosenCell;
 
@@ -137,10 +137,10 @@ public class Game implements World {
         for (int i = 0; i < nets.size(); i++) {
             JsonArray netInfo = nets.get(i).getAsJsonArray();
             int id = netInfo.get(0).getAsInt();
-            int tileX = netInfo.get(1).getAsInt();
-            int tileY = netInfo.get(2).getAsInt();
+            int cellX = netInfo.get(1).getAsInt();
+            int cellY = netInfo.get(2).getAsInt();
 
-            Cell theChosenCell = cells[tileX][tileY];
+            Cell theChosenCell = cells[cellX][cellY];
             theChosenCell.addNet(id);
             netCells[i] = theChosenCell;
 
@@ -154,10 +154,10 @@ public class Game implements World {
         for (int i = 0; i < teleports.size(); i++) {
             JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
             int id = teleportInfo.get(0).getAsInt();
-            int tileX = teleportInfo.get(1).getAsInt();
-            int tileY = teleportInfo.get(2).getAsInt();
+            int cellX = teleportInfo.get(1).getAsInt();
+            int cellY = teleportInfo.get(2).getAsInt();
 
-            Cell theChosenCell = cells[tileX][tileY];
+            Cell theChosenCell = cells[cellX][cellY];
             theChosenCell.addTeleport(id, teleportInfo.get(3).getAsInt());
             teleportCells[i] = theChosenCell;
 
@@ -304,9 +304,9 @@ public class Game implements World {
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
                 break;
             case 1:
-                int tileX = nextX(theChosenCell, theChosenInfo.getDirection());
-                int tileY = nextY(theChosenCell, theChosenInfo.getDirection());
-                Cell targetCell = map.getTile(tileX, tileY);
+                int cellX = nextX(theChosenCell, theChosenInfo.getDirection());
+                int cellY = nextY(theChosenCell, theChosenInfo.getDirection());
+                Cell targetCell = map.getCell(cellX, cellY);
                 targetCell.receiveInfo(theChosenInfo);
                 idMap.put(id, targetCell);
                 System.out.println("-----------------------");
@@ -360,7 +360,7 @@ public class Game implements World {
         int sick = changes.get(4);
         Cell theChosenCell = idMap.get(id);
         Beetle theChosenInfo = (Beetle) infoMap.get(id);
-        Cell targetCell = map.getTile(newX, newY);
+        Cell targetCell = map.getCell(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
         targetCell.receiveInfo(theChosenInfo);
@@ -398,14 +398,14 @@ public class Game implements World {
     private void addBeetle(ArrayList<Integer> changes) {
         ArrayList<Cell> beetleList;
         int id = changes.get(0);
-        int tileX = changes.get(2);
-        int tileY = changes.get(3);
+        int cellX = changes.get(2);
+        int cellY = changes.get(3);
         int direction = changes.get(4);
         int color = changes.get(5);
         int queen = changes.get(6);
         int team = changes.get(7);
 
-        Cell theChosenCell = map.getTile(tileX, tileY);
+        Cell theChosenCell = map.getCell(cellX, cellY);
         theChosenCell.addBeetleInfo(id, direction, color, queen, team);
 
         idMap.put(id, theChosenCell);
@@ -426,10 +426,10 @@ public class Game implements World {
 
     private void addFood(ArrayList<Integer> changes) {
         int id = changes.get(0);
-        int tileX = changes.get(2);
-        int tileY = changes.get(3);
+        int cellX = changes.get(2);
+        int cellY = changes.get(3);
 
-        Cell theChosenCell = map.getTile(tileX, tileY);
+        Cell theChosenCell = map.getCell(cellX, cellY);
         theChosenCell.addItem(id, 0);
 
         idMap.put(id, theChosenCell);
@@ -442,12 +442,12 @@ public class Game implements World {
     }
 
     private void addTrash(ArrayList<Integer> changes) {
-//        Cell[][] tiles = map.getCells();
+//        Cell[][] cells = map.getCells();
         int id = changes.get(0);
-        int tileX = changes.get(2);
-        int tileY = changes.get(3);
+        int cellX = changes.get(2);
+        int cellY = changes.get(3);
 
-        Cell theChosenCell = map.getTile(tileX, tileY);
+        Cell theChosenCell = map.getCell(cellX, cellY);
         theChosenCell.addItem(id, 1);
 
         idMap.put(id, theChosenCell);
@@ -461,10 +461,10 @@ public class Game implements World {
 
     private void addNet(ArrayList<Integer> changes) {
         int id = changes.get(0);
-        int tileX = changes.get(2);
-        int tileY = changes.get(3);
+        int cellX = changes.get(2);
+        int cellY = changes.get(3);
 
-        Cell theChosenCell = map.getTile(tileX, tileY);
+        Cell theChosenCell = map.getCell(cellX, cellY);
         theChosenCell.addNet(id);
 
         idMap.put(id, theChosenCell);
@@ -476,27 +476,27 @@ public class Game implements World {
         items[1] = netList.toArray(tempCell);
     }
 
-    public Cell[] getMyTiles() {
+    public Cell[] getMyCells() {
         return beetles[0];
     }
 
-    public Cell[] getOppTiles() {
+    public Cell[] getOppCells() {
         return beetles[1];
     }
 
-    public Cell[] getTeleportTiles() {
+    public Cell[] getTeleportCells() {
         return items[0];
     }
 
-    public Cell[] getNetTiles() {
+    public Cell[] getNetCells() {
         return items[1];
     }
 
-    public Cell[] getTrashTiles() {
+    public Cell[] getTrashCells() {
         return items[2];
     }
 
-    public Cell[] getFoodTiles() {
+    public Cell[] getFoodCells() {
         return items[3];
     }
 
