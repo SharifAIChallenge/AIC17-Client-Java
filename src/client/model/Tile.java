@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 public class Tile {
     private int x;
     private int y;
-    private Information fishInformation;
+    private Information cockroachInformation;
     private Information itemInformation;
     private Information netInformation;
     private Information teleportInformation;
@@ -28,8 +28,8 @@ public class Tile {
     }
 
     public void receiveInfo(Information information) {
-        if (information instanceof FishInformation) {
-            fishInformation = information;
+        if (information instanceof CockroachInformation) {
+            cockroachInformation = information;
         } else if (information instanceof ItemInformation) {
             itemInformation = information;
         } else if (information instanceof NetInformation) {
@@ -39,15 +39,15 @@ public class Tile {
         }
     }
 
-    public void addFishInfo(JsonArray fishInfo) {
-        fishInformation = new FishInformation();
-        fishInformation.setId(fishInfo.get(0).getAsInt());
-        FishInformation chosenFishInfo = (FishInformation) fishInformation;
-        chosenFishInfo.setDirection(fishInfo.get(3).getAsInt());
-        chosenFishInfo.setColor(fishInfo.get(4).getAsInt());
-        chosenFishInfo.setQueen(fishInfo.get(5).getAsInt());
-        chosenFishInfo.setSick(fishInfo.get(6).getAsInt());
-        chosenFishInfo.setTeam(fishInfo.get(7).getAsInt());
+    public void addCockroachInfo(JsonArray cockroachInfo) {
+        cockroachInformation = new CockroachInformation();
+        cockroachInformation.setId(cockroachInfo.get(0).getAsInt());
+        CockroachInformation chosenCockroachInfo = (CockroachInformation) cockroachInformation;
+        chosenCockroachInfo.setDirection(cockroachInfo.get(3).getAsInt());
+        chosenCockroachInfo.setColor(cockroachInfo.get(4).getAsInt());
+        chosenCockroachInfo.setQueen(cockroachInfo.get(5).getAsInt());
+        chosenCockroachInfo.setSick(cockroachInfo.get(6).getAsInt());
+        chosenCockroachInfo.setTeam(cockroachInfo.get(7).getAsInt());
     }
 
     public int getX() {
@@ -66,19 +66,19 @@ public class Tile {
         this.y = y;
     }
 
-    public void addFishInfo(int id, int direction, int color, int queen, int team) {
-        fishInformation = new FishInformation();
-        fishInformation.setId(id);
-        FishInformation chosenFishInfo = (FishInformation) fishInformation;
-        chosenFishInfo.setDirection(direction);
-        chosenFishInfo.setColor(color);
-        chosenFishInfo.setQueen(queen);
-        chosenFishInfo.setSick(0);
-        chosenFishInfo.setTeam(team);
+    public void addCockroachInfo(int id, int direction, int color, int queen, int team) {
+        cockroachInformation = new CockroachInformation();
+        cockroachInformation.setId(id);
+        CockroachInformation chosenCockroachInfo = (CockroachInformation) cockroachInformation;
+        chosenCockroachInfo.setDirection(direction);
+        chosenCockroachInfo.setColor(color);
+        chosenCockroachInfo.setQueen(queen);
+        chosenCockroachInfo.setSick(0);
+        chosenCockroachInfo.setTeam(team);
     }
 
     public void clear() {
-        fishInformation = null;
+        cockroachInformation = null;
         itemInformation = null;
     }
 
@@ -86,12 +86,12 @@ public class Tile {
         netInformation = null;
     }
 
-    public Information getFishInformation() {
-        return fishInformation;
+    public Information getCockroachInformation() {
+        return cockroachInformation;
     }
 
-    public void setFishInformation(Information fishInformation) {
-        this.fishInformation = fishInformation;
+    public void setCockroachInformation(Information cockroachInformation) {
+        this.cockroachInformation = cockroachInformation;
     }
 
     public Information getItemInformation() {

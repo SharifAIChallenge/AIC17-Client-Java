@@ -49,7 +49,7 @@ public class Game implements World {
     private int trashValidTime;
 
     private Tile[][] items = new Tile[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
-    private Tile[][] fishes = new Tile[2][]; // my fish - 0, opp fish - 1
+    private Tile[][] Cockroaches = new Tile[2][]; // my Cockroach - 0, opp Cockroach - 1
 
     private HashMap<Integer, Tile> idMap = new HashMap<>();
     private HashMap<Integer, Information> infoMap = new HashMap<>(); // This field is not usefull for user
@@ -67,7 +67,7 @@ public class Game implements World {
         sender.accept(new Message(Event.EVENT, event));
     }
 
-    public void deterministicMove(int id, int s) {
+    public void selectiveMove(int id, int s) {
         Event event = new Event("m", new Object[]{id, s});
         sender.accept(new Message(Event.EVENT, event));
     }
@@ -93,27 +93,27 @@ public class Game implements World {
         map = new Map(tiles);
 
 
-        JsonArray fishes = msg.args.get(2).getAsJsonArray();
-        this.fishes = new Tile[2][fishes.size()];
-        int myfish = 0;
-        int opfish = 0;
-        for (int i = 0; i < fishes.size(); i++) {
+        JsonArray Cockroaches = msg.args.get(2).getAsJsonArray();
+        this.Cockroaches = new Tile[2][Cockroaches.size()];
+        int myCockroach = 0;
+        int oppCockroach = 0;
+        for (int i = 0; i < Cockroaches.size(); i++) {
             int tileX, tileY;
-            JsonArray fishInfo = fishes.get(i).getAsJsonArray();
-            int id = fishInfo.get(0).getAsInt();
-            tileX = fishInfo.get(1).getAsInt();
-            tileY = fishInfo.get(2).getAsInt();
+            JsonArray CockroachInfo = Cockroaches.get(i).getAsJsonArray();
+            int id = CockroachInfo.get(0).getAsInt();
+            tileX = CockroachInfo.get(1).getAsInt();
+            tileY = CockroachInfo.get(2).getAsInt();
 
             Tile theChosenTile = map.getTile(tileX, tileY);
-            theChosenTile.addFishInfo(fishInfo);
+            theChosenTile.addCockroachInfo(CockroachInfo);
 
             idMap.put(id, theChosenTile);
-            infoMap.put(id, theChosenTile.getFishInformation());
+            infoMap.put(id, theChosenTile.getCockroachInformation());
 
-            if (teamID == fishInfo.get(7).getAsInt()) {
-                this.fishes[0][myfish++] = theChosenTile;
+            if (teamID == CockroachInfo.get(7).getAsInt()) {
+                this.Cockroaches[0][myCockroach++] = theChosenTile;
             } else {
-                this.fishes[1][opfish++] = theChosenTile;
+                this.Cockroaches[1][oppCockroach++] = theChosenTile;
             }
         }
 
@@ -216,7 +216,7 @@ public class Game implements World {
                     ArrayList<Integer> addChange = allAdds.get(j);
                     switch (addChange.get(1)) {
                         case 0:
-                            addFish(addChange);
+                            addCockroach(addChange);
                             break;
                         case 1:
                             addFood(addChange);
@@ -239,14 +239,14 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
-                    moveFish(moveChange);
+                    moveCockroach(moveChange);
                 }
             } else if (type == 'c') { // change condition
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
                     if (alter.size() == 5) {
-                        fishAlter(alter);
+                        cockroachAlter(alter);
                     } else {
                         itemAlter(alter);
                     }
@@ -278,18 +278,18 @@ public class Game implements World {
         Information theChosenInfo = infoMap.get(id);
         infoMap.remove(id);
 
-        if (theChosenInfo instanceof FishInformation) {
-            FishInformation chosenFishInfo = (FishInformation) theChosenInfo;
-            if (chosenFishInfo.getTeam() == teamID) {
-                ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
-                fishList.remove(theChosenTile);
-                Tile[] tempTile = new Tile[fishList.size()];
-                fishes[0] = fishList.toArray(tempTile);
+        if (theChosenInfo instanceof CockroachInformation) {
+            CockroachInformation chosenCockroachInfo = (CockroachInformation) theChosenInfo;
+            if (chosenCockroachInfo.getTeam() == teamID) {
+                ArrayList<Tile> CockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[0]));
+                CockroachList.remove(theChosenTile);
+                Tile[] tempTile = new Tile[CockroachList.size()];
+                Cockroaches[0] = CockroachList.toArray(tempTile);
             } else {
-                ArrayList<Tile> fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
-                fishList.remove(theChosenTile);
-                Tile[] tempTile = new Tile[fishList.size()];
-                fishes[1] = fishList.toArray(tempTile);
+                ArrayList<Tile> cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[1]));
+                cockroachList.remove(theChosenTile);
+                Tile[] tempTile = new Tile[cockroachList.size()];
+                Cockroaches[1] = cockroachList.toArray(tempTile);
             }
             theChosenTile.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 0) {
@@ -313,11 +313,11 @@ public class Game implements World {
         }
     }
 
-    private void moveFish(ArrayList<Integer> changes) {
+    private void moveCockroach(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int move = changes.get(1);
         Tile theChosenTile = idMap.get(id);
-        FishInformation theChosenInfo = (FishInformation) (infoMap.get(id));
+        CockroachInformation theChosenInfo = (CockroachInformation) (infoMap.get(id));
         switch (move) {
             case 0:
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
@@ -330,10 +330,10 @@ public class Game implements World {
                 idMap.put(id, targetTile);
                 System.out.println("-----------------------");
                 System.out.println(id);
-                System.out.println(targetTile.getFishInformation());
-                System.out.println(theChosenTile.getFishInformation());
+                System.out.println(targetTile.getCockroachInformation());
+                System.out.println(theChosenTile.getCockroachInformation());
                 System.out.println("-----------------------");
-                if (targetTile.getFishInformation().getId() == theChosenTile.getFishInformation().getId()) {
+                if (targetTile.getCockroachInformation().getId() == theChosenTile.getCockroachInformation().getId()) {
                     theChosenTile.clear();
                 }
                 break;
@@ -371,14 +371,14 @@ public class Game implements World {
         return y;
     }
 
-    private void fishAlter(ArrayList<Integer> changes) {
+    private void cockroachAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int newX = changes.get(1);
         int newY = changes.get(2);
         int color = changes.get(3);
         int sick = changes.get(4);
         Tile theChosenTile = idMap.get(id);
-        FishInformation theChosenInfo = (FishInformation) infoMap.get(id);
+        CockroachInformation theChosenInfo = (CockroachInformation) infoMap.get(id);
         Tile targetTile = map.getTile(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
@@ -414,8 +414,8 @@ public class Game implements World {
         trashValidTime = (int) constants.get(20).getAsDouble();
     }
 
-    private void addFish(ArrayList<Integer> changes) {
-        ArrayList<Tile> fishList;
+    private void addCockroach(ArrayList<Integer> changes) {
+        ArrayList<Tile> cockroachList;
         int id = changes.get(0);
         int tileX = changes.get(2);
         int tileY = changes.get(3);
@@ -425,21 +425,21 @@ public class Game implements World {
         int team = changes.get(7);
 
         Tile theChosenTile = map.getTile(tileX, tileY);
-        theChosenTile.addFishInfo(id, direction, color, queen, team);
+        theChosenTile.addCockroachInfo(id, direction, color, queen, team);
 
         idMap.put(id, theChosenTile);
-        infoMap.put(id, theChosenTile.getFishInformation());
+        infoMap.put(id, theChosenTile.getCockroachInformation());
 
         if (team == teamID) {
-            fishList = new ArrayList<Tile>(Arrays.asList(fishes[0]));
-            fishList.add(theChosenTile);
-            Tile[] tempTile = new Tile[fishList.size()];
-            fishes[0] = fishList.toArray(tempTile);
+            cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[0]));
+            cockroachList.add(theChosenTile);
+            Tile[] tempTile = new Tile[cockroachList.size()];
+            Cockroaches[0] = cockroachList.toArray(tempTile);
         } else {
-            fishList = new ArrayList<Tile>(Arrays.asList(fishes[1]));
-            fishList.add(theChosenTile);
-            Tile[] tempTile = new Tile[fishList.size()];
-            fishes[1] = fishList.toArray(tempTile);
+            cockroachList = new ArrayList<Tile>(Arrays.asList(Cockroaches[1]));
+            cockroachList.add(theChosenTile);
+            Tile[] tempTile = new Tile[cockroachList.size()];
+            Cockroaches[1] = cockroachList.toArray(tempTile);
         }
     }
 
@@ -496,11 +496,11 @@ public class Game implements World {
     }
 
     public Tile[] getMyTiles() {
-        return fishes[0];
+        return Cockroaches[0];
     }
 
     public Tile[] getOppTiles() {
-        return fishes[1];
+        return Cockroaches[1];
     }
 
     public Tile[] getTeleportTiles() {
@@ -519,11 +519,11 @@ public class Game implements World {
         return items[3];
     }
 
-    public FishInformation getFishInformation(int id) {
-        Tile fishTile = idMap.get(id);
-        FishInformation theChosenInfo = (FishInformation) fishTile.getFishInformation();
-        theChosenInfo.setX(fishTile.getX());
-        theChosenInfo.setY(fishTile.getY());
+    public CockroachInformation getCockroachInformation(int id) {
+        Tile cockroachTile = idMap.get(id);
+        CockroachInformation theChosenInfo = (CockroachInformation) cockroachTile.getCockroachInformation();
+        theChosenInfo.setX(cockroachTile.getX());
+        theChosenInfo.setY(cockroachTile.getY());
         return theChosenInfo;
     }
 

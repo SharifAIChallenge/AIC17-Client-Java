@@ -1,7 +1,6 @@
 package client;
 
-import client.model.FishInformation;
-import client.model.Game;
+import client.model.CockroachInformation;
 import client.model.Tile;
 
 import java.util.Random;
@@ -25,7 +24,7 @@ public class AI {
 
         Tile[][] tiles = game.getMap().getTiles();
         Tile[] myFishTile = game.getMyTiles();
-        FishInformation fishInformation = (FishInformation) myFishTile[0].getFishInformation();
+        CockroachInformation cockroachInformation = (CockroachInformation) myFishTile[0].getCockroachInformation();
 
         if (game.getCurrentTurn() == 1)
         {
@@ -42,7 +41,7 @@ public class AI {
                     }
                 }
             }
-            game.antennaChange(fishInformation.getId(), 1 - fishInformation.getColor());
+            game.antennaChange(cockroachInformation.getId(), 1 - cockroachInformation.getColor());
         }
         else
         {
