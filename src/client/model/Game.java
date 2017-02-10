@@ -553,14 +553,15 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
 
-        ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(items[3]));
+		Cell[] foods = map.getFoodCells();
+        ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
         foodList.add(theChosenCell);
         Cell[] tempCell = new Cell[foodList.size()];
-        items[3] = foodList.toArray(tempCell);
+        foods = foodList.toArray(tempCell);
+		map.setFoodCells(foods);
     }
 
     private void addTrash(ArrayList<Integer> changes) {
-//        Cell[][] cells = map.getCells();
         int id = changes.get(0);
         int cellX = changes.get(2);
         int cellY = changes.get(3);
@@ -571,10 +572,12 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
 
-        ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(items[2]));
+		Cell[] trashes = map.getTrashCells();
+        ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
         trashList.add(theChosenCell);
         Cell[] tempCell = new Cell[trashList.size()];
-        items[2] = trashList.toArray(tempCell);
+        trashes = trashList.toArray(tempCell);
+		map.setTrashCells(trashes);
     }
 
     private void addSlipper(ArrayList<Integer> changes) {
@@ -588,69 +591,13 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getSlipperEntity());
 
-        ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(items[1]));
+		Cell[] slippers = map.getSlipperCells();
+        ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(slippers));
         slipperList.add(theChosenCell);
         Cell[] tempCell = new Cell[slipperList.size()];
-        items[1] = slipperList.toArray(tempCell);
+        slippers = slipperList.toArray(tempCell);
+		map.setSlipperCells(slippers);
     }
-
-    public Cell[] getMyCells() {
-        return beetles[0];
-    }
-
-    public Cell[] getOppCells() {
-        return beetles[1];
-    }
-
-    public Cell[] getTeleportCells() {
-        return items[0];
-    }
-
-    public Cell[] getSlipperCells() {
-        return items[1];
-    }
-
-    public Cell[] getTrashCells() {
-        return items[2];
-    }
-
-    public Cell[] getFoodCells() {
-        return items[3];
-    }
-
-    public Beetle getBeetleInformation(int id) {
-        Cell beetleCell = idMap.get(id);
-        Beetle theChosenInfo = (Beetle) beetleCell.getBeetleEntity();
-        theChosenInfo.setX(beetleCell.getX());
-        theChosenInfo.setY(beetleCell.getY());
-        return theChosenInfo;
-    }
-
-//    public ItemEntity getItemInformation(int id) {
-//        Cell itemCell = idMap.get(id);
-//        ItemEntity theChosenInfo = (ItemEntity) itemCell.getItemEntity();
-//        theChosenInfo.setX(itemCell.getX());
-//        theChosenInfo.setY(itemCell.getY());
-//        return theChosenInfo;
-//    }
-
-    public Slipper getSlipperInformation(int id) {
-        Cell slipperCell = idMap.get(id);
-        Slipper theChosenInfo = (Slipper) slipperCell.getSlipperEntity();
-        theChosenInfo.setX(slipperCell.getX());
-        theChosenInfo.setY(slipperCell.getY());
-        return theChosenInfo;
-    }
-
-    public Teleport getTeleportInformation(int id) {
-        Cell teleCell = idMap.get(id);
-        Teleport theChosenInfo = (Teleport) teleCell.getTeleportEntity();
-        theChosenInfo.setX(teleCell.getX());
-        theChosenInfo.setY(teleCell.getY());
-        return theChosenInfo;
-    }
-
-
 
     public Map getMap() {
         return map;
