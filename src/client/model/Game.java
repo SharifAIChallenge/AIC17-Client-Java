@@ -398,14 +398,27 @@ public class Game implements World {
                 Cell targetCell = map.getCell(cellX, cellY);
                 targetCell.receiveInfo(theChosenInfo);
                 idMap.put(id, targetCell);
-                System.out.println("-----------------------");
-                System.out.println(id);
-                System.out.println(targetCell.getBeetleEntity());
-                System.out.println(theChosenCell.getBeetleEntity());
-                System.out.println("-----------------------");
                 if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
                     theChosenCell.clear();
                 }
+				int team = ((Beetle) (map.getEntity(id))).getTeam();
+				if (team == teamID) {
+					Cell[] beetles = map.getMyCells();
+					beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+					beetleList.remove(theChosenCell);
+					beetleList.add(targetCell);
+					Cell[] tempCell = new Cell[beetleList.size()];
+					beetles = beetleList.toArray(tempCell);
+					map.setMyCells(beetles);
+				} else {
+					Cell[] beetles = map.getOppCells();
+					beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+					beetleList.remove(theChosenCell);
+					beetleList.add(targetCell);
+					Cell[] tempCell = new Cell[beetleList.size()];
+					beetles = beetleList.toArray(tempCell);
+					map.setOppCells(beetles);
+				}
                 break;
             case 2:
                 theChosenInfo.setDirection((theChosenInfo.getDirectionInt() + 1) % 4);
