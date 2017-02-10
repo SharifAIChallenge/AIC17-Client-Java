@@ -526,15 +526,19 @@ public class Game implements World {
         infoMap.put(id, theChosenCell.getBeetleEntity());
 
         if (team == teamID) {
-            beetleList = new ArrayList<Cell>(Arrays.asList(beetles[0]));
+			Cell[] beetles = map.getMyCells();
+            beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
             beetleList.add(theChosenCell);
             Cell[] tempCell = new Cell[beetleList.size()];
-            beetles[0] = beetleList.toArray(tempCell);
-        } else {
-            beetleList = new ArrayList<Cell>(Arrays.asList(beetles[1]));
+            beetles = beetleList.toArray(tempCell);
+			map.setMyCells(beetles);
+		} else {
+			Cell[] beetles = map.getOppCells();
+            beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
             beetleList.add(theChosenCell);
             Cell[] tempCell = new Cell[beetleList.size()];
-            beetles[1] = beetleList.toArray(tempCell);
+            beetles = beetleList.toArray(tempCell);
+			map.setOppCells(beetles);
         }
     }
 
