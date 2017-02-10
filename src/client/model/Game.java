@@ -176,12 +176,6 @@ public class Game implements World {
             JsonObject changes = allChanges.get(i).getAsJsonObject();
             String jsonString = changes.toString();
             Change change = gson.fromJson(jsonString, Change.class);
-            if (currentTurn == 1) {
-                System.out.println("Lol");
-            } else if (currentTurn == 2) {
-                System.out.println();
-            }
-
             char type = change.getType();
             if (type == 'a') {
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
