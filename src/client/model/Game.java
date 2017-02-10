@@ -49,7 +49,7 @@ public class Game implements World {
     private int trashValidTime;
 
     private Cell[][] items = new Cell[4][]; // Teleport-0, net-1, Trash-2 and food-3 tiles
-    private Cell[][] Cockroaches = new Cell[2][]; // my Cockroach - 0, opp Cockroach - 1
+    private Cell[][] beetles = new Cell[2][]; // my Beetle - 0, opp Beetle - 1
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
     private HashMap<Integer, Information> infoMap = new HashMap<>(); // This field is not usefull for user
@@ -93,27 +93,27 @@ public class Game implements World {
         map = new Map(cells);
 
 
-        JsonArray Cockroaches = msg.args.get(2).getAsJsonArray();
-        this.Cockroaches = new Cell[2][Cockroaches.size()];
-        int myCockroach = 0;
-        int oppCockroach = 0;
-        for (int i = 0; i < Cockroaches.size(); i++) {
+        JsonArray Beetles = msg.args.get(2).getAsJsonArray();
+        this.beetles = new Cell[2][Beetles.size()];
+        int myBeetle = 0;
+        int oppBeetle = 0;
+        for (int i = 0; i < Beetles.size(); i++) {
             int tileX, tileY;
-            JsonArray CockroachInfo = Cockroaches.get(i).getAsJsonArray();
-            int id = CockroachInfo.get(0).getAsInt();
-            tileX = CockroachInfo.get(1).getAsInt();
-            tileY = CockroachInfo.get(2).getAsInt();
+            JsonArray beetleInfo = Beetles.get(i).getAsJsonArray();
+            int id = beetleInfo.get(0).getAsInt();
+            tileX = beetleInfo.get(1).getAsInt();
+            tileY = beetleInfo.get(2).getAsInt();
 
             Cell theChosenCell = map.getTile(tileX, tileY);
-            theChosenCell.addCockroachInfo(CockroachInfo);
+            theChosenCell.addBeetleInfo(beetleInfo);
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getCockroachInformation());
+            infoMap.put(id, theChosenCell.getBeetleInformation());
 
-            if (teamID == CockroachInfo.get(7).getAsInt()) {
-                this.Cockroaches[0][myCockroach++] = theChosenCell;
+            if (teamID == beetleInfo.get(7).getAsInt()) {
+                this.beetles[0][myBeetle++] = theChosenCell;
             } else {
-                this.Cockroaches[1][oppCockroach++] = theChosenCell;
+                this.beetles[1][oppBeetle++] = theChosenCell;
             }
         }
 
@@ -216,7 +216,7 @@ public class Game implements World {
                     ArrayList<Integer> addChange = allAdds.get(j);
                     switch (addChange.get(1)) {
                         case 0:
-                            addCockroach(addChange);
+                            addBeetle(addChange);
                             break;
                         case 1:
                             addFood(addChange);
@@ -239,14 +239,14 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
-                    moveCockroach(moveChange);
+                    moveBeetle(moveChange);
                 }
             } else if (type == 'c') { // change condition
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
                     if (alter.size() == 5) {
-                        cockroachAlter(alter);
+                        beetleAlter(alter);
                     } else {
                         itemAlter(alter);
                     }
@@ -278,18 +278,18 @@ public class Game implements World {
         Information theChosenInfo = infoMap.get(id);
         infoMap.remove(id);
 
-        if (theChosenInfo instanceof CockroachInformation) {
-            CockroachInformation chosenCockroachInfo = (CockroachInformation) theChosenInfo;
-            if (chosenCockroachInfo.getTeam() == teamID) {
-                ArrayList<Cell> CockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[0]));
-                CockroachList.remove(theChosenCell);
-                Cell[] tempCell = new Cell[CockroachList.size()];
-                Cockroaches[0] = CockroachList.toArray(tempCell);
+        if (theChosenInfo instanceof BeetleInformation) {
+            BeetleInformation chosenBeetleInfo = (BeetleInformation) theChosenInfo;
+            if (chosenBeetleInfo.getTeam() == teamID) {
+                ArrayList<Cell> beetleList = new ArrayList<Cell>(Arrays.asList(beetles[0]));
+                beetleList.remove(theChosenCell);
+                Cell[] tempCell = new Cell[beetleList.size()];
+                beetles[0] = beetleList.toArray(tempCell);
             } else {
-                ArrayList<Cell> cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[1]));
-                cockroachList.remove(theChosenCell);
-                Cell[] tempCell = new Cell[cockroachList.size()];
-                Cockroaches[1] = cockroachList.toArray(tempCell);
+                ArrayList<Cell> beetleList = new ArrayList<Cell>(Arrays.asList(beetles[1]));
+                beetleList.remove(theChosenCell);
+                Cell[] tempCell = new Cell[beetleList.size()];
+                beetles[1] = beetleList.toArray(tempCell);
             }
             theChosenCell.clear();
         } else if (theChosenInfo instanceof ItemInformation && ((ItemInformation) theChosenInfo).getItemId() == 0) {
@@ -313,11 +313,11 @@ public class Game implements World {
         }
     }
 
-    private void moveCockroach(ArrayList<Integer> changes) {
+    private void moveBeetle(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int move = changes.get(1);
         Cell theChosenCell = idMap.get(id);
-        CockroachInformation theChosenInfo = (CockroachInformation) (infoMap.get(id));
+        BeetleInformation theChosenInfo = (BeetleInformation) (infoMap.get(id));
         switch (move) {
             case 0:
                 theChosenInfo.setDirection((theChosenInfo.getDirection() + 3) % 4);
@@ -330,10 +330,10 @@ public class Game implements World {
                 idMap.put(id, targetCell);
                 System.out.println("-----------------------");
                 System.out.println(id);
-                System.out.println(targetCell.getCockroachInformation());
-                System.out.println(theChosenCell.getCockroachInformation());
+                System.out.println(targetCell.getBeetleInformation());
+                System.out.println(theChosenCell.getBeetleInformation());
                 System.out.println("-----------------------");
-                if (targetCell.getCockroachInformation().getId() == theChosenCell.getCockroachInformation().getId()) {
+                if (targetCell.getBeetleInformation().getId() == theChosenCell.getBeetleInformation().getId()) {
                     theChosenCell.clear();
                 }
                 break;
@@ -371,14 +371,14 @@ public class Game implements World {
         return y;
     }
 
-    private void cockroachAlter(ArrayList<Integer> changes) {
+    private void beetleAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int newX = changes.get(1);
         int newY = changes.get(2);
         int color = changes.get(3);
         int sick = changes.get(4);
         Cell theChosenCell = idMap.get(id);
-        CockroachInformation theChosenInfo = (CockroachInformation) infoMap.get(id);
+        BeetleInformation theChosenInfo = (BeetleInformation) infoMap.get(id);
         Cell targetCell = map.getTile(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
@@ -414,8 +414,8 @@ public class Game implements World {
         trashValidTime = (int) constants.get(20).getAsDouble();
     }
 
-    private void addCockroach(ArrayList<Integer> changes) {
-        ArrayList<Cell> cockroachList;
+    private void addBeetle(ArrayList<Integer> changes) {
+        ArrayList<Cell> beetleList;
         int id = changes.get(0);
         int tileX = changes.get(2);
         int tileY = changes.get(3);
@@ -425,21 +425,21 @@ public class Game implements World {
         int team = changes.get(7);
 
         Cell theChosenCell = map.getTile(tileX, tileY);
-        theChosenCell.addCockroachInfo(id, direction, color, queen, team);
+        theChosenCell.addBeetleInfo(id, direction, color, queen, team);
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getCockroachInformation());
+        infoMap.put(id, theChosenCell.getBeetleInformation());
 
         if (team == teamID) {
-            cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[0]));
-            cockroachList.add(theChosenCell);
-            Cell[] tempCell = new Cell[cockroachList.size()];
-            Cockroaches[0] = cockroachList.toArray(tempCell);
+            beetleList = new ArrayList<Cell>(Arrays.asList(beetles[0]));
+            beetleList.add(theChosenCell);
+            Cell[] tempCell = new Cell[beetleList.size()];
+            beetles[0] = beetleList.toArray(tempCell);
         } else {
-            cockroachList = new ArrayList<Cell>(Arrays.asList(Cockroaches[1]));
-            cockroachList.add(theChosenCell);
-            Cell[] tempCell = new Cell[cockroachList.size()];
-            Cockroaches[1] = cockroachList.toArray(tempCell);
+            beetleList = new ArrayList<Cell>(Arrays.asList(beetles[1]));
+            beetleList.add(theChosenCell);
+            Cell[] tempCell = new Cell[beetleList.size()];
+            beetles[1] = beetleList.toArray(tempCell);
         }
     }
 
@@ -496,11 +496,11 @@ public class Game implements World {
     }
 
     public Cell[] getMyTiles() {
-        return Cockroaches[0];
+        return beetles[0];
     }
 
     public Cell[] getOppTiles() {
-        return Cockroaches[1];
+        return beetles[1];
     }
 
     public Cell[] getTeleportTiles() {
@@ -519,11 +519,11 @@ public class Game implements World {
         return items[3];
     }
 
-    public CockroachInformation getCockroachInformation(int id) {
-        Cell cockroachCell = idMap.get(id);
-        CockroachInformation theChosenInfo = (CockroachInformation) cockroachCell.getCockroachInformation();
-        theChosenInfo.setX(cockroachCell.getX());
-        theChosenInfo.setY(cockroachCell.getY());
+    public BeetleInformation getBeetleInformation(int id) {
+        Cell beetleCell = idMap.get(id);
+        BeetleInformation theChosenInfo = (BeetleInformation) beetleCell.getBeetleInformation();
+        theChosenInfo.setX(beetleCell.getX());
+        theChosenInfo.setY(beetleCell.getY());
         return theChosenInfo;
     }
 

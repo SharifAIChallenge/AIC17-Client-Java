@@ -241,7 +241,7 @@ public interface World {
      * @param id Beetle id
      * @return Information object related to the given beetle
      */
-    CockroachInformation getCockroachInformation(int id);
+    BeetleInformation getBeetleInformation(int id);
 
     /**
      *

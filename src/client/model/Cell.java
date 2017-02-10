@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 public class Cell {
     private int x;
     private int y;
-    private Information cockroachInformation;
+    private Information beetleInformation;
     private Information itemInformation;
     private Information netInformation;
     private Information teleportInformation;
@@ -28,8 +28,8 @@ public class Cell {
     }
 
     public void receiveInfo(Information information) {
-        if (information instanceof CockroachInformation) {
-            cockroachInformation = information;
+        if (information instanceof BeetleInformation) {
+            beetleInformation = information;
         } else if (information instanceof ItemInformation) {
             itemInformation = information;
         } else if (information instanceof NetInformation) {
@@ -39,15 +39,15 @@ public class Cell {
         }
     }
 
-    public void addCockroachInfo(JsonArray cockroachInfo) {
-        cockroachInformation = new CockroachInformation();
-        cockroachInformation.setId(cockroachInfo.get(0).getAsInt());
-        CockroachInformation chosenCockroachInfo = (CockroachInformation) cockroachInformation;
-        chosenCockroachInfo.setDirection(cockroachInfo.get(3).getAsInt());
-        chosenCockroachInfo.setColor(cockroachInfo.get(4).getAsInt());
-        chosenCockroachInfo.setQueen(cockroachInfo.get(5).getAsInt());
-        chosenCockroachInfo.setSick(cockroachInfo.get(6).getAsInt());
-        chosenCockroachInfo.setTeam(cockroachInfo.get(7).getAsInt());
+    public void addBeetleInfo(JsonArray beetleInfo) {
+        beetleInformation = new BeetleInformation();
+        beetleInformation.setId(beetleInfo.get(0).getAsInt());
+        BeetleInformation chosenBeetleInfo = (BeetleInformation) beetleInformation;
+        chosenBeetleInfo.setDirection(beetleInfo.get(3).getAsInt());
+        chosenBeetleInfo.setColor(beetleInfo.get(4).getAsInt());
+        chosenBeetleInfo.setQueen(beetleInfo.get(5).getAsInt());
+        chosenBeetleInfo.setSick(beetleInfo.get(6).getAsInt());
+        chosenBeetleInfo.setTeam(beetleInfo.get(7).getAsInt());
     }
 
     public int getX() {
@@ -66,19 +66,19 @@ public class Cell {
         this.y = y;
     }
 
-    public void addCockroachInfo(int id, int direction, int color, int queen, int team) {
-        cockroachInformation = new CockroachInformation();
-        cockroachInformation.setId(id);
-        CockroachInformation chosenCockroachInfo = (CockroachInformation) cockroachInformation;
-        chosenCockroachInfo.setDirection(direction);
-        chosenCockroachInfo.setColor(color);
-        chosenCockroachInfo.setQueen(queen);
-        chosenCockroachInfo.setSick(0);
-        chosenCockroachInfo.setTeam(team);
+    public void addBeetleInfo(int id, int direction, int color, int queen, int team) {
+        beetleInformation = new BeetleInformation();
+        beetleInformation.setId(id);
+        BeetleInformation chosenBeetleInfo = (BeetleInformation) beetleInformation;
+        chosenBeetleInfo.setDirection(direction);
+        chosenBeetleInfo.setColor(color);
+        chosenBeetleInfo.setQueen(queen);
+        chosenBeetleInfo.setSick(0);
+        chosenBeetleInfo.setTeam(team);
     }
 
     public void clear() {
-        cockroachInformation = null;
+        beetleInformation = null;
         itemInformation = null;
     }
 
@@ -86,12 +86,12 @@ public class Cell {
         netInformation = null;
     }
 
-    public Information getCockroachInformation() {
-        return cockroachInformation;
+    public Information getBeetleInformation() {
+        return beetleInformation;
     }
 
-    public void setCockroachInformation(Information cockroachInformation) {
-        this.cockroachInformation = cockroachInformation;
+    public void setBeetleInformation(Information beetleInformation) {
+        this.beetleInformation = beetleInformation;
     }
 
     public Information getItemInformation() {

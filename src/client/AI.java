@@ -1,6 +1,6 @@
 package client;
 
-import client.model.CockroachInformation;
+import client.model.BeetleInformation;
 import client.model.Cell;
 
 import java.util.Random;
@@ -24,7 +24,7 @@ public class AI {
 
         Cell[][] cells = game.getMap().getCells();
         Cell[] myFishCell = game.getMyTiles();
-        CockroachInformation cockroachInformation = (CockroachInformation) myFishCell[0].getCockroachInformation();
+        BeetleInformation beetleInformation = (BeetleInformation) myFishCell[0].getBeetleInformation();
 
         if (game.getCurrentTurn() == 1)
         {
@@ -41,7 +41,7 @@ public class AI {
                     }
                 }
             }
-            game.antennaChange(cockroachInformation.getId(), 1 - cockroachInformation.getColor());
+            game.antennaChange(beetleInformation.getId(), 1 - beetleInformation.getColor());
         }
         else
         {
