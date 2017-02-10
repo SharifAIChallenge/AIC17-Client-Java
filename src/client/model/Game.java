@@ -361,23 +361,29 @@ public class Game implements World {
             }
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Food) {
-            ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(items[3]));
+			Cell[] foods = map.getFoodCells();
+            ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
             foodList.remove(theChosenCell);
             Cell[] tempCell = new Cell[foodList.size()];
-            items[3] = foodList.toArray(tempCell);
+            foods = foodList.toArray(tempCell);
+			map.setFoodCells(foods);
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Trash) {
-            ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(items[2]));
+			Cell[] trashes = map.getTrashCells();
+            ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
             trashList.remove(theChosenCell);
             Cell[] tempCell = new Cell[trashList.size()];
-            items[2] = trashList.toArray(tempCell);
+            trashes = trashList.toArray(tempCell);
+			map.setTrashCells(trashes);
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Slipper) {
-            ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(items[1]));
+			Cell[] slippers = map.getSlipperCells();
+            ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(slippers));
             slipperList.remove(theChosenCell);
             Cell[] tempCell = new Cell[slipperList.size()];
-            items[1] = slipperList.toArray(tempCell);
-            theChosenCell.cleanSlipper();
+            slippers = slipperList.toArray(tempCell);
+            map.setSlipperCells(slipper);
+			theChosenCell.cleanSlipper();
         }
     }
 
