@@ -135,4 +135,22 @@ public class Cell {
     public void setTeleportEntity(Entity teleportEntity) {
         this.teleportEntity = teleportEntity;
     }
+
+    public Entity getFoodEntity() {
+        return foodEntity;
+    }
+
+    public void setFoodEntity(Entity foodEntity) {
+        this.foodEntity = foodEntity;
+    }
+
+    public Entity getTrashEntity() {
+        return trashEntity;
+    }
+
+    public void setTrashEntity(Entity trashEntity) {
+        this.trashEntity = trashEntity;
+    }
+
+
 }

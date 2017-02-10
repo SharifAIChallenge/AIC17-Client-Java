@@ -24,7 +24,7 @@ public class Game implements World {
     private int height;
     private int myScore;
     private int oppScore;
-	
+
     private Constants constants;
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
@@ -68,7 +68,7 @@ public class Game implements World {
                 cells[i][j] = new Cell(i, j);
             }
         }
-        map = new Map(cells);
+        map = new Map(cells, width, height);
 
 
         JsonArray Beetles = msg.args.get(2).getAsJsonArray();
@@ -89,12 +89,12 @@ public class Game implements World {
             infoMap.put(id, theChosenCell.getBeetleEntity());
 
             if (teamID == beetleInfo.get(7).getAsInt()) {
-                this.beetles[0][myBeetle++] = theChosenCell;
+                beetles[0][myBeetle++] = theChosenCell;
             } else {
-                this.beetles[1][oppBeetle++] = theChosenCell;
+                beetles[1][oppBeetle++] = theChosenCell;
             }
         }
-		map.setBeetles(beetles);
+        map.setBeetles(beetles);
 
         JsonArray foods = msg.args.get(3).getAsJsonArray();
         Cell[] foodCells = new Cell[foods.size()];
@@ -128,7 +128,7 @@ public class Game implements World {
             idMap.put(id, theChosenCell);
             infoMap.put(id, theChosenCell.getItemEntity());
         }
-        map.setTrashCells(targetCells);
+        map.setTrashCells(trashCells);
 
         JsonArray slippers = msg.args.get(5).getAsJsonArray();
         Cell[] slipperCells = new Cell[slippers.size()];
@@ -228,70 +228,67 @@ public class Game implements World {
                 }
             }
         }
-		handleFinalChanges();
+        handleFinalChanges();
+        if (currentTurn == 1) {
+            System.out.println("Lol");
+        } else if (currentTurn == 2) {
+            System.out.println();
+        }
     }
 
-	private void handleFinalChanges()
-	{
-		map.setIdMap(idMap);
-		handleTeleports();
-		handleEntityCells();
-		handleFoodRemainings();
-		handleTrashRemainings();
-		handleSlipperRemainings();
-	}
-	
-	private void handleTeleports()
-	{
-		Cell[] teleportCells = map.getTeleportCells();
-		for(Cell cell : teleportCells)
-		{
-			Teleport theChosenTeleport = (Teleport) cell.getTeleport();
-			int targetId = theChosenTeleport.getTargetId();
-			Teleport targetTeleport = (Teleport) idMap.get(targetId).getTeleport();
-			theChosenTeleport.setPair(targetTeleport);
-		}
-	}
-	
-	private void handleEntityCells()
-	{
-		for(Integer id : idMap.keySet())
-		{
-			Entity theChosenEntity = map.getEntity(id);
-			theChosenEntity.setCell(idMap.get(id));
-		}
-	}
-	
-	private void handleFoodRemainings()
-	{
-		Cell[] foodCells = map.getFoodCells();
-		for(Cell cell : foodCells)
-		{
-			Food food = (Food) cell.getFood();
-			food.setRemainingTurns(food.getRemainingTurns() - 1);
-		}
-	}
-	
-	private void handleTrashRemainings()
-	{
-		Cell[] trashCells = map.getTrashCells();
-		for(Cell cell : trashCells)
-		{
-			Trash trash = (Trash) cell.getTrash();
-			trash.setRemainingTurns(trash.getRemainingTurns() - 1);
-		}
-	}
-	
-	private void handleSlipperRemainings()
-	{
-		Cell[] slipperCells = map.getSlipperCells();
-		for(Cell cell : slipperCells)
-		{
-			Slipper slipper = (Slipper) cell.getSlipper();
-			slipper.setRemainingTurns(slipper.getRemainingTurns() - 1);
-		}
-	}
-	
+    private void handleFinalChanges() {
+        map.setIdMap(idMap);
+        handleTeleports();
+        handleEntityCells();
+        handleFoodRemainings();
+        handleTrashRemainings();
+        handleSlipperRemainings();
+    }
+
+    private void handleTeleports() {
+        Cell[] teleportCells = map.getTeleportCells();
+        for (Cell cell : teleportCells) {
+            Teleport theChosenTeleport = (Teleport) cell.getTeleportEntity();
+            int targetId = theChosenTeleport.getTargetId();
+            Teleport targetTeleport = (Teleport) idMap.get(targetId).getTeleportEntity();
+            theChosenTeleport.setPair(targetTeleport);
+        }
+    }
+
+    private void handleEntityCells() {
+        for (Integer id : idMap.keySet()) {
+            if (map.getEntity(id) == null) {
+                System.out.println("WTF!");
+            }
+            Entity theChosenEntity = map.getEntity(id);
+            theChosenEntity.setCell(idMap.get(id));
+        }
+    }
+
+    private void handleFoodRemainings() {
+        Cell[] foodCells = map.getFoodCells();
+        for (Cell cell : foodCells) {
+            Food food = (Food) cell.getFoodEntity();
+            food.setRemainingTurn(food.getRemainingTurns() - 1);
+        }
+    }
+
+    private void handleTrashRemainings() {
+        Cell[] trashCells = map.getTrashCells();
+        for (Cell cell : trashCells) {
+            Trash trash = (Trash) cell.getTrashEntity();
+            trash.setRemainingTurn(trash.getRemainingTurns() - 1);
+        }
+    }
+
+    private void handleSlipperRemainings() {
+        Cell[] slipperCells = map.getSlipperCells();
+        for (Cell cell : slipperCells) {
+            Slipper slipper = (Slipper) cell.getSlipperEntity();
+            slipper.setRemainingTurn(slipper.getRemainingTurns() - 1);
+        }
+    }
+
     private void itemAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int x = changes.get(1);
@@ -304,27 +301,24 @@ public class Game implements World {
         targetCell.receiveInfo(theChosenCell.getItemEntity());
         idMap.put(id, targetCell);
         theChosenCell.setItemEntity(null);
-		
-		if(map.getEntityType(id) == EntityType.Food)
-		{
-			Cell[] foods = map.getFoodCells();
-			ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
-			foodList.remove(theChosenCell);
-			foodList.add(targetCell);
-			Cell[] tempCell = new Cell[foodList.size()];
-			foods = foodList.toArray(tempCell);
-			map.setFoodCells(foods);
-		}
-		else
-		{
-			Cell[] trashes = map.getTrashCells();
-			ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
-			trashList.remove(theChosenCell);
-			trashList.add(targetCell);
-			Cell[] tempCell = new Cell[trashList.size()];
-			trashes = trashList.toArray(tempCell);
-			map.setTrashCells(trashes);
-		}
+
+        if (map.getEntityType(id) == EntityType.Food) {
+            Cell[] foods = map.getFoodCells();
+            ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
+            foodList.remove(theChosenCell);
+            foodList.add(targetCell);
+            Cell[] tempCell = new Cell[foodList.size()];
+            foods = foodList.toArray(tempCell);
+            map.setFoodCells(foods);
+        } else {
+            Cell[] trashes = map.getTrashCells();
+            ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
+            trashList.remove(theChosenCell);
+            trashList.add(targetCell);
+            Cell[] tempCell = new Cell[trashList.size()];
+            trashes = trashList.toArray(tempCell);
+            map.setTrashCells(trashes);
+        }
     }
 
     private void delete(ArrayList<Integer> changes) {
@@ -339,45 +333,45 @@ public class Game implements World {
         if (theChosenInfo instanceof Beetle) {
             Beetle chosenBeetleInfo = (Beetle) theChosenInfo;
             if (chosenBeetleInfo.getTeam() == teamID) {
-				Cell[] beetles = map.getMyCells();
+                Cell[] beetles = map.getMyCells();
                 ArrayList<Cell> beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
                 beetleList.remove(theChosenCell);
                 Cell[] tempCell = new Cell[beetleList.size()];
                 beetles = beetleList.toArray(tempCell);
-				map.setMyCells(beetles);
+                map.setMyCells(beetles);
             } else {
-				Cell[] beetles = map.getOppCells();
+                Cell[] beetles = map.getOppCells();
                 ArrayList<Cell> beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
                 beetleList.remove(theChosenCell);
                 Cell[] tempCell = new Cell[beetleList.size()];
                 beetles = beetleList.toArray(tempCell);
-				map.setOppCells(beetles);
+                map.setOppCells(beetles);
             }
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Food) {
-			Cell[] foods = map.getFoodCells();
+            Cell[] foods = map.getFoodCells();
             ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
             foodList.remove(theChosenCell);
             Cell[] tempCell = new Cell[foodList.size()];
             foods = foodList.toArray(tempCell);
-			map.setFoodCells(foods);
+            map.setFoodCells(foods);
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Trash) {
-			Cell[] trashes = map.getTrashCells();
+            Cell[] trashes = map.getTrashCells();
             ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
             trashList.remove(theChosenCell);
             Cell[] tempCell = new Cell[trashList.size()];
             trashes = trashList.toArray(tempCell);
-			map.setTrashCells(trashes);
+            map.setTrashCells(trashes);
             theChosenCell.clear();
         } else if (theChosenInfo instanceof Slipper) {
-			Cell[] slippers = map.getSlipperCells();
+            Cell[] slippers = map.getSlipperCells();
             ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(slippers));
             slipperList.remove(theChosenCell);
             Cell[] tempCell = new Cell[slipperList.size()];
             slippers = slipperList.toArray(tempCell);
-            map.setSlipperCells(slipper);
-			theChosenCell.cleanSlipper();
+            map.setSlipperCells(slippers);
+            theChosenCell.cleanSlipper();
         }
     }
 
@@ -399,24 +393,25 @@ public class Game implements World {
                 if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
                     theChosenCell.clear();
                 }
-				int team = ((Beetle) (map.getEntity(id))).getTeam();
-				if (team == teamID) {
-					Cell[] beetles = map.getMyCells();
-					beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
-					beetleList.remove(theChosenCell);
-					beetleList.add(targetCell);
-					Cell[] tempCell = new Cell[beetleList.size()];
-					beetles = beetleList.toArray(tempCell);
-					map.setMyCells(beetles);
-				} else {
-					Cell[] beetles = map.getOppCells();
-					beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
-					beetleList.remove(theChosenCell);
-					beetleList.add(targetCell);
-					Cell[] tempCell = new Cell[beetleList.size()];
-					beetles = beetleList.toArray(tempCell);
-					map.setOppCells(beetles);
-				}
+                int team = ((Beetle) (map.getEntity(id))).getTeam();
+                ArrayList<Cell> beetleList;
+                if (team == teamID) {
+                    Cell[] beetles = map.getMyCells();
+                    beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+                    beetleList.remove(theChosenCell);
+                    beetleList.add(targetCell);
+                    Cell[] tempCell = new Cell[beetleList.size()];
+                    beetles = beetleList.toArray(tempCell);
+                    map.setMyCells(beetles);
+                } else {
+                    Cell[] beetles = map.getOppCells();
+                    beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+                    beetleList.remove(theChosenCell);
+                    beetleList.add(targetCell);
+                    Cell[] tempCell = new Cell[beetleList.size()];
+                    beetles = beetleList.toArray(tempCell);
+                    map.setOppCells(beetles);
+                }
                 break;
             case 2:
                 theChosenInfo.setDirection((theChosenInfo.getDirectionInt() + 1) % 4);
@@ -458,62 +453,38 @@ public class Game implements World {
         int newY = changes.get(2);
         int color = changes.get(3);
         int sick = changes.get(4);
-        
-		Cell theChosenCell = idMap.get(id);
+
+        Cell theChosenCell = idMap.get(id);
         Beetle theChosenInfo = (Beetle) infoMap.get(id);
         Cell targetCell = map.getCell(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
-        
-		targetCell.receiveInfo(theChosenInfo);
+
+        targetCell.receiveInfo(theChosenInfo);
         idMap.put(id, targetCell);
         if (targetCell != theChosenCell) {
             theChosenCell.clear();
-			
-			int team =((Beetle) (map.getEntity(id))).getTeam();
-			if (team == teamID) {
-				Cell[] beetles = map.getMyCells();
-				beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
-				beetleList.remove(theChosenCell);
-				beetleList.add(targetCell);
-				Cell[] tempCell = new Cell[beetleList.size()];
-				beetles = beetleList.toArray(tempCell);
-				map.setMyCells(beetles);
-			} else {
-				Cell[] beetles = map.getOppCells();
-				beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
-				beetleList.remove(theChosenCell);
-				beetleList.add(targetCell);
-				Cell[] tempCell = new Cell[beetleList.size()];
-				beetles = beetleList.toArray(tempCell);
-				map.setOppCells(beetles);
-			}
-        }
-    }
 
-    private void setConstants(JsonArray constants) {
-        this.constants = new Constants();
-        this.constants.setTurnTimeout((int) constants.get(0).getAsDouble());
-        this.constants.setFoodProb(constants.get(1).getAsDouble());
-        this.constants.setTrashProb(constants.get(2).getAsDouble());
-        this.constants.setNetProb(constants.get(3).getAsDouble());
-        this.constants.setNetValidTime((int) constants.get(4).getAsDouble());
-        this.constants.setColorCost((int) constants.get(5).getAsDouble());
-        this.constants.setSickCost((int) constants.get(6).getAsDouble());
-        this.constants.setUpdateCost((int) constants.get(7).getAsDouble());
-        this.constants.setDetMoveCost((int) constants.get(8).getAsDouble());
-        this.constants.setKillQueenScore((int) constants.get(9).getAsDouble());
-        this.constants.setKillBothQueenScore((int) constants.get(10).getAsDouble());
-        this.constants.setKillFishScore((int) constants.get(11).getAsDouble());
-        this.constants.setQueenCollisionScore((int) constants.get(12).getAsDouble());
-        this.constants.setFishFoodScore((int) constants.get(13).getAsDouble());
-        this.constants.setQueenFoodScore((int) constants.get(14).getAsDouble());
-        this.constants.setSickLifeTime((int) constants.get(15).getAsDouble());
-        this.constants.setPowerRatio(constants.get(16).getAsDouble());
-        this.constants.setEndRatio(constants.get(17).getAsDouble());
-        this.constants.setDisobeyNum((int) constants.get(18).getAsDouble());
-        this.constants.setFoodValidTime((int) constants.get(19).getAsDouble());
-        this.constants.setTrashValidTime((int) constants.get(20).getAsDouble());
+            int team = ((Beetle) (map.getEntity(id))).getTeam();
+            ArrayList<Cell> beetleList;
+            if (team == teamID) {
+                Cell[] beetles = map.getMyCells();
+                beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+                beetleList.remove(theChosenCell);
+                beetleList.add(targetCell);
+                Cell[] tempCell = new Cell[beetleList.size()];
+                beetles = beetleList.toArray(tempCell);
+                map.setMyCells(beetles);
+            } else {
+                Cell[] beetles = map.getOppCells();
+                beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
+                beetleList.remove(theChosenCell);
+                beetleList.add(targetCell);
+                Cell[] tempCell = new Cell[beetleList.size()];
+                beetles = beetleList.toArray(tempCell);
+                map.setOppCells(beetles);
+            }
+        }
     }
 
     private void addBeetle(ArrayList<Integer> changes) {
@@ -533,19 +504,19 @@ public class Game implements World {
         infoMap.put(id, theChosenCell.getBeetleEntity());
 
         if (team == teamID) {
-			Cell[] beetles = map.getMyCells();
+            Cell[] beetles = map.getMyCells();
             beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
             beetleList.add(theChosenCell);
             Cell[] tempCell = new Cell[beetleList.size()];
             beetles = beetleList.toArray(tempCell);
-			map.setMyCells(beetles);
-		} else {
-			Cell[] beetles = map.getOppCells();
+            map.setMyCells(beetles);
+        } else {
+            Cell[] beetles = map.getOppCells();
             beetleList = new ArrayList<Cell>(Arrays.asList(beetles));
             beetleList.add(theChosenCell);
             Cell[] tempCell = new Cell[beetleList.size()];
             beetles = beetleList.toArray(tempCell);
-			map.setOppCells(beetles);
+            map.setOppCells(beetles);
         }
     }
 
@@ -560,12 +531,12 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
 
-		Cell[] foods = map.getFoodCells();
+        Cell[] foods = map.getFoodCells();
         ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
         foodList.add(theChosenCell);
         Cell[] tempCell = new Cell[foodList.size()];
         foods = foodList.toArray(tempCell);
-		map.setFoodCells(foods);
+        map.setFoodCells(foods);
     }
 
     private void addTrash(ArrayList<Integer> changes) {
@@ -579,12 +550,12 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getItemEntity());
 
-		Cell[] trashes = map.getTrashCells();
+        Cell[] trashes = map.getTrashCells();
         ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
         trashList.add(theChosenCell);
         Cell[] tempCell = new Cell[trashList.size()];
         trashes = trashList.toArray(tempCell);
-		map.setTrashCells(trashes);
+        map.setTrashCells(trashes);
     }
 
     private void addSlipper(ArrayList<Integer> changes) {
@@ -598,12 +569,12 @@ public class Game implements World {
         idMap.put(id, theChosenCell);
         infoMap.put(id, theChosenCell.getSlipperEntity());
 
-		Cell[] slippers = map.getSlipperCells();
+        Cell[] slippers = map.getSlipperCells();
         ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(slippers));
         slipperList.add(theChosenCell);
         Cell[] tempCell = new Cell[slipperList.size()];
         slippers = slipperList.toArray(tempCell);
-		map.setSlipperCells(slippers);
+        map.setSlipperCells(slippers);
     }
 
     public Map getMap() {
@@ -617,7 +588,6 @@ public class Game implements World {
     public long getTotalTime() {
         return System.currentTimeMillis() - startTime;
     }
-
 
     public int getTeamID() {
         return teamID;
@@ -657,5 +627,30 @@ public class Game implements World {
     @Override
     public Constants getConstants() {
         return this.constants;
+    }
+
+    private void setConstants(JsonArray constants) {
+        this.constants = new Constants();
+        this.constants.setTurnTimeout((int) constants.get(0).getAsDouble());
+        this.constants.setFoodProb(constants.get(1).getAsDouble());
+        this.constants.setTrashProb(constants.get(2).getAsDouble());
+        this.constants.setNetProb(constants.get(3).getAsDouble());
+        this.constants.setNetValidTime((int) constants.get(4).getAsDouble());
+        this.constants.setColorCost((int) constants.get(5).getAsDouble());
+        this.constants.setSickCost((int) constants.get(6).getAsDouble());
+        this.constants.setUpdateCost((int) constants.get(7).getAsDouble());
+        this.constants.setDetMoveCost((int) constants.get(8).getAsDouble());
+        this.constants.setKillQueenScore((int) constants.get(9).getAsDouble());
+        this.constants.setKillBothQueenScore((int) constants.get(10).getAsDouble());
+        this.constants.setKillFishScore((int) constants.get(11).getAsDouble());
+        this.constants.setQueenCollisionScore((int) constants.get(12).getAsDouble());
+        this.constants.setFishFoodScore((int) constants.get(13).getAsDouble());
+        this.constants.setQueenFoodScore((int) constants.get(14).getAsDouble());
+        this.constants.setSickLifeTime((int) constants.get(15).getAsDouble());
+        this.constants.setPowerRatio(constants.get(16).getAsDouble());
+        this.constants.setEndRatio(constants.get(17).getAsDouble());
+        this.constants.setDisobeyNum((int) constants.get(18).getAsDouble());
+        this.constants.setFoodValidTime((int) constants.get(19).getAsDouble());
+        this.constants.setTrashValidTime((int) constants.get(20).getAsDouble());
     }
 }

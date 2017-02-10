@@ -81,63 +81,6 @@ public interface World {
      */
     int getOppScore();
 
-    /**
-     *
-     * @return Cells which contains user's beetles
-     */
-    Cell[] getMyCells();
-
-    /**
-     *
-     * @return Cells which contains opponent's beetles
-     */
-    Cell[] getOppCells();
-
-    /**
-     *
-     * @return Cells which contains Teleporting devices
-     */
-    Cell[] getTeleportCells();
-
-    /**
-     *
-     * @return Cells which contains net
-     */
-    Cell[] getSlipperCells();
-
-    /**
-     *
-     * @return Cells which contains trash
-     */
-    Cell[] getTrashCells();
-
-    /**
-     *
-     * @return Cells which contains food
-     */
-    Cell[] getFoodCells();
-
-    /**
-     *
-     * @param id Beetle id
-     * @return Entity object related to the given beetle
-     */
-    Beetle getBeetleInformation(int id);
-
-
-    /**
-     *
-     * @param id Net id
-     * @return Entity object related to the given net
-     */
-    Slipper getSlipperInformation(int id);
-
-    /**
-     *
-     * @param id Teleport device id
-     * @return Entity object related to the given teleport device
-     */
-    Teleport getTeleportInformation(int id);
 
     int getTotalTurns();
     long getTurnRemainingTime();

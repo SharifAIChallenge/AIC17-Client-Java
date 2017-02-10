@@ -24,10 +24,10 @@ public class AI {
 
         Cell[][] cells = game.getMap().getCells();
 
-        if (game.getCurrentTurn() == 1)
-        {
-            System.out.println("LOL");
-        }
+//        if (game.getCurrentTurn() == 1)
+//        {
+//            System.out.println("LOL");
+//        }
 
         if (game.getCurrentTurn() == 0)
         {
