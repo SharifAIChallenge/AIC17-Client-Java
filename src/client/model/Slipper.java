@@ -2,6 +2,7 @@ package client.model;
 
 public class Slipper extends Entity {
     private int remainingTurn;
+
     Slipper(int id, int slipperValidTime) {
         super(id, EntityType.Slipper);
         remainingTurn = slipperValidTime--;

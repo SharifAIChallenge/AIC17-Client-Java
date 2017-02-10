@@ -27,7 +27,6 @@ public class Cell {
     }
 
 
-
     public void addSlipper(int id, int slipperValidTime) {
         slipperEntity = new Slipper(id, slipperValidTime);
     }
@@ -41,7 +40,7 @@ public class Cell {
             beetleEntity = entity;
         } else if (entity instanceof Food) {
             foodEntity = entity;
-        } else if (entity instanceof Trash){
+        } else if (entity instanceof Trash) {
             trashEntity = entity;
         } else if (entity instanceof Slipper) {
             slipperEntity = entity;

@@ -1,6 +1,9 @@
 package client;
 
-import client.model.*;
+import client.model.BeetleType;
+import client.model.Cell;
+import client.model.CellState;
+import client.model.Move;
 
 import java.util.Random;
 
@@ -23,24 +26,20 @@ public class AI {
 
         Cell[][] cells = game.getMap().getCells();
 
-        if (game.getCurrentTurn() == 1)
-        {
+        if (game.getCurrentTurn() == 1) {
             System.out.println("LOL");
         }
 
-        if (game.getCurrentTurn() == 0)
-        {
+        if (game.getCurrentTurn() == 0) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 3; k++) {
                         game.changeStrategy(BeetleType.values()[0], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[rand.nextInt(2)]);
-                        game.changeStrategy(BeetleType.values()[1], CellState.values()[i], CellState.values()[i], CellState.values()[i],Move.values()[rand.nextInt(2)]);
+                        game.changeStrategy(BeetleType.values()[1], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[rand.nextInt(2)]);
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // no strategy change
         }
 

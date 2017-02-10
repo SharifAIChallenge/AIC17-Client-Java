@@ -18,28 +18,6 @@ public class Beetle extends Entity {
         return color;
     }
 
-    void setDirection(int direction) {
-        switch (direction) {
-            case 0:
-                this.direction = Direction.Right;
-                break;
-            case 1:
-                this.direction = Direction.Up;
-                break;
-            case 2:
-                this.direction = Direction.Left;
-                break;
-            case 3:
-                this.direction = Direction.Down;
-                break;
-        }
-        this.directionInt = direction;
-    }
-
-    int getDirectionInt() {
-        return this.directionInt;
-    }
-
     void setColor(int color) {
         switch (color) {
             case 0:
@@ -50,6 +28,10 @@ public class Beetle extends Entity {
                 break;
         }
         this.color = color;
+    }
+
+    int getDirectionInt() {
+        return this.directionInt;
     }
 
     void setQueen(int queen) {
@@ -72,23 +54,41 @@ public class Beetle extends Entity {
         return (sick == 1);
     }
 
-    public int getRow(){
+    public int getRow() {
         return this.getX();
     }
 
-    public int getColumn(){
+    public int getColumn() {
         return this.getY();
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return this.direction;
     }
 
-    public BeetleType getBeetleType(){
+    void setDirection(int direction) {
+        switch (direction) {
+            case 0:
+                this.direction = Direction.Right;
+                break;
+            case 1:
+                this.direction = Direction.Up;
+                break;
+            case 2:
+                this.direction = Direction.Left;
+                break;
+            case 3:
+                this.direction = Direction.Down;
+                break;
+        }
+        this.directionInt = direction;
+    }
+
+    public BeetleType getBeetleType() {
         return this.beetleType;
     }
 
-    public boolean has_winge(){
+    public boolean has_winge() {
         return (queen == 1);
     }
 }

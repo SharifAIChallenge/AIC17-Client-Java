@@ -55,7 +55,7 @@ public class Entity {
         return this.cell;
     }
 
-    public EntityType getType(){
+    public EntityType getType() {
         return this.entityType;
     }
 }

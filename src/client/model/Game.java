@@ -1,6 +1,5 @@
 package client.model;
 
-//import client.World;
 
 import client.World;
 import com.google.gson.Gson;
@@ -15,13 +14,10 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class Game implements World {
-    // Yo!
     private int currentTurn = 0;
     private long totalTime;
     private long startTime;
     private int teamID;
-    private int width;
-    private int height;
     private int myScore;
     private int oppScore;
 
@@ -32,6 +28,7 @@ public class Game implements World {
 
     private Consumer<Message> sender;
     private Map map;
+    private long turnStartTime;
 
     public Game(Consumer<Message> sender) {
         this.sender = sender;
@@ -59,8 +56,8 @@ public class Game implements World {
         teamID = msg.args.get(0).getAsInt();
 
         JsonArray size = msg.args.get(1).getAsJsonArray();
-        width = size.get(0).getAsInt();
-        height = size.get(1).getAsInt();
+        int width = size.get(0).getAsInt();
+        int height = size.get(1).getAsInt();
 
         Cell[][] cells = new Cell[height][width];
         for (int i = 0; i < height; i++) {
@@ -166,6 +163,7 @@ public class Game implements World {
     }
 
     public void handleTurnMessage(Message msg) {
+        turnStartTime = System.currentTimeMillis();
         currentTurn = msg.args.get(0).getAsInt();
 
         JsonArray scores = msg.args.get(1).getAsJsonArray();
@@ -185,7 +183,7 @@ public class Game implements World {
             }
 
             char type = change.getType();
-            if (type == 'a') { // add
+            if (type == 'a') {
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
                 for (int j = 0; j < allAdds.size(); j++) {
                     ArrayList<Integer> addChange = allAdds.get(j);
@@ -204,19 +202,19 @@ public class Game implements World {
                             break;
                     }
                 }
-            } else if (type == 'd') { // delete
+            } else if (type == 'd') {
                 ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
                 for (int j = 0; j < allDeletes.size(); j++) {
                     ArrayList<Integer> deleteChange = allDeletes.get(j);
                     delete(deleteChange);
                 }
-            } else if (type == 'm') { // moveContent
+            } else if (type == 'm') {
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
                     moveBeetle(moveChange);
                 }
-            } else if (type == 'c') { // change condition
+            } else if (type == 'c') {
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
@@ -229,11 +227,6 @@ public class Game implements World {
             }
         }
         handleFinalChanges();
-        if (currentTurn == 1) {
-            System.out.println("Lol");
-        } else if (currentTurn == 2) {
-            System.out.println();
-        }
     }
 
     private void handleFinalChanges() {
@@ -585,20 +578,8 @@ public class Game implements World {
         return currentTurn;
     }
 
-    public long getTotalTime() {
-        return System.currentTimeMillis() - startTime;
-    }
-
     public int getTeamID() {
         return teamID;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     public int getMyScore() {
@@ -611,17 +592,17 @@ public class Game implements World {
 
     @Override
     public int getTotalTurns() {
-        return 0;
+        return constants.getTotalTurns();
     }
 
     @Override
     public long getTurnRemainingTime() {
-        return 0;
+        return getTurnTotalTime() - System.currentTimeMillis() + startTime;
     }
 
     @Override
     public long getTurnTotalTime() {
-        return 0;
+        return constants.getTurnTimeout();
     }
 
     @Override
@@ -652,5 +633,6 @@ public class Game implements World {
         this.constants.setDisobeyNum((int) constants.get(18).getAsDouble());
         this.constants.setFoodValidTime((int) constants.get(19).getAsDouble());
         this.constants.setTrashValidTime((int) constants.get(20).getAsDouble());
+        this.constants.setTotalTurns((int) constants.get(21).getAsDouble());
     }
 }

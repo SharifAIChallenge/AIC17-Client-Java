@@ -1,16 +1,12 @@
 package client.model;
 
-public class Teleport extends Entity{
-    private Teleport pair;
+public class Teleport extends Entity {
     protected int targetId;
+    private Teleport pair;
 
     Teleport(int id, int targetId) {
         super(id, EntityType.Teleport);
         this.targetId = targetId;
-    }
-
-    void setPair(Teleport pair) {
-        this.pair = pair;
     }
 
     int getTargetId() {
@@ -21,9 +17,12 @@ public class Teleport extends Entity{
         this.targetId = targetId;
     }
 
-
     public Teleport getPair() {
         return pair;
+    }
+
+    void setPair(Teleport pair) {
+        this.pair = pair;
     }
 
 

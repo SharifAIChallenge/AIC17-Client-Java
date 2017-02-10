@@ -25,169 +25,182 @@ public class Constants {
     private int disobeyNum;
     private int foodValidTime;
     private int trashValidTime;
+    private int totalTurns;
 
 
     public double getFoodProb() {
         return foodProb;
     }
 
-    public double getTrashProb() {
-        return trashProb;
-    }
-
-    public double getNetProb() {
-        return netProb;
-    }
-
-    public int getTurnTimeout() {
-        return turnTimeout;
-    }
-
-    public int getColorCost() {
-        return colorCost;
-    }
-
-    public int getSickCost() {
-        return sickCost;
-    }
-
-    public int getUpdateCost() {
-        return updateCost;
-    }
-
-    public int getDetMoveCost() {
-        return detMoveCost;
-    }
-
-    public int getKillQueenScore() {
-        return killQueenScore;
-    }
-
-    public int getKillBothQueenScore() {
-        return killBothQueenScore;
-    }
-
-    public int getKillFishScore() {
-        return killFishScore;
-    }
-
-    public int getFishFoodScore() {
-        return fishFoodScore;
-    }
-
-    public int getQueenFoodScore() {
-        return queenFoodScore;
-    }
-
-    public int getSickLifeTime() {
-        return sickLifeTime;
-    }
-
-    public double getPowerRatio() {
-        return powerRatio;
-    }
-
-    public double getEndRatio() {
-        return endRatio;
-    }
-
-    public int getDisobeyNum() {
-        return disobeyNum;
-    }
-
-    public int getFoodValidTime() {
-        return foodValidTime;
-    }
-
-    public int getTrashValidTime() {
-        return trashValidTime;
-    }
-
-    public int getNetValidTime() {
-        return netValidTime;
-    }
-
     void setFoodProb(double foodProb) {
         this.foodProb = foodProb;
+    }
+
+    public double getTrashProb() {
+        return trashProb;
     }
 
     void setTrashProb(double trashProb) {
         this.trashProb = trashProb;
     }
 
+    public double getNetProb() {
+        return netProb;
+    }
+
     void setNetProb(double netProb) {
         this.netProb = netProb;
     }
 
-    void setNetValidTime(int netValidTime) {
-        this.netValidTime = netValidTime;
+    public int getTurnTimeout() {
+        return turnTimeout;
     }
 
     void setTurnTimeout(int turnTimeout) {
         this.turnTimeout = turnTimeout;
     }
 
+    public int getColorCost() {
+        return colorCost;
+    }
+
     void setColorCost(int colorCost) {
         this.colorCost = colorCost;
+    }
+
+    public int getSickCost() {
+        return sickCost;
     }
 
     void setSickCost(int sickCost) {
         this.sickCost = sickCost;
     }
 
+    public int getUpdateCost() {
+        return updateCost;
+    }
+
     void setUpdateCost(int updateCost) {
         this.updateCost = updateCost;
+    }
+
+    public int getDetMoveCost() {
+        return detMoveCost;
     }
 
     void setDetMoveCost(int detMoveCost) {
         this.detMoveCost = detMoveCost;
     }
 
+    public int getKillQueenScore() {
+        return killQueenScore;
+    }
+
     void setKillQueenScore(int killQueenScore) {
         this.killQueenScore = killQueenScore;
+    }
+
+    public int getKillBothQueenScore() {
+        return killBothQueenScore;
     }
 
     void setKillBothQueenScore(int killBothQueenScore) {
         this.killBothQueenScore = killBothQueenScore;
     }
 
+    public int getKillFishScore() {
+        return killFishScore;
+    }
+
     void setKillFishScore(int killFishScore) {
         this.killFishScore = killFishScore;
     }
 
-    void setQueenCollisionScore(int queenCollisionScore) {
-        this.queenCollisionScore = queenCollisionScore;
+    public int getFishFoodScore() {
+        return fishFoodScore;
     }
 
     void setFishFoodScore(int fishFoodScore) {
         this.fishFoodScore = fishFoodScore;
     }
 
+    public int getQueenFoodScore() {
+        return queenFoodScore;
+    }
+
     void setQueenFoodScore(int queenFoodScore) {
         this.queenFoodScore = queenFoodScore;
+    }
+
+    public int getSickLifeTime() {
+        return sickLifeTime;
     }
 
     void setSickLifeTime(int sickLifeTime) {
         this.sickLifeTime = sickLifeTime;
     }
 
+    public double getPowerRatio() {
+        return powerRatio;
+    }
+
     void setPowerRatio(double powerRatio) {
         this.powerRatio = powerRatio;
+    }
+
+    public double getEndRatio() {
+        return endRatio;
     }
 
     void setEndRatio(double endRatio) {
         this.endRatio = endRatio;
     }
 
+    public int getDisobeyNum() {
+        return disobeyNum;
+    }
+
     void setDisobeyNum(int disobeyNum) {
         this.disobeyNum = disobeyNum;
+    }
+
+    public int getFoodValidTime() {
+        return foodValidTime;
     }
 
     void setFoodValidTime(int foodValidTime) {
         this.foodValidTime = foodValidTime;
     }
 
+    public int getTrashValidTime() {
+        return trashValidTime;
+    }
+
     void setTrashValidTime(int trashValidTime) {
         this.trashValidTime = trashValidTime;
+    }
+
+    public int getNetValidTime() {
+        return netValidTime;
+    }
+
+    void setNetValidTime(int netValidTime) {
+        this.netValidTime = netValidTime;
+    }
+
+    void setQueenCollisionScore(int queenCollisionScore) {
+        this.queenCollisionScore = queenCollisionScore;
+    }
+
+    public int getQueenCollisionScore() {
+        return queenCollisionScore;
+    }
+
+    public int getTotalTurns() {
+        return totalTurns;
+    }
+
+    void setTotalTurns(int totalTurns) {
+        this.totalTurns = totalTurns;
     }
 }

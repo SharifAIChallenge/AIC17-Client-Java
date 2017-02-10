@@ -5,12 +5,13 @@ package client.model;
  */
 public class Trash extends Entity {
     private int remainingTurn;
+
     Trash(int id, int trashValidTime) {
         super(id, EntityType.Trash);
         this.remainingTurn = trashValidTime--;
     }
 
-    public int getRemainingTurns(){
+    public int getRemainingTurns() {
         return this.remainingTurn;
     }
 

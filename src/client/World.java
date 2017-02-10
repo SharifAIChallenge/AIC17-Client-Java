@@ -47,27 +47,9 @@ public interface World {
 
     /**
      *
-     * @return Passed time(in milliseconds)
-     */
-    long getTotalTime();
-
-    /**
-     *
      * @return Team id
      */
     int getTeamID();
-
-    /**
-     *
-     * @return width
-     */
-    int getWidth();
-
-    /**
-     *
-     * @return height
-     */
-    int getHeight();
 
     /**
      *
@@ -81,11 +63,32 @@ public interface World {
      */
     int getOppScore();
 
-
+    /**
+     *
+     * @return maximum turns
+     */
     int getTotalTurns();
+
+    /**
+     *
+     * @return remaining time of the turn
+     */
     long getTurnRemainingTime();
-    long getTurnTotalTime();
+
+    /**
+     *
+     * @return maximum time of a single turn
+     */
+    public long getTurnTotalTime();
+
+    /**
+     *
+     * @return constants
+     */
     Constants getConstants();
+
+
+
 
 
     /**
