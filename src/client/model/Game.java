@@ -267,6 +267,36 @@ public class Game implements World {
 		}
 	}
 	
+	private void handleFoodRemainings()
+	{
+		Cell[] foodCells = map.getFoodCells();
+		for(Cell cell : foodCells)
+		{
+			Food food = (Food) cell.getFood();
+			food.setRemainingTurns(food.getRemainingTurns() - 1);
+		}
+	}
+	
+	private void handleTrashRemainings()
+	{
+		Cell[] trashCells = map.getTrashCells();
+		for(Cell cell : trashCells)
+		{
+			Trash trash = (Trash) cell.getTrash();
+			trash.setRemainingTurns(trash.getRemainingTurns() - 1);
+		}
+	}
+	
+	private void handleSlipperRemainings()
+	{
+		Cell[] slipperCells = map.getSlipperCells();
+		for(Cell cell : slipperCells)
+		{
+			Slipper slipper = (Slipper) cell.getSlipper();
+			slipper.setRemainingTurns(slipper.getRemainingTurns() - 1);
+		}
+	}
+	
     private void itemAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int x = changes.get(1);
