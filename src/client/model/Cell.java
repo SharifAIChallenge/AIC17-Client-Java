@@ -6,11 +6,10 @@ public class Cell {
     private int x;
     private int y;
     private Entity beetleEntity;
-    private Entity itemEntity;
     private Entity slipperEntity;
     private Entity teleportEntity;
-    private Entity food;
-    private Entity trash;
+    private Entity foodEntity;
+    private Entity trashEntity;
 
     public Cell(int x, int y) {
         this.x = x;
@@ -19,12 +18,12 @@ public class Cell {
 
 
     void addTrash(int id, int trashValidTime) {
-        trash = new Trash(id, trashValidTime);
+        trashEntity = new Trash(id, trashValidTime);
     }
 
 
     void addFood(int id, int foodValidTime) {
-        food = new Food(id, foodValidTime);
+        foodEntity = new Food(id, foodValidTime);
     }
 
 
@@ -40,8 +39,10 @@ public class Cell {
     public void receiveInfo(Entity entity) {
         if (entity instanceof Beetle) {
             beetleEntity = entity;
-        } else if (entity instanceof ItemEntity) {
-            itemEntity = entity;
+        } else if (entity instanceof Food) {
+            foodEntity = entity;
+        } else if (entity instanceof Trash){
+            trashEntity = entity;
         } else if (entity instanceof Slipper) {
             slipperEntity = entity;
         } else if (entity instanceof Teleport) {
@@ -87,9 +88,8 @@ public class Cell {
 
     public void clear() {
         beetleEntity = null;
-        food = null;
-        trash = null;
-        itemEntity = null;
+        foodEntity = null;
+        trashEntity = null;
     }
 
     public void cleanSlipper() {
@@ -105,11 +105,19 @@ public class Cell {
     }
 
     public Entity getItemEntity() {
-        return itemEntity;
+        if (foodEntity != null) {
+            return foodEntity;
+        } else {
+            return trashEntity;
+        }
     }
 
-    public void setItemEntity(Entity itemEntity) {
-        this.itemEntity = itemEntity;
+    void setItemEntity(Entity itemEntity) {
+        if (itemEntity instanceof Food) {
+            this.foodEntity = itemEntity;
+        } else {
+            this.trashEntity = itemEntity;
+        }
     }
 
     public Entity getSlipperEntity() {

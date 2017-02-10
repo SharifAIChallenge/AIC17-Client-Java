@@ -13,4 +13,8 @@ public class Trash extends Entity {
     public int getRemainingTurns(){
         return this.remainingTurn;
     }
+
+    public void setRemainingTurn(int remainingTurn) {
+        this.remainingTurn = remainingTurn;
+    }
 }

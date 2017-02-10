@@ -124,12 +124,6 @@ public interface World {
      */
     Beetle getBeetleInformation(int id);
 
-    /**
-     *
-     * @param id Item id(food or trash)
-     * @return Entity object related to the given item
-     */
-    ItemEntity getItemInformation(int id);
 
     /**
      *

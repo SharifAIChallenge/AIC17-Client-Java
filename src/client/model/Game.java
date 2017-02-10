@@ -273,13 +273,13 @@ public class Game implements World {
                 beetles[1] = beetleList.toArray(tempCell);
             }
             theChosenCell.clear();
-        } else if (theChosenInfo instanceof ItemEntity && ((ItemEntity) theChosenInfo).getItemId() == 0) {
+        } else if (theChosenInfo instanceof Food) {
             ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(items[3]));
             foodList.remove(theChosenCell);
             Cell[] tempCell = new Cell[foodList.size()];
             items[3] = foodList.toArray(tempCell);
             theChosenCell.clear();
-        } else if (theChosenInfo instanceof ItemEntity && ((ItemEntity) theChosenInfo).getItemId() == 1) {
+        } else if (theChosenInfo instanceof Trash) {
             ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(items[2]));
             trashList.remove(theChosenCell);
             Cell[] tempCell = new Cell[trashList.size()];
@@ -508,13 +508,13 @@ public class Game implements World {
         return theChosenInfo;
     }
 
-    public ItemEntity getItemInformation(int id) {
-        Cell itemCell = idMap.get(id);
-        ItemEntity theChosenInfo = (ItemEntity) itemCell.getItemEntity();
-        theChosenInfo.setX(itemCell.getX());
-        theChosenInfo.setY(itemCell.getY());
-        return theChosenInfo;
-    }
+//    public ItemEntity getItemInformation(int id) {
+//        Cell itemCell = idMap.get(id);
+//        ItemEntity theChosenInfo = (ItemEntity) itemCell.getItemEntity();
+//        theChosenInfo.setX(itemCell.getX());
+//        theChosenInfo.setY(itemCell.getY());
+//        return theChosenInfo;
+//    }
 
     public Slipper getSlipperInformation(int id) {
         Cell slipperCell = idMap.get(id);
