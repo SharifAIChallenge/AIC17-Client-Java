@@ -7,11 +7,11 @@ public class FishInformation extends ContentInformation {
     private int sick = -1;
     private int team = -1;
 
-    public int getDirection() {
+    int getDirection() {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    void setDirection(int direction) {
         this.direction = direction;
     }
 
@@ -19,7 +19,7 @@ public class FishInformation extends ContentInformation {
         return color;
     }
 
-    public void setColor(int color) {
+    void setColor(int color) {
         this.color = color;
     }
 
@@ -27,7 +27,7 @@ public class FishInformation extends ContentInformation {
         return queen;
     }
 
-    public void setQueen(int queen) {
+    void setQueen(int queen) {
         this.queen = queen;
     }
 
@@ -35,15 +35,15 @@ public class FishInformation extends ContentInformation {
         return sick;
     }
 
-    public void setSick(int sick) {
+    void setSick(int sick) {
         this.sick = sick;
     }
 
-    public int getTeam() {
+    int getTeam() {
         return team;
     }
 
-    public void setTeam(int team) {
+    void setTeam(int team) {
         this.team = team;
     }
 }

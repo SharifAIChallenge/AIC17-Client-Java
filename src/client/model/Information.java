@@ -10,10 +10,10 @@ public class Information {
     private int x;
     private int y;
 
-    public Information() {
+    Information() {
     }
 
-    public Information(int id) {
+    Information(int id) {
         this.id = id;
     }
 
@@ -21,7 +21,7 @@ public class Information {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -29,7 +29,7 @@ public class Information {
         return x;
     }
 
-    public void setX(int x) {
+    void setX(int x) {
         this.x = x;
     }
 
@@ -37,7 +37,7 @@ public class Information {
         return y;
     }
 
-    public void setY(int y) {
+    void setY(int y) {
         this.y = y;
     }
 }

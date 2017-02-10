@@ -3,7 +3,7 @@ package client.model;
 public class TeleportInformation extends Information {
     protected int targetId;
 
-    public TeleportInformation(int id, int targetId) {
+    TeleportInformation(int id, int targetId) {
         super(id);
         this.targetId = targetId;
     }

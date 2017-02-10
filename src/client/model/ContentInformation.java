@@ -1,10 +1,10 @@
 package client.model;
 
 public class ContentInformation extends Information {
-    public ContentInformation() {
+    ContentInformation() {
     }
 
-    public ContentInformation(int id) {
+    ContentInformation(int id) {
         super(id);
     }
 }
