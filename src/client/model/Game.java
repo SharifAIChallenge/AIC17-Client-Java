@@ -258,6 +258,15 @@ public class Game implements World {
 		}
 	}
 	
+	private void handleEntityCells()
+	{
+		for(Integer id : idMap.keySet())
+		{
+			Entity theChosenEntity = map.getEntity(id);
+			theChosenEntity.setCell(idMap.get(id));
+		}
+	}
+	
     private void itemAlter(ArrayList<Integer> changes) {
         int id = changes.get(0);
         int x = changes.get(1);
