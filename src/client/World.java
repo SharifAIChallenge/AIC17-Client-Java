@@ -20,7 +20,7 @@ public interface World {
      * @param strategy The command given to the beetle (0 for turning right, 1 for going forward and 2 for turning left
      */
 
-    void changeStrategy(int color, int right, int front, int left, int strategy);
+    void changeStrategy(BeetleType type, CellState right, CellState front, CellState left, Move move);
 
     /**
      * Give command to a specific Beetle with the given id
@@ -28,7 +28,7 @@ public interface World {
      * @param id Beetle id
      * @param s The command given to the beetle(same as the previous method)
      */
-    void deterministicMove(int id, int s);
+    public void deterministicMove(Beetle beetle, Move move);
 
     /**
      * Changes antenna type of the given beetle
@@ -36,7 +36,7 @@ public interface World {
      * @param id Beetle id
      * @param c Antenna type
      */
-    void antennaChange(int id, int c);
+    public void changeType(Beetle beetle, BeetleType newType);
 
     /**
      * Number of turns passed from the beginning of the game

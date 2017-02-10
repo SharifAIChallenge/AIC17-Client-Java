@@ -37,18 +37,18 @@ public class Game implements World {
         this.sender = sender;
     }
 
-    public void changeStrategy(int color, int right, int front, int left, int strategy) {
-        Event event = new Event("s", new Object[]{color, right, front, left, strategy});
+    public void changeStrategy(BeetleType type, CellState right, CellState front, CellState left, Move newStrategy) {
+        Event event = new Event("s", new Object[]{type, right, front, left, newStrategy});
         sender.accept(new Message(Event.EVENT, event));
     }
 
-    public void deterministicMove(int id, int s) {
-        Event event = new Event("m", new Object[]{id, s});
+    public void deterministicMove(Beetle beetle, Move move) {
+        Event event = new Event("m", new Object[]{beetle, move});
         sender.accept(new Message(Event.EVENT, event));
     }
 
-    public void antennaChange(int id, int c) {
-        Event event = new Event("c", new Object[]{id, c});
+    public void changeType(Beetle beetle, BeetleType newType) {
+        Event event = new Event("c", new Object[]{beetle, newType});
         sender.accept(new Message(Event.EVENT, event));
     }
 

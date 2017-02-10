@@ -29,21 +29,21 @@ public class AI {
 //            System.out.println("LOL");
 //        }
 
-        if (game.getCurrentTurn() == 0)
-        {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 2; j++) {
-                    for (int k = 0; k < 3; k++) {
-                        game.changeStrategy(0, i, j, k,/*rand.nextInt(2)*/1);
-                        game.changeStrategy(1, i, j, k,1);
-                    }
-                }
-            }
-        }
-        else
-        {
-            // no strategy change
-        }
+//        if (game.getCurrentTurn() == 0)
+//        {
+//            for (int i = 0; i < 3; i++) {
+//                for (int j = 0; j < 2; j++) {
+//                    for (int k = 0; k < 3; k++) {
+//                        game.changeStrategy(0, i, j, k,/*rand.nextInt(2)*/1);
+//                        game.changeStrategy(1, i, j, k,1);
+//                    }
+//                }
+//            }
+//        }
+//        else
+//        {
+//            // no strategy change
+//        }
 
     }
 
