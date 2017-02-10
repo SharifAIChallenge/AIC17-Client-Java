@@ -27,7 +27,7 @@ public interface World {
      * @param id Beetle id
      * @param s The command given to the beetle(same as the previous method)
      */
-    void selectiveMove(int id, int s);
+    void deterministicMove(int id, int s);
 
     /**
      * Changes antenna type of the given beetle

@@ -67,7 +67,7 @@ public class Game implements World {
         sender.accept(new Message(Event.EVENT, event));
     }
 
-    public void selectiveMove(int id, int s) {
+    public void deterministicMove(int id, int s) {
         Event event = new Event("m", new Object[]{id, s});
         sender.accept(new Message(Event.EVENT, event));
     }
