@@ -35,17 +35,17 @@ public class Game implements World {
     }
 
     public void changeStrategy(BeetleType type, CellState right, CellState front, CellState left, Move newStrategy) {
-        Event event = new Event("s", new Object[]{type, right, front, left, newStrategy});
+        Event event = new Event("s", new Object[]{type.getValue(), right.getValue(), front.getValue(), left.getValue(), newStrategy.getValue()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
     public void deterministicMove(Beetle beetle, Move move) {
-        Event event = new Event("m", new Object[]{beetle, move});
+        Event event = new Event("m", new Object[]{beetle, move.getValue()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
     public void changeType(Beetle beetle, BeetleType newType) {
-        Event event = new Event("c", new Object[]{beetle, newType});
+        Event event = new Event("c", new Object[]{beetle, newType.getValue()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
@@ -627,6 +627,8 @@ public class Game implements World {
         this.constants.setDisobeyNum((int) constants.get(18).getAsDouble());
         this.constants.setFoodValidTime((int) constants.get(19).getAsDouble());
         this.constants.setTrashValidTime((int) constants.get(20).getAsDouble());
-        this.constants.setTotalTurns((int) constants.get(21).getAsDouble());
+        if (constants.size() == 22) {
+            this.constants.setTotalTurns((int) constants.get(21).getAsDouble());
+        }
     }
 }
