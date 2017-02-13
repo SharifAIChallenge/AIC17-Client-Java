@@ -86,6 +86,9 @@ public class Cell {
     }
 
     public void clear() {
+        if (this.getBeetleEntity().getId() == 3) {
+            System.out.println();
+        }
         beetleEntity = null;
         foodEntity = null;
         trashEntity = null;

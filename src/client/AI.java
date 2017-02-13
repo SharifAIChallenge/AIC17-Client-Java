@@ -26,10 +26,6 @@ public class AI {
 
         Cell[][] cells = game.getMap().getCells();
 
-        if (game.getCurrentTurn() == 1) {
-            System.out.println("LOL");
-        }
-
         if (game.getCurrentTurn() == 0) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 2; j++) {

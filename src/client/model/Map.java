@@ -30,7 +30,7 @@ public class Map {
         return beetles[0];
     }
 
-    public void setMyCells(Cell[] myCells) {
+    void setMyCells(Cell[] myCells) {
         this.beetles[0] = myCells;
     }
 
@@ -38,7 +38,7 @@ public class Map {
         return beetles[1];
     }
 
-    public void setOppCells(Cell[] oppCells) {
+    void setOppCells(Cell[] oppCells) {
         this.beetles[1] = oppCells;
     }
 
@@ -46,7 +46,7 @@ public class Map {
         return items[0];
     }
 
-    public void setTeleportCells(Cell[] teleportCells) {
+    void setTeleportCells(Cell[] teleportCells) {
         this.items[0] = teleportCells;
     }
 
@@ -54,7 +54,7 @@ public class Map {
         return items[1];
     }
 
-    public void setSlipperCells(Cell[] netCells) {
+    void setSlipperCells(Cell[] netCells) {
         this.items[1] = netCells;
     }
 
@@ -62,7 +62,7 @@ public class Map {
         return items[2];
     }
 
-    public void setTrashCells(Cell[] trashCells) {
+    void setTrashCells(Cell[] trashCells) {
         this.items[2] = trashCells;
     }
 
@@ -70,11 +70,11 @@ public class Map {
         return items[3];
     }
 
-    public void setFoodCells(Cell[] foodCells) {
+    void setFoodCells(Cell[] foodCells) {
         this.items[3] = foodCells;
     }
 
-    public void setIdMap(HashMap<Integer, Cell> idMap) {
+    void setIdMap(HashMap<Integer, Cell> idMap) {
         this.idMap = idMap;
     }
 
@@ -99,7 +99,7 @@ public class Map {
         return getEntity(id).getType();
     }
 
-    public void setBeetles(Cell[][] beetles) {
+    void setBeetles(Cell[][] beetles) {
         this.beetles = beetles;
     }
 
@@ -107,5 +107,11 @@ public class Map {
         this.items = items;
     }
 
+    public int getHeight() {
+        return height;
+    }
 
+    public int getWidth() {
+        return width;
+    }
 }

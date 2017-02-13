@@ -58,4 +58,12 @@ public class Entity {
     public EntityType getType() {
         return this.entityType;
     }
+
+    public int getRow(){
+        return this.cell.getX();
+    }
+
+    public int getColumn(){
+        return this.cell.getY();
+    }
 }
