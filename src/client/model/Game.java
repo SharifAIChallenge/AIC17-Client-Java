@@ -454,7 +454,7 @@ public class Game implements World {
                 x = (x + 1) % map.getHeight();
                 break;
             case 1:
-                x = (x + 7) % map.getWidth();
+                x = (x + map.getHeight() - 1) % map.getHeight();
                 break;
         }
         return x;
@@ -465,10 +465,10 @@ public class Game implements World {
         int y = cell.getY();
         switch (direction) {
             case 2:
-                y = (y + 7) % 8;
+                y = (y + map.getWidth()) % map.getWidth();
                 break;
             case 0:
-                y = (y + 1) % 8;
+                y = (y + 1) % map.getWidth();
                 break;
         }
         return y;
