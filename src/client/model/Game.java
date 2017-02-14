@@ -272,6 +272,9 @@ public class Game implements World {
     private void handleEntityCells() {
         for (Integer id : idMap.keySet()) {
             Entity theChosenEntity = map.getEntity(id);
+            if (theChosenEntity == null) {
+                System.out.println();
+            }
             theChosenEntity.setCell(idMap.get(id));
         }
     }

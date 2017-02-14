@@ -30,8 +30,8 @@ public class AI {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 2; j++) {
                     for (int k = 0; k < 3; k++) {
-                        game.changeStrategy(BeetleType.values()[0], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[rand.nextInt(2)]);
-                        game.changeStrategy(BeetleType.values()[1], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[rand.nextInt(2)]);
+                        game.changeStrategy(BeetleType.values()[0], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[1/*rand.nextInt(2)*/]);
+                        game.changeStrategy(BeetleType.values()[1], CellState.values()[i], CellState.values()[i], CellState.values()[i], Move.values()[1]);
                     }
                 }
             }
