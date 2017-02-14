@@ -34,6 +34,8 @@ public class Game implements World {
         this.sender = sender;
     }
 
+
+
     public void changeStrategy(BeetleType type, CellState right, CellState front, CellState left, Move newStrategy) {
         Event event = new Event("s", new Object[]{type.ordinal(), right.ordinal(), front.ordinal(), left.ordinal(), newStrategy.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
@@ -99,9 +101,6 @@ public class Game implements World {
         for (int i = 0; i < foods.size(); i++) {
             JsonArray foodInfo = foods.get(i).getAsJsonArray();
             int id = foodInfo.get(0).getAsInt();
-            if (id == 3) {
-                System.out.println();
-            }
             int cellX = foodInfo.get(1).getAsInt();
             int cellY = foodInfo.get(2).getAsInt();
 
@@ -119,9 +118,6 @@ public class Game implements World {
         for (int i = 0; i < trashes.size(); i++) {
             JsonArray trashInfo = trashes.get(i).getAsJsonArray();
             int id = trashInfo.get(0).getAsInt();
-            if (id == 3) {
-                System.out.println();
-            }
             int cellX = trashInfo.get(1).getAsInt();
             int cellY = trashInfo.get(2).getAsInt();
 
@@ -139,9 +135,6 @@ public class Game implements World {
         for (int i = 0; i < slippers.size(); i++) {
             JsonArray slipperInfo = slippers.get(i).getAsJsonArray();
             int id = slipperInfo.get(0).getAsInt();
-            if (id == 3) {
-                System.out.println();
-            }
             int cellX = slipperInfo.get(1).getAsInt();
             int cellY = slipperInfo.get(2).getAsInt();
 
@@ -159,9 +152,6 @@ public class Game implements World {
         for (int i = 0; i < teleports.size(); i++) {
             JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
             int id = teleportInfo.get(0).getAsInt();
-            if (id == 3) {
-                System.out.println();
-            }
             int cellX = teleportInfo.get(1).getAsInt();
             int cellY = teleportInfo.get(2).getAsInt();
 
@@ -194,9 +184,6 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
                 for (int j = 0; j < allAdds.size(); j++) {
                     ArrayList<Integer> addChange = allAdds.get(j);
-                    if (addChange.get(0) == 3) {
-                        System.out.println();
-                    }
                     switch (addChange.get(1)) {
                         case 0:
                             addBeetle(addChange);
@@ -262,10 +249,6 @@ public class Game implements World {
         for (Integer id : idMap.keySet()) {
 
             Entity theChosenEntity = map.getEntity(id);
-            if (theChosenEntity == null) {
-                System.out.println();
-                map.getEntity(id);
-            }
             theChosenEntity.setCell(idMap.get(id));
         }
     }
@@ -387,14 +370,7 @@ public class Game implements World {
         int move = changes.get(1);
         Cell theChosenCell = idMap.get(id);
         Beetle theChosenInfo = null;
-//        try
-//        {
         theChosenInfo = (Beetle) (infoMap.get(id));
-
-//        } catch (Exception e)
-//        {
-//            System.out.println();
-//        }
         switch (move) {
             case 0:
                 theChosenInfo.setDirection((theChosenInfo.getDirectionInt() + 3) % 4);
@@ -471,11 +447,6 @@ public class Game implements World {
 
         Cell theChosenCell = idMap.get(id);
         Beetle theChosenInfo = (Beetle) infoMap.get(id);
-        if (theChosenInfo == null)
-        {
-            System.out.println();
-            infoMap.get(id);
-        }
         Cell targetCell = map.getCell(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);
