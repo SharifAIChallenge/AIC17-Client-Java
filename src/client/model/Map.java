@@ -114,4 +114,12 @@ public class Map {
     public int getWidth() {
         return width;
     }
+
+    void setHeight(int height) {
+        this.height = height;
+    }
+
+    void setWidth(int width) {
+        this.width = width;
+    }
 }

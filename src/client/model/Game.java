@@ -76,8 +76,7 @@ public class Game implements World {
             int cellX, cellY;
             JsonArray beetleInfo = Beetles.get(i).getAsJsonArray();
             int id = beetleInfo.get(0).getAsInt();
-            if (id == 3)
-            {
+            if (id == 3) {
                 System.out.println();
             }
             cellX = beetleInfo.get(1).getAsInt();
@@ -102,8 +101,7 @@ public class Game implements World {
         for (int i = 0; i < foods.size(); i++) {
             JsonArray foodInfo = foods.get(i).getAsJsonArray();
             int id = foodInfo.get(0).getAsInt();
-            if (id == 3)
-            {
+            if (id == 3) {
                 System.out.println();
             }
             int cellX = foodInfo.get(1).getAsInt();
@@ -123,8 +121,7 @@ public class Game implements World {
         for (int i = 0; i < trashes.size(); i++) {
             JsonArray trashInfo = trashes.get(i).getAsJsonArray();
             int id = trashInfo.get(0).getAsInt();
-            if (id == 3)
-            {
+            if (id == 3) {
                 System.out.println();
             }
             int cellX = trashInfo.get(1).getAsInt();
@@ -144,8 +141,7 @@ public class Game implements World {
         for (int i = 0; i < slippers.size(); i++) {
             JsonArray slipperInfo = slippers.get(i).getAsJsonArray();
             int id = slipperInfo.get(0).getAsInt();
-            if (id == 3)
-            {
+            if (id == 3) {
                 System.out.println();
             }
             int cellX = slipperInfo.get(1).getAsInt();
@@ -165,8 +161,7 @@ public class Game implements World {
         for (int i = 0; i < teleports.size(); i++) {
             JsonArray teleportInfo = teleports.get(i).getAsJsonArray();
             int id = teleportInfo.get(0).getAsInt();
-            if (id == 3)
-            {
+            if (id == 3) {
                 System.out.println();
             }
             int cellX = teleportInfo.get(1).getAsInt();
@@ -201,8 +196,7 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allAdds = change.getArgs();
                 for (int j = 0; j < allAdds.size(); j++) {
                     ArrayList<Integer> addChange = allAdds.get(j);
-                    if (addChange.get(0) == 3)
-                    {
+                    if (addChange.get(0) == 3) {
                         System.out.println();
                     }
                     switch (addChange.get(1)) {
@@ -224,8 +218,7 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
                 for (int j = 0; j < allDeletes.size(); j++) {
                     ArrayList<Integer> deleteChange = allDeletes.get(j);
-                    if (deleteChange.get(0) == 3)
-                    {
+                    if (deleteChange.get(0) == 3) {
                         System.out.println();
                     }
                     delete(deleteChange);
@@ -243,8 +236,7 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
-                    if (alter.get(0) == 3)
-                    {
+                    if (alter.get(0) == 3) {
                         System.out.println();
                     }
                     if (alter.size() == 5) {
@@ -319,7 +311,9 @@ public class Game implements World {
 
         targetCell.receiveInfo(theChosenCell.getItemEntity());
         idMap.put(id, targetCell);
-        theChosenCell.setItemEntity(null);
+        if (targetCell.getItemEntity().getId() == theChosenCell.getItemEntity().getId()) {
+            theChosenCell.setItemEntity(null);
+        }
 
         if (map.getEntityType(id) == EntityType.Food) {
             Cell[] foods = map.getFoodCells();
@@ -401,7 +395,7 @@ public class Game implements World {
         Beetle theChosenInfo = null;
 //        try
 //        {
-            theChosenInfo = (Beetle) (infoMap.get(id));
+        theChosenInfo = (Beetle) (infoMap.get(id));
 
 //        } catch (Exception e)
 //        {
@@ -465,7 +459,7 @@ public class Game implements World {
         int y = cell.getY();
         switch (direction) {
             case 2:
-                y = (y + map.getWidth()) % map.getWidth();
+                y = (y + map.getWidth() - 1) % map.getWidth();
                 break;
             case 0:
                 y = (y + 1) % map.getWidth();
@@ -490,7 +484,9 @@ public class Game implements World {
         targetCell.receiveInfo(theChosenInfo);
         idMap.put(id, targetCell);
         if (targetCell != theChosenCell) {
-            theChosenCell.clear();
+            if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
+                theChosenCell.clear();
+            }
 
             int team = ((Beetle) (map.getEntity(id))).getTeam();
             ArrayList<Cell> beetleList;
