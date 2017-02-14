@@ -35,17 +35,17 @@ public class Game implements World {
     }
 
     public void changeStrategy(BeetleType type, CellState right, CellState front, CellState left, Move newStrategy) {
-        Event event = new Event("s", new Object[]{type.getValue(), right.getValue(), front.getValue(), left.getValue(), newStrategy.getValue()});
+        Event event = new Event("s", new Object[]{type.ordinal(), right.ordinal(), front.ordinal(), left.ordinal(), newStrategy.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
     public void deterministicMove(Beetle beetle, Move move) {
-        Event event = new Event("m", new Object[]{beetle, move.getValue()});
+        Event event = new Event("m", new Object[]{beetle, move.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
     public void changeType(Beetle beetle, BeetleType newType) {
-        Event event = new Event("c", new Object[]{beetle, newType.getValue()});
+        Event event = new Event("c", new Object[]{beetle, newType.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
@@ -76,9 +76,7 @@ public class Game implements World {
             int cellX, cellY;
             JsonArray beetleInfo = Beetles.get(i).getAsJsonArray();
             int id = beetleInfo.get(0).getAsInt();
-            if (id == 3) {
-                System.out.println();
-            }
+
             cellX = beetleInfo.get(1).getAsInt();
             cellY = beetleInfo.get(2).getAsInt();
 
@@ -218,27 +216,18 @@ public class Game implements World {
                 ArrayList<ArrayList<Integer>> allDeletes = change.getArgs();
                 for (int j = 0; j < allDeletes.size(); j++) {
                     ArrayList<Integer> deleteChange = allDeletes.get(j);
-                    if (deleteChange.get(0) == 3) {
-                        System.out.println();
-                    }
                     delete(deleteChange);
                 }
             } else if (type == 'm') {
                 ArrayList<ArrayList<Integer>> allMoves = change.getArgs();
                 for (int j = 0; j < allMoves.size(); j++) {
                     ArrayList<Integer> moveChange = allMoves.get(j);
-                    if (moveChange.get(0) == 3) {
-                        System.out.println();
-                    }
                     moveBeetle(moveChange);
                 }
             } else if (type == 'c') {
                 ArrayList<ArrayList<Integer>> allAlters = change.getArgs();
                 for (int j = 0; j < allAlters.size(); j++) {
                     ArrayList<Integer> alter = allAlters.get(j);
-                    if (alter.get(0) == 3) {
-                        System.out.println();
-                    }
                     if (alter.size() == 5) {
                         beetleAlter(alter);
                     } else {
@@ -271,9 +260,11 @@ public class Game implements World {
 
     private void handleEntityCells() {
         for (Integer id : idMap.keySet()) {
+
             Entity theChosenEntity = map.getEntity(id);
             if (theChosenEntity == null) {
                 System.out.println();
+                map.getEntity(id);
             }
             theChosenEntity.setCell(idMap.get(id));
         }
@@ -480,6 +471,11 @@ public class Game implements World {
 
         Cell theChosenCell = idMap.get(id);
         Beetle theChosenInfo = (Beetle) infoMap.get(id);
+        if (theChosenInfo == null)
+        {
+            System.out.println();
+            infoMap.get(id);
+        }
         Cell targetCell = map.getCell(newX, newY);
         theChosenInfo.setColor(color);
         theChosenInfo.setSick(sick);

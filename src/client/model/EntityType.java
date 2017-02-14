@@ -6,7 +6,7 @@ package client.model;
 public enum EntityType {
     Beetle(0), Food(1), Trash(2), Slipper(3), Teleport(4);
 
-    private final int value;
+    private int value;
     EntityType(int value) {
         this.value = value;
     }

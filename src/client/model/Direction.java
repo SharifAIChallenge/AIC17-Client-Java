@@ -6,7 +6,7 @@ package client.model;
 public enum Direction {
     Right(0), Up(1), Left(2), Down(3);
 
-    private final int value;
+    private int value;
     Direction(int value) {
         this.value = value;
     }

@@ -6,7 +6,7 @@ package client.model;
 public enum CellState {
     Ally(0), Enemy(1), Blank(2);
 
-    private final int value;
+    private int value;
     CellState(int value) {
         this.value = value;
     }

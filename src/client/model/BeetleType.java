@@ -6,9 +6,10 @@ package client.model;
 public enum BeetleType {
     LOW(0), HIGH(1);
 
-    private final int value;
+    private int value;
     BeetleType(int value) {
         this.value = value;
+        BeetleType type;
     }
 
     public int getValue() {

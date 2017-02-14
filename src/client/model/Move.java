@@ -6,7 +6,7 @@ package client.model;
 public enum Move {
     turnRight(0), stepForward(1), turnLeft(2);
 
-    private final int value;
+    private int value;
     Move(int value) {
         this.value = value;
     }
