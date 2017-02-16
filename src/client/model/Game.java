@@ -20,6 +20,7 @@ public class Game implements World {
     private int teamID;
     private int myScore;
     private int oppScore;
+    private int power = 0;
 
     private Constants constants;
 
@@ -42,12 +43,12 @@ public class Game implements World {
     }
 
     public void deterministicMove(Beetle beetle, Move move) {
-        Event event = new Event("m", new Object[]{beetle, move.ordinal()});
+        Event event = new Event("m", new Object[]{beetle.getId(), move.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
     public void changeType(Beetle beetle, BeetleType newType) {
-        Event event = new Event("c", new Object[]{beetle, newType.ordinal()});
+        Event event = new Event("c", new Object[]{beetle.getId(), newType.ordinal()});
         sender.accept(new Message(Event.EVENT, event));
     }
 
@@ -384,6 +385,8 @@ public class Game implements World {
                 if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
                     theChosenCell.clear();
                 }
+                Beetle beetle = (Beetle) map.getEntity(id);
+                beetle.setPower(beetle.getPower() + 1);
                 int team = ((Beetle) (map.getEntity(id))).getTeam();
                 ArrayList<Cell> beetleList;
                 if (team == teamID) {

@@ -8,10 +8,21 @@ public class Beetle extends Entity {
     private int queen = -1;
     private int sick = -1;
     private int team = -1;
+    private int power = 0;
 
 
     Beetle(int id) {
         super(id, EntityType.Beetle);
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+
+
+    void setPower(int power) {
+        this.power = power;
     }
 
     int getColor() {
@@ -91,4 +102,6 @@ public class Beetle extends Entity {
     public boolean has_winge() {
         return (queen == 1);
     }
+
+
 }
