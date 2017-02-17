@@ -20,7 +20,6 @@ public class Game implements World {
     private int teamID;
     private int myScore;
     private int oppScore;
-    private int power = 0;
 
     private Constants constants;
 
