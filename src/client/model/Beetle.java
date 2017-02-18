@@ -19,8 +19,6 @@ public class Beetle extends Entity {
         return power;
     }
 
-
-
     void setPower(int power) {
         this.power = power;
     }

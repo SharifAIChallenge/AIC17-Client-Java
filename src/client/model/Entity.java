@@ -31,7 +31,7 @@ public class Entity {
         this.id = id;
     }
 
-    public int getX() {
+    int getX() {
         return x;
     }
 
@@ -39,7 +39,7 @@ public class Entity {
         this.x = x;
     }
 
-    public int getY() {
+    int getY() {
         return y;
     }
 

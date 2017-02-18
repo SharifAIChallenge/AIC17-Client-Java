@@ -15,7 +15,7 @@ public class Food extends Entity {
         return remainingTurn;
     }
 
-    public void setRemainingTurn(int remainingTurn) {
+    void setRemainingTurn(int remainingTurn) {
         this.remainingTurn = remainingTurn;
     }
 }

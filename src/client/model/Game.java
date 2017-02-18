@@ -86,7 +86,7 @@ public class Game implements World {
             theChosenCell.addBeetleInfo(beetleInfo);
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getBeetleEntity());
+            infoMap.put(id, theChosenCell.getBeetle());
 
             if (teamID == beetleInfo.get(7).getAsInt()) {
                 beetles[0][myBeetle++] = theChosenCell;
@@ -109,7 +109,7 @@ public class Game implements World {
             foodCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getItemEntity());
+            infoMap.put(id, theChosenCell.getItem());
         }
         map.setFoodCells(foodCells);
 
@@ -126,7 +126,7 @@ public class Game implements World {
             trashCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getItemEntity());
+            infoMap.put(id, theChosenCell.getItem());
         }
         map.setTrashCells(trashCells);
 
@@ -143,7 +143,7 @@ public class Game implements World {
             slipperCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getSlipperEntity());
+            infoMap.put(id, theChosenCell.getSlipper());
         }
         map.setSlipperCells(slipperCells);
 
@@ -160,7 +160,7 @@ public class Game implements World {
             teleportCells[i] = theChosenCell;
 
             idMap.put(id, theChosenCell);
-            infoMap.put(id, theChosenCell.getTeleportEntity());
+            infoMap.put(id, theChosenCell.getTeleport());
         }
         map.setTeleportCells(teleportCells);
     }
@@ -238,9 +238,9 @@ public class Game implements World {
     private void handleTeleports() {
         Cell[] teleportCells = map.getTeleportCells();
         for (Cell cell : teleportCells) {
-            Teleport theChosenTeleport = (Teleport) cell.getTeleportEntity();
+            Teleport theChosenTeleport = (Teleport) cell.getTeleport();
             int targetId = theChosenTeleport.getTargetId();
-            Teleport targetTeleport = (Teleport) idMap.get(targetId).getTeleportEntity();
+            Teleport targetTeleport = (Teleport) idMap.get(targetId).getTeleport();
             theChosenTeleport.setPair(targetTeleport);
         }
     }
@@ -272,7 +272,7 @@ public class Game implements World {
     private void handleSlipperRemainings() {
         Cell[] slipperCells = map.getSlipperCells();
         for (Cell cell : slipperCells) {
-            Slipper slipper = (Slipper) cell.getSlipperEntity();
+            Slipper slipper = (Slipper) cell.getSlipper();
             slipper.setRemainingTurn(slipper.getRemainingTurns() - 1);
         }
     }
@@ -286,9 +286,9 @@ public class Game implements World {
         Cell[][] cells = map.getCells();
         Cell targetCell = cells[x][y];
 
-        targetCell.receiveInfo(theChosenCell.getItemEntity());
+        targetCell.receiveInfo(theChosenCell.getItem());
         idMap.put(id, targetCell);
-        if (targetCell.getItemEntity().getId() == theChosenCell.getItemEntity().getId()) {
+        if (targetCell.getItem().getId() == theChosenCell.getItem().getId()) {
             theChosenCell.setItemEntity(null);
         }
 
@@ -381,7 +381,7 @@ public class Game implements World {
                 Cell targetCell = map.getCell(cellX, cellY);
                 targetCell.receiveInfo(theChosenInfo);
                 idMap.put(id, targetCell);
-                if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
+                if (targetCell.getBeetle().getId() == theChosenCell.getBeetle().getId()) {
                     theChosenCell.clear();
                 }
                 Beetle beetle = (Beetle) map.getEntity(id);
@@ -456,7 +456,7 @@ public class Game implements World {
         targetCell.receiveInfo(theChosenInfo);
         idMap.put(id, targetCell);
         if (targetCell != theChosenCell) {
-            if (targetCell.getBeetleEntity().getId() == theChosenCell.getBeetleEntity().getId()) {
+            if (targetCell.getBeetle().getId() == theChosenCell.getBeetle().getId()) {
                 theChosenCell.clear();
             }
 
@@ -496,7 +496,7 @@ public class Game implements World {
         theChosenCell.addBeetleInfo(id, direction, color, queen, team);
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getBeetleEntity());
+        infoMap.put(id, theChosenCell.getBeetle());
 
         if (team == teamID) {
             Cell[] beetles = map.getMyCells();
@@ -524,7 +524,7 @@ public class Game implements World {
         theChosenCell.addFood(id, constants.getFoodValidTime());
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getItemEntity());
+        infoMap.put(id, theChosenCell.getItem());
 
         Cell[] foods = map.getFoodCells();
         ArrayList<Cell> foodList = new ArrayList<Cell>(Arrays.asList(foods));
@@ -543,7 +543,7 @@ public class Game implements World {
         theChosenCell.addTrash(id, constants.getTrashValidTime());
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getItemEntity());
+        infoMap.put(id, theChosenCell.getItem());
 
         Cell[] trashes = map.getTrashCells();
         ArrayList<Cell> trashList = new ArrayList<Cell>(Arrays.asList(trashes));
@@ -562,7 +562,7 @@ public class Game implements World {
         theChosenCell.addSlipper(id, constants.getNetValidTime());
 
         idMap.put(id, theChosenCell);
-        infoMap.put(id, theChosenCell.getSlipperEntity());
+        infoMap.put(id, theChosenCell.getSlipper());
 
         Cell[] slippers = map.getSlipperCells();
         ArrayList<Cell> slipperList = new ArrayList<Cell>(Arrays.asList(slippers));

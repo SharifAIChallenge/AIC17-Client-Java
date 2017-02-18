@@ -12,7 +12,7 @@ public class Slipper extends Entity {
         return this.remainingTurn;
     }
 
-    public void setRemainingTurn(int remainingTurn) {
+    void setRemainingTurn(int remainingTurn) {
         this.remainingTurn = remainingTurn;
     }
 }

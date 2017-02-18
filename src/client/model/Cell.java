@@ -27,15 +27,15 @@ public class Cell {
     }
 
 
-    public void addSlipper(int id, int slipperValidTime) {
+    void addSlipper(int id, int slipperValidTime) {
         slipperEntity = new Slipper(id, slipperValidTime);
     }
 
-    public void addTeleport(int id, int targetId) {
+    void addTeleport(int id, int targetId) {
         teleportEntity = new Teleport(id, targetId);
     }
 
-    public void receiveInfo(Entity entity) {
+    void receiveInfo(Entity entity) {
         if (entity instanceof Beetle) {
             beetleEntity = entity;
         } else if (entity instanceof Food) {
@@ -49,7 +49,7 @@ public class Cell {
         }
     }
 
-    public void addBeetleInfo(JsonArray beetleInfo) {
+    void addBeetleInfo(JsonArray beetleInfo) {
         beetleEntity = new Beetle(beetleInfo.get(0).getAsInt());
         Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(beetleInfo.get(3).getAsInt());
@@ -75,7 +75,7 @@ public class Cell {
         this.y = y;
     }
 
-    public void addBeetleInfo(int id, int direction, int color, int queen, int team) {
+    void addBeetleInfo(int id, int direction, int color, int queen, int team) {
         beetleEntity = new Beetle(id);
         Beetle chosenBeetleInfo = (Beetle) beetleEntity;
         chosenBeetleInfo.setDirection(direction);
@@ -85,31 +85,32 @@ public class Cell {
         chosenBeetleInfo.setTeam(team);
     }
 
-    public void clear() {
+    void clear() {
         beetleEntity = null;
         foodEntity = null;
         trashEntity = null;
     }
 
-    public void cleanSlipper() {
+    void cleanSlipper() {
         slipperEntity = null;
     }
 
-    public Entity getBeetleEntity() {
+    public Entity getBeetle() {
         return beetleEntity;
     }
 
-    public void setBeetleEntity(Entity beetleEntity) {
+    void setBeetleEntity(Entity beetleEntity) {
         this.beetleEntity = beetleEntity;
     }
 
-    public Entity getItemEntity() {
+    public Entity getItem() {
         if (foodEntity != null) {
             return foodEntity;
         } else {
             return trashEntity;
         }
     }
+
 
     void setItemEntity(Entity itemEntity) {
         if (itemEntity instanceof Food) {
@@ -119,35 +120,35 @@ public class Cell {
         }
     }
 
-    public Entity getSlipperEntity() {
+    public Entity getSlipper() {
         return slipperEntity;
     }
 
-    public void setSlipperEntity(Entity slipperEntity) {
+    void setSlipperEntity(Entity slipperEntity) {
         this.slipperEntity = slipperEntity;
     }
 
-    public Entity getTeleportEntity() {
+    public Entity getTeleport() {
         return teleportEntity;
     }
 
-    public void setTeleportEntity(Entity teleportEntity) {
+    void setTeleportEntity(Entity teleportEntity) {
         this.teleportEntity = teleportEntity;
     }
 
-    public Entity getFoodEntity() {
+    Entity getFoodEntity() {
         return foodEntity;
     }
 
-    public void setFoodEntity(Entity foodEntity) {
+    void setFoodEntity(Entity foodEntity) {
         this.foodEntity = foodEntity;
     }
 
-    public Entity getTrashEntity() {
+    Entity getTrashEntity() {
         return trashEntity;
     }
 
-    public void setTrashEntity(Entity trashEntity) {
+    void setTrashEntity(Entity trashEntity) {
         this.trashEntity = trashEntity;
     }
 

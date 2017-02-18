@@ -12,7 +12,7 @@ public class Map {
 
     private HashMap<Integer, Cell> idMap = new HashMap<>();
 
-    public Map(Cell[][] cells, int width, int height) {
+    Map(Cell[][] cells, int width, int height) {
         this.cells = cells;
         this.width = width;
         this.height = height;
@@ -81,16 +81,16 @@ public class Map {
     public Entity getEntity(int id) {
         Cell theChosenCell = idMap.get(id);
 
-        if (theChosenCell.getBeetleEntity() != null && theChosenCell.getBeetleEntity().getId() == id) {
-            return theChosenCell.getBeetleEntity();
+        if (theChosenCell.getBeetle() != null && theChosenCell.getBeetle().getId() == id) {
+            return theChosenCell.getBeetle();
         } else if (theChosenCell.getFoodEntity() != null && theChosenCell.getFoodEntity().getId() == id) {
             return theChosenCell.getFoodEntity();
         } else if (theChosenCell.getTrashEntity() != null && theChosenCell.getTrashEntity().getId() == id) {
             return theChosenCell.getTrashEntity();
-        } else if (theChosenCell.getSlipperEntity() != null && theChosenCell.getSlipperEntity().getId() == id) {
-            return theChosenCell.getSlipperEntity();
-        } else if (theChosenCell.getTeleportEntity() != null && theChosenCell.getTeleportEntity().getId() == id) {
-            return theChosenCell.getTeleportEntity();
+        } else if (theChosenCell.getSlipper() != null && theChosenCell.getSlipper().getId() == id) {
+            return theChosenCell.getSlipper();
+        } else if (theChosenCell.getTeleport() != null && theChosenCell.getTeleport().getId() == id) {
+            return theChosenCell.getTeleport();
         }
         return null;
     }
