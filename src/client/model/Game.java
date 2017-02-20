@@ -71,7 +71,10 @@ public class Game implements World {
 
 
         JsonArray Beetles = msg.args.get(2).getAsJsonArray();
-        Cell[][] beetles = new Cell[2][Beetles.size()];
+        Cell[][] beetles = new Cell[2][];
+        ArrayList<Cell> myBeetles = new ArrayList<>();
+        ArrayList<Cell> oppBeetles = new ArrayList<>();
+
         int myBeetle = 0;
         int oppBeetle = 0;
         for (int i = 0; i < Beetles.size(); i++) {
@@ -89,11 +92,20 @@ public class Game implements World {
             infoMap.put(id, theChosenCell.getBeetle());
 
             if (teamID == beetleInfo.get(7).getAsInt()) {
-                beetles[0][myBeetle++] = theChosenCell;
+                myBeetles.add(theChosenCell);
             } else {
-                beetles[1][oppBeetle++] = theChosenCell;
+                oppBeetles.add(theChosenCell);
             }
         }
+        Cell[] mBeetles = new Cell[myBeetles.size()];
+        Cell[] oBeetles = new Cell[oppBeetles.size()];
+
+        mBeetles = myBeetles.toArray(mBeetles);
+        oBeetles = myBeetles.toArray(oBeetles);
+
+        beetles[0] = mBeetles;
+        beetles[1] = oBeetles;
+
         map.setBeetles(beetles);
 
         JsonArray foods = msg.args.get(3).getAsJsonArray();
