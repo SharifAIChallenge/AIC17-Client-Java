@@ -23,7 +23,7 @@ public class AI
         Random rand = new Random();
 
         Map map = game.getMap();
-        Cell[] cells = game.getMap().getMyCells();
+        Cell[] cells = map.getMyCells();
         for (Cell cell : cells)
         {
             Beetle beetle = (Beetle) cell.getBeetle();
@@ -45,8 +45,8 @@ public class AI
                 {
                     for (int k = 0; k < 3; k++)
                     {
-                        game.changeStrategy(BeetleType.LOW, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[1]);
-                        game.changeStrategy(BeetleType.HIGH, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[1]);
+                        game.changeStrategy(BeetleType.LOW, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[0]);
+                        game.changeStrategy(BeetleType.HIGH, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[0]);
                     }
                 }
             }

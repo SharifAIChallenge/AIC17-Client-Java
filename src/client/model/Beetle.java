@@ -63,14 +63,6 @@ public class Beetle extends Entity {
         return (sick == 1);
     }
 
-    public int getRow() {
-        return this.getX();
-    }
-
-    public int getColumn() {
-        return this.getY();
-    }
-
     public Direction getDirection() {
         return this.direction;
     }
