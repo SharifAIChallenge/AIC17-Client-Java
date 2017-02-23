@@ -1,9 +1,6 @@
 package client;
 
-import client.model.BeetleType;
-import client.model.Cell;
-import client.model.CellState;
-import client.model.Move;
+import client.model.*;
 
 import java.util.Random;
 
@@ -17,26 +14,44 @@ import java.util.Random;
  * world!
  * See World interface for more details.
  */
-public class AI {
+public class AI
+{
 
-    public void doTurn(World game) {
+    public void doTurn(World game)
+    {
         // fill this method, we've presented a stupid AI for example!
         Random rand = new Random();
 
+        Map map = game.getMap();
+        Cell[] cells = game.getMap().getMyCells();
+        for (Cell cell : cells)
+        {
+            Beetle beetle = (Beetle) cell.getBeetle();
+            game.deterministicMove(beetle, Move.stepForward);
+            if (beetle.getBeetleType() == BeetleType.HIGH)
+            {
+                game.changeType(beetle, BeetleType.LOW);
+            } else
+            {
+                game.changeType(beetle, BeetleType.HIGH);
+            }
+        }
 
-        Cell[][] cells = game.getMap().getCells();
-        Cell[] myCells = game.getMap().getMyCells();
-
-        if (game.getCurrentTurn() == 0) {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 2; j++) {
-                    for (int k = 0; k < 3; k++) {
+        if (game.getCurrentTurn() == 0)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
                         game.changeStrategy(BeetleType.LOW, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[1]);
                         game.changeStrategy(BeetleType.HIGH, CellState.values()[i], CellState.values()[j], CellState.values()[k], Move.values()[1]);
                     }
                 }
             }
-        } else {
+        } else
+        {
             // no strategy change
         }
 
