@@ -109,7 +109,7 @@ public class Game implements World
         Cell[] oBeetles = new Cell[oppBeetles.size()];
 
         mBeetles = myBeetles.toArray(mBeetles);
-        oBeetles = myBeetles.toArray(oBeetles);
+        oBeetles = oppBeetles.toArray(oBeetles);
 
         beetles[0] = mBeetles;
         beetles[1] = oBeetles;
