@@ -51,7 +51,7 @@ public class Beetle extends Entity {
         this.sick = sick;
     }
 
-    int getTeam() {
+    public int getTeam() {
         return team;
     }
 
